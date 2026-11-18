@@ -1,1603 +1,318 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>順勢療方助手｜經典草本藥典與智慧辨證查詢</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Noto Sans TC & Inter & Noto Serif TC -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome for clean botanical/medical icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Noto Sans TC"', 'Inter', 'sans-serif'],
-            serif: ['"Noto Serif TC"', 'serif'],
-            mono: ['Inter', 'monospace'],
-          },
-          colors: {
-            linen: {
-              50: '#FCFBF8',
-              100: '#F7F5EE',
-              200: '#ECE7DA',
-              300: '#DCD4C0',
-            },
-            sage: {
-              50: '#F3F7F4',
-              100: '#E3ECE6',
-              200: '#C5D8CC',
-              300: '#9DBCA9',
-              500: '#5D876E',
-              600: '#496E58',
-              700: '#395746',
-              800: '#2A4134',
-              900: '#1D2E25',
-            },
-            amber: {
-              50: '#FDF9F0',
-              100: '#F9EED6',
-              200: '#F1D9A6',
-              500: '#C88D32',
-              600: '#A87121',
-              700: '#855617',
-            }
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="順勢療方助手 - 結合經典七維度順勢辨證、S.R. Phatak 藥典查詢與自然醫學的 AI 智能工具。">
+    <meta name="keywords" content="順勢療法, 順勢糖球, Homeopathy, 自然醫學, 羅菲卡, Rophecca">
+    <title>順勢療方助手 - AI 深度順勢辨證解析</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f7f5ef; }
+        .brand-green { background-color: #2c4a3b; }
+        .brand-green-text { color: #2c4a3b; }
+        .accent-gold { background-color: #c49a45; }
+        .accent-gold-text { color: #c49a45; }
+        .card-bg { background-color: #ffffff; }
+        .border-green { border-color: #2c4a3b; }
+        
+        /* Loading Spinner */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2c4a3b;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
         }
-      }
-    }
-  </script>
-  <style>
-    body {
-      background-color: #F7F5EE;
-      color: #1D2E25;
-      overflow-x: hidden;
-    }
-    /* Custom subtle scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #F7F5EE;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #C5D8CC;
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #9DBCA9;
-    }
-    .botanical-pattern {
-      background-image: radial-gradient(#C5D8CC 0.75px, transparent 0.75px), radial-gradient(#C5D8CC 0.75px, #F7F5EE 0.75px);
-      background-size: 28px 28px;
-      background-position: 0 0, 14px 14px;
-    }
-  </style>
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-sage-200 selection:text-sage-900">
+<body class="text-gray-800">
 
-  <!-- Top Navigation & Brand Header -->
-  <header class="bg-sage-900 text-linen-50 shadow-md sticky top-0 z-40 border-b border-sage-700">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-sage-700 border border-sage-500 flex items-center justify-center text-amber-200 shadow-inner">
-          <i class="fa-solid fa-mortar-pestle text-lg"></i>
+    <!-- Navbar -->
+    <nav class="brand-green text-white p-4 shadow-md flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="bg-white/20 p-2 rounded-lg">
+                <i class="fa-solid fa-mortar-pestle text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-wider">順勢療方助手 <span class="text-xs bg-white/20 px-2 py-1 rounded ml-2">Materia Medica & Bach System</span></h1>
+                <p class="text-xs text-gray-300 mt-1">經典七維度順勢辨證 • 藥典查詢 • 巴赫花精情緒平衡</p>
+            </div>
         </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="font-serif text-lg sm:text-xl font-bold tracking-wide text-linen-50">順勢療方助手</h1>
-            <span class="hidden sm:inline-block text-[11px] font-medium px-2 py-0.5 rounded-full bg-sage-700 text-sage-100 border border-sage-600">
-              Materia Medica & Bach System
-            </span>
-          </div>
-          <p class="text-xs text-sage-200">經典七維度順勢辨證・藥典查詢・巴赫花精情緒平衡</p>
+        <div class="flex items-center space-x-4">
+            <button class="bg-white text-green-900 px-4 py-2 rounded-lg font-medium shadow-sm hover:bg-gray-100 transition"><i class="fa-solid fa-stethoscope mr-2"></i>症狀評估與配對</button>
+            <button class="text-white border border-white/40 px-4 py-2 rounded-lg hover:bg-white/10 transition"><i class="fa-solid fa-book-medical mr-2"></i>順勢藥名直接查詢</button>
+            <!-- 設定按鈕 -->
+            <button onclick="toggleSettings()" class="text-white hover:text-gray-300 transition text-xl" title="API 金鑰設定">
+                <i class="fa-solid fa-gear"></i>
+            </button>
         </div>
-      </div>
+    </nav>
 
-      <!-- Mode Switcher Pills & Settings -->
-      <nav class="flex bg-sage-800 p-1 rounded-xl border border-sage-700 w-full sm:w-auto items-center">
-        <button id="tab-symptom" onclick="switchMode('symptom')"
-          class="flex-1 sm:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 bg-linen-50 text-sage-900 shadow-sm">
-          <i class="fa-solid fa-stethoscope text-sage-600"></i>
-          <span>症狀評估與配對</span>
-        </button>
-        <button id="tab-remedy" onclick="switchMode('remedy')"
-          class="flex-1 sm:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 text-sage-200 hover:text-white">
-          <i class="fa-solid fa-book-medical"></i>
-          <span>順勢藥名直接查詢</span>
-        </button>
-        <div class="w-px h-5 bg-sage-600 mx-1 hidden sm:block"></div>
-        <button onclick="openSettings()" class="px-3 py-2 text-sage-300 hover:text-white transition" title="設定 API Key">
-          <i class="fa-solid fa-gear"></i>
-        </button>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Main Workspace -->
-  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
-
-    <!-- Toast Notification Banner (Non-blocking replacement for alert) -->
-    <div id="toast-box" class="hidden fixed bottom-5 right-5 z-50 max-w-sm bg-sage-900 text-linen-50 px-4 py-3 rounded-xl shadow-xl border border-sage-600 flex items-center gap-3 transition-all">
-      <i id="toast-icon" class="fa-solid fa-circle-info text-amber-200"></i>
-      <span id="toast-msg" class="text-sm leading-snug"></span>
+    <!-- API 金鑰設定 Modal -->
+    <div id="settingsModal" class="hidden fixed inset-0 bg-black/50 z-50 flex justify-center items-center">
+        <div class="bg-white rounded-xl shadow-2xl p-6 w-11/12 max-w-md relative">
+            <button onclick="toggleSettings()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h2 class="text-xl font-bold brand-green-text mb-2"><i class="fa-solid fa-key mr-2"></i>系統設定</h2>
+            <p class="text-sm text-gray-600 mb-4">請輸入您的 Google Gemini API 金鑰以啟用 AI 諮詢功能。金鑰將安全地儲存於您的瀏覽器中。</p>
+            <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:outline-none focus:border-green-700">
+            <button onclick="saveApiKey()" class="w-full brand-green text-white font-bold py-3 rounded-lg hover:opacity-90 transition">
+                儲存設定
+            </button>
+        </div>
     </div>
 
-    <!-- ========================================================= -->
-    <!-- MODE 1: 症狀評估與配對 (7-Dimension Assessment)             -->
-    <!-- ========================================================= -->
-    <section id="view-symptom" class="space-y-6">
-
-      <!-- Quick Scenario Examples Bar -->
-      <div class="bg-linen-50 border border-linen-300 rounded-2xl p-4 sm:p-5 shadow-sm">
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-          <div class="flex items-center gap-2 text-sage-800 font-semibold text-sm">
-            <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i>
-            <span>一鍵體驗經典問診情境範例：</span>
-          </div>
-          <button onclick="clearSymptomForm()" class="text-xs text-sage-600 hover:text-sage-900 underline underline-offset-2 px-2 py-1">
-            清空所有欄位
-          </button>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
-          <button onclick="applyScenario('coldFever')"
-            class="text-left p-3 rounded-xl bg-sage-50 hover:bg-sage-100 border border-sage-200 transition group">
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-xs font-bold text-sage-700 bg-sage-200/70 px-2 py-0.5 rounded-md">急性症狀範例</span>
-              <i class="fa-solid fa-arrow-right text-xs text-sage-400 group-hover:translate-x-0.5 transition"></i>
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto mt-8 p-4">
+        
+        <header class="mb-6 flex justify-between items-end border-b border-gray-300 pb-4">
+            <div>
+                <p class="text-sm text-gray-500 font-medium tracking-wide mb-1">GEMINI AI 深度順勢辨證解析 (參考 S.R. PHATAK 藥典)</p>
+                <h2 class="text-3xl font-bold brand-green-text">順勢療方評估與配對報告</h2>
             </div>
-            <p class="text-xs sm:text-sm font-medium text-sage-900">半夜吹冷風後突然高燒畏寒、極度口渴、焦慮不安</p>
-          </button>
-
-          <button onclick="applyScenario('stressStomach')"
-            class="text-left p-3 rounded-xl bg-sage-50 hover:bg-sage-100 border border-sage-200 transition group">
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-xs font-bold text-sage-700 bg-sage-200/70 px-2 py-0.5 rounded-md">急性 / 亞急性範例</span>
-              <i class="fa-solid fa-arrow-right text-xs text-sage-400 group-hover:translate-x-0.5 transition"></i>
+            <div class="text-sm text-gray-500 bg-gray-200 px-3 py-1 rounded-full">
+                已依匹配程度由高至低排列
             </div>
-            <p class="text-xs sm:text-sm font-medium text-sage-900">工作壓力大熬夜飲酒後胃脹痙攣、易怒怕冷、對聲光敏感</p>
-          </button>
+        </header>
 
-          <button onclick="applyScenario('chronicFatigue')"
-            class="text-left p-3 rounded-xl bg-amber-50 hover:bg-amber-100/80 border border-amber-200 transition group">
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-xs font-bold text-amber-700 bg-amber-200/70 px-2 py-0.5 rounded-md">慢性體質範例</span>
-              <i class="fa-solid fa-arrow-right text-xs text-amber-500 group-hover:translate-x-0.5 transition"></i>
+        <!-- Input Section -->
+        <section class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-green-100">
+            <h3 class="text-lg font-bold brand-green-text mb-4"><i class="fa-solid fa-comment-medical mr-2"></i>症狀諮詢</h3>
+            <textarea id="symptomInput" rows="4" class="w-full border border-gray-300 rounded-lg p-4 focus:outline-none focus:border-green-700 focus:ring-1 focus:ring-green-700 mb-4 bg-gray-50" placeholder="請輸入諮詢內容... (例如：昨天吹到冷風後開始發燒，喉嚨很痛像被火燒，特別口渴一直想喝冷水，而且非常焦慮...)"></textarea>
+            
+            <div class="flex flex-wrap items-center justify-between">
+                <div class="flex items-center space-x-3 bg-green-900 rounded-full p-1 pl-4">
+                    <span class="text-white text-sm font-medium">病程性質：</span>
+                    <button id="btnAcute" onclick="setConditionType('急性 (Acute)')" class="px-4 py-1.5 rounded-full text-sm font-bold transition accent-gold text-white shadow">急性 (Acute)</button>
+                    <button id="btnChronic" onclick="setConditionType('慢性 (Chronic)')" class="px-4 py-1.5 rounded-full text-sm font-bold transition text-gray-300 hover:text-white">慢性 (Chronic)</button>
+                </div>
+                
+                <button onclick="startConsultation()" class="brand-green text-white px-8 py-3 rounded-lg font-bold shadow-md hover:opacity-90 transition flex items-center">
+                    <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> 開始諮詢
+                </button>
             </div>
-            <p class="text-xs sm:text-sm font-medium text-sage-900">長期疲倦消化脹氣、下午4點至8點惡化、缺乏自信猶豫不決</p>
-          </button>
-        </div>
-      </div>
+            <input type="hidden" id="conditionType" value="急性 (Acute)">
+        </section>
 
-      <!-- Main 7-Dimension Consultation Form Card -->
-      <div class="bg-linen-50 border border-linen-300 rounded-2xl shadow-sm overflow-hidden">
-        <!-- Form Header & Acute/Chronic Selector -->
-        <div class="bg-sage-800 text-linen-50 px-5 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-sage-700">
-          <div>
-            <h2 class="font-serif text-lg font-bold flex items-center gap-2">
-              <i class="fa-solid fa-clipboard-list text-amber-200"></i>
-              <span>經典順勢療法 7 維度問診評估</span>
-            </h2>
-            <p class="text-xs text-sage-200 mt-0.5">填寫或點選越具體的感受與惡化好轉條件，順勢療方配對精準度越高</p>
-          </div>
-
-          <!-- Disease Nature Selector: 急性 vs 慢性 -->
-          <div class="flex items-center gap-2 bg-sage-900/70 p-1.5 rounded-xl border border-sage-600 self-start md:self-auto">
-            <span class="text-xs text-sage-200 pl-2 font-medium">病程性質：</span>
-            <button type="button" id="nature-acute" onclick="setDiseaseNature('acute')"
-              class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-amber-500 text-white shadow">
-              急性 (Acute)
-            </button>
-            <button type="button" id="nature-chronic" onclick="setDiseaseNature('chronic')"
-              class="px-3 py-1.5 rounded-lg text-xs font-bold transition text-sage-200 hover:text-white">
-              慢性 (Chronic)
-            </button>
-          </div>
+        <!-- Loading UI -->
+        <div id="loadingUI" class="hidden text-center py-12">
+            <div class="loader mb-4"></div>
+            <p class="brand-green-text font-medium animate-pulse">AI 正在深度解析 S.R. Phatak 藥典與您的諮詢症狀...</p>
         </div>
 
-        <!-- 7 Dimensions Grid -->
-        <div class="p-5 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
-
-          <!-- Dimension 1: 病因 -->
-          <div class="bg-white p-4 rounded-xl border border-linen-200 shadow-sm space-y-2.5">
-            <label class="flex items-center justify-between text-sm font-bold text-sage-900">
-              <span><span class="inline-block w-5 h-5 rounded-full bg-sage-700 text-white text-xs text-center leading-5 mr-1.5">1</span>病因與誘發因素 (Ailments From)</span>
-              <span class="text-[11px] font-normal text-sage-500">何時開始、起因</span>
-            </label>
-            <input type="text" id="dim-cause" placeholder="例如：昨晚吹冷風後突然發作、受到驚嚇、吃壞肚子..."
-              class="w-full px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
-            <div class="flex flex-wrap gap-1.5 pt-0.5" data-target="dim-cause">
-              <button type="button" onclick="appendTag('dim-cause', '吹冷風受寒')" class="tag-chip">吹冷風受寒</button>
-              <button type="button" onclick="appendTag('dim-cause', '淋雨受濕')" class="tag-chip">淋雨受濕</button>
-              <button type="button" onclick="appendTag('dim-cause', '驚嚇恐懼')" class="tag-chip">驚嚇恐懼</button>
-              <button type="button" onclick="appendTag('dim-cause', '飲食不潔/過食')" class="tag-chip">飲食不潔/過食</button>
-              <button type="button" onclick="appendTag('dim-cause', '熬夜壓力大')" class="tag-chip">熬夜壓力大</button>
-              <button type="button" onclick="appendTag('dim-cause', '外傷撞擊瘀青')" class="tag-chip">外傷撞擊瘀青</button>
-              <button type="button" onclick="appendTag('dim-cause', '悲傷失落')" class="tag-chip">悲傷失落</button>
-              <button type="button" onclick="appendTag('dim-cause', '日曬中暑')" class="tag-chip">日曬中暑</button>
+        <!-- Results Container -->
+        <div id="resultsContainer" class="space-y-6">
+            <!-- 動態生成的卡片會放在這裡 -->
+            <div class="text-center text-gray-400 py-10">
+                <i class="fa-solid fa-leaf text-4xl mb-3 opacity-50"></i>
+                <p>請輸入症狀並點擊「開始諮詢」</p>
             </div>
-          </div>
-
-          <!-- Dimension 2: 主要症狀 -->
-          <div class="bg-white p-4 rounded-xl border border-linen-200 shadow-sm space-y-2.5">
-            <label class="flex items-center justify-between text-sm font-bold text-sage-900">
-              <span><span class="inline-block w-5 h-5 rounded-full bg-sage-700 text-white text-xs text-center leading-5 mr-1.5">2</span>主要症狀 (Chief Complaint)</span>
-              <span class="text-[11px] font-normal text-sage-500">身體哪裡不適</span>
-            </label>
-            <input type="text" id="dim-symptom" placeholder="例如：突然高燒、右側頭痛、乾咳、胃脹痛、紅腫癢..."
-              class="w-full px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
-            <div class="flex flex-wrap gap-1.5 pt-0.5">
-              <button type="button" onclick="appendTag('dim-symptom', '突然高燒')" class="tag-chip">突然高燒</button>
-              <button type="button" onclick="appendTag('dim-symptom', '劇烈頭痛')" class="tag-chip">劇烈頭痛</button>
-              <button type="button" onclick="appendTag('dim-symptom', '乾咳喉嚨痛')" class="tag-chip">乾咳喉嚨痛</button>
-              <button type="button" onclick="appendTag('dim-symptom', '胃痛脹氣反胃')" class="tag-chip">胃痛脹氣反胃</button>
-              <button type="button" onclick="appendTag('dim-symptom', '肌肉痠痛無力')" class="tag-chip">肌肉痠痛無力</button>
-              <button type="button" onclick="appendTag('dim-symptom', '失眠多夢')" class="tag-chip">失眠多夢</button>
-              <button type="button" onclick="appendTag('dim-symptom', '皮膚紅腫癢疹')" class="tag-chip">皮膚紅腫癢疹</button>
-              <button type="button" onclick="appendTag('dim-symptom', '鼻塞流清涕')" class="tag-chip">鼻塞流清涕</button>
-            </div>
-          </div>
-
-          <!-- Dimension 3: 自己感覺 Sensation -->
-          <div class="bg-white p-4 rounded-xl border border-linen-200 shadow-sm space-y-2.5">
-            <label class="flex items-center justify-between text-sm font-bold text-sage-900">
-              <span><span class="inline-block w-5 h-5 rounded-full bg-sage-700 text-white text-xs text-center leading-5 mr-1.5">3</span>自己感覺 (Sensation)</span>
-              <span class="text-[11px] font-normal text-sage-500">疼痛或身體的質地</span>
-            </label>
-            <input type="text" id="dim-sensation" placeholder="例如：血管跳動痛、灼燒感、針刺痛、像被重物壓住..."
-              class="w-full px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
-            <div class="flex flex-wrap gap-1.5 pt-0.5">
-              <button type="button" onclick="appendTag('dim-sensation', '跳動搏動痛')" class="tag-chip">跳動搏動痛</button>
-              <button type="button" onclick="appendTag('dim-sensation', '灼燒熱辣感')" class="tag-chip">灼燒熱辣感</button>
-              <button type="button" onclick="appendTag('dim-sensation', '針刺尖銳痛')" class="tag-chip">針刺尖銳痛</button>
-              <button type="button" onclick="appendTag('dim-sensation', '悶痛緊箍感')" class="tag-chip">悶痛緊箍感</button>
-              <button type="button" onclick="appendTag('dim-sensation', '沉重無力感')" class="tag-chip">沉重無力感</button>
-              <button type="button" onclick="appendTag('dim-sensation', '全身被打傷痠痛')" class="tag-chip">全身被打傷痠痛</button>
-              <button type="button" onclick="appendTag('dim-sensation', '喉嚨有異物梗阻感')" class="tag-chip">喉嚨有異物梗阻感</button>
-            </div>
-          </div>
-
-          <!-- Dimension 4: 惡化與好轉因子 Modality -->
-          <div class="bg-white p-4 rounded-xl border border-linen-200 shadow-sm space-y-2.5">
-            <label class="flex items-center justify-between text-sm font-bold text-sage-900">
-              <span><span class="inline-block w-5 h-5 rounded-full bg-sage-700 text-white text-xs text-center leading-5 mr-1.5">4</span>惡化與好轉因子 (Modality)</span>
-              <span class="text-[11px] font-normal text-sage-500">關鍵辨證指標</span>
-            </label>
-            <input type="text" id="dim-modality" placeholder="例如：一動就痛、熱敷好轉、凌晨1-3點惡化、吹風好轉..."
-              class="w-full px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
-            <div class="flex flex-wrap gap-1.5 pt-0.5">
-              <button type="button" onclick="appendTag('dim-modality', '稍微移動就惡化')" class="tag-chip">稍微移動就惡化</button>
-              <button type="button" onclick="appendTag('dim-modality', '持續活動後好轉')" class="tag-chip">持續活動後好轉</button>
-              <button type="button" onclick="appendTag('dim-modality', '熱敷保暖好轉')" class="tag-chip">熱敷保暖好轉</button>
-              <button type="button" onclick="appendTag('dim-modality', '冷敷新鮮空氣好轉')" class="tag-chip">冷敷新鮮空氣好轉</button>
-              <button type="button" onclick="appendTag('dim-modality', '用力按壓好轉')" class="tag-chip">用力按壓好轉</button>
-              <button type="button" onclick="appendTag('dim-modality', '半夜/凌晨1-3點惡化')" class="tag-chip">半夜/凌晨1-3點惡化</button>
-              <button type="button" onclick="appendTag('dim-modality', '下午4-8點惡化')" class="tag-chip">下午4-8點惡化</button>
-            </div>
-          </div>
-
-          <!-- Dimension 5: 伴隨症狀 -->
-          <div class="bg-white p-4 rounded-xl border border-linen-200 shadow-sm space-y-2.5">
-            <label class="flex items-center justify-between text-sm font-bold text-sage-900">
-              <span><span class="inline-block w-5 h-5 rounded-full bg-sage-700 text-white text-xs text-center leading-5 mr-1.5">5</span>伴隨症狀 (Concomitants)</span>
-              <span class="text-[11px] font-normal text-sage-500">口渴、流汗、冷熱</span>
-            </label>
-            <input type="text" id="dim-concomitant" placeholder="例如：極度口渴想喝冷水、完全不口渴、畏寒怕冷、盜汗..."
-              class="w-full px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
-            <div class="flex flex-wrap gap-1.5 pt-0.5">
-              <button type="button" onclick="appendTag('dim-concomitant', '極度口渴喝大量冷水')" class="tag-chip">極度口渴喝大量冷水</button>
-              <button type="button" onclick="appendTag('dim-concomitant', '口渴但只小口啜飲')" class="tag-chip">口渴但只小口啜飲</button>
-              <button type="button" onclick="appendTag('dim-concomitant', '發燒卻完全不口渴')" class="tag-chip">發燒卻完全不口渴</button>
-              <button type="button" onclick="appendTag('dim-concomitant', '極度畏寒怕冷')" class="tag-chip">極度畏寒怕冷</button>
-              <button type="button" onclick="appendTag('dim-concomitant', '臉紅發燙手腳冰冷')" class="tag-chip">臉紅發燙手腳冰冷</button>
-              <button type="button" onclick="appendTag('dim-concomitant', '大量流汗')" class="tag-chip">大量流汗</button>
-            </div>
-          </div>
-
-          <!-- Dimension 6: 情緒與行為 (同時影響巴赫花精選方) -->
-          <div class="bg-white p-4 rounded-xl border border-linen-200 shadow-sm space-y-2.5">
-            <label class="flex items-center justify-between text-sm font-bold text-sage-900">
-              <span><span class="inline-block w-5 h-5 rounded-full bg-amber-600 text-white text-xs text-center leading-5 mr-1.5">6</span>情緒與行為 (Mind & Emotion)</span>
-              <span class="text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded">連動巴赫花精</span>
-            </label>
-            <input type="text" id="dim-emotion" placeholder="例如：焦躁不安怕死、易怒沒耐心、愛哭想人陪伴、想獨處..."
-              class="w-full px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
-            <div class="flex flex-wrap gap-1.5 pt-0.5">
-              <button type="button" onclick="appendTag('dim-emotion', '極度恐慌焦慮不安')" class="tag-chip">極度恐慌焦慮不安</button>
-              <button type="button" onclick="appendTag('dim-emotion', '易怒暴躁沒耐心')" class="tag-chip">易怒暴躁沒耐心</button>
-              <button type="button" onclick="appendTag('dim-emotion', '愛哭委屈需要安慰')" class="tag-chip">愛哭委屈需要安慰</button>
-              <button type="button" onclick="appendTag('dim-emotion', '想一個人靜靜別煩我')" class="tag-chip">想一個人靜靜別煩我</button>
-              <button type="button" onclick="appendTag('dim-emotion', '反覆思慮停不下來')" class="tag-chip">反覆思慮停不下來</button>
-              <button type="button" onclick="appendTag('dim-emotion', '缺乏自信猶豫不決')" class="tag-chip">缺乏自信猶豫不決</button>
-              <button type="button" onclick="appendTag('dim-emotion', '身心耗竭無力')" class="tag-chip">身心耗竭無力</button>
-            </div>
-          </div>
-
-          <!-- Dimension 7: 對什麼較敏感 -->
-          <div class="bg-white p-4 rounded-xl border border-linen-200 shadow-sm space-y-2.5 md:col-span-2">
-            <label class="flex items-center justify-between text-sm font-bold text-sage-900">
-              <span><span class="inline-block w-5 h-5 rounded-full bg-sage-700 text-white text-xs text-center leading-5 mr-1.5">7</span>對什麼較敏感 (Sensitivities)</span>
-              <span class="text-[11px] font-normal text-sage-500">感官與環境刺激</span>
-            </label>
-            <div class="flex flex-col sm:flex-row gap-3">
-              <input type="text" id="dim-sensitive" placeholder="例如：怕光、怕吵雜聲音、對氣味敏感、討厭別人碰觸、天氣變冷就發作..."
-                class="flex-1 px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
-              <div class="flex flex-wrap gap-1.5 items-center">
-                <button type="button" onclick="appendTag('dim-sensitive', '怕強光')" class="tag-chip">怕強光</button>
-                <button type="button" onclick="appendTag('dim-sensitive', '怕聲音吵雜')" class="tag-chip">怕聲音吵雜</button>
-                <button type="button" onclick="appendTag('dim-sensitive', '對氣味敏感')" class="tag-chip">對氣味敏感</button>
-                <button type="button" onclick="appendTag('dim-sensitive', '拒絕被觸碰')" class="tag-chip">拒絕被觸碰</button>
-                <button type="button" onclick="appendTag('dim-sensitive', '怕冷風吹拂')" class="tag-chip">怕冷風吹拂</button>
-                <button type="button" onclick="appendTag('dim-sensitive', '潮濕天氣敏感')" class="tag-chip">潮濕天氣敏感</button>
-              </div>
-            </div>
-          </div>
-
         </div>
+        
+        <footer class="text-center text-xs text-gray-400 mt-12 mb-4">
+            © Copyright by Rophecca 羅菲卡. 系統提供資訊僅供參考，不取代專業醫療診斷。
+        </footer>
+    </main>
 
-        <!-- Action Buttons Bar -->
-        <div class="bg-linen-100 px-5 py-4 border-t border-linen-300 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <p class="text-xs text-sage-700 flex items-center gap-1.5">
-            <i class="fa-solid fa-circle-check text-sage-600"></i>
-            <span>支援離線經典藥典即時比對，亦可呼叫 AI 進行深度個人化順勢辨證</span>
-          </p>
-          <div class="flex flex-col sm:flex-row gap-2.5">
-            <button type="button" onclick="runLocalSymptomMatch()"
-              class="px-5 py-2.5 rounded-xl bg-sage-700 hover:bg-sage-800 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-magnifying-glass"></i>
-              <span>經典藥典即時配對</span>
-            </button>
-            <button type="button" id="btn-ai-symptom" onclick="runAISymptomAnalysis()"
-              class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-sparkles"></i>
-              <span>AI 深度順勢辨證分析</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ========================================================= -->
-    <!-- MODE 2: 順勢藥名直接查詢 (Direct Remedy Lookup)             -->
-    <!-- ========================================================= -->
-    <section id="view-remedy" class="hidden space-y-6">
-      <div class="bg-linen-50 border border-linen-300 rounded-2xl p-5 sm:p-6 shadow-sm space-y-5">
-        <div class="border-b border-linen-200 pb-4">
-          <h2 class="font-serif text-xl font-bold text-sage-900 flex items-center gap-2">
-            <i class="fa-solid fa-book-open text-sage-600"></i>
-            <span>順勢療法藥物典籍查詢 (Materia Medica Lookup)</span>
-          </h2>
-          <p class="text-sm text-sage-600 mt-1">
-            輸入拉丁學名、英文簡稱或中文藥名（例如：Aconitum、Belladonna、山金車、Nux vomica），或直接點選下方常見經典藥物。
-            <span class="inline-block text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded ml-1">註：單純查詢順勢藥名時，依規範不顯示巴赫花精</span>
-          </p>
-        </div>
-
-        <!-- Search Input Row -->
-        <div class="flex flex-col sm:flex-row gap-3">
-          <div class="relative flex-1">
-            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-sage-400"></i>
-            <input type="text" id="remedy-search-input"
-              onkeydown="if(event.key==='Enter') searchRemedyByName()"
-              placeholder="輸入順勢藥名，如：Arnica montana、Pulsatilla、顛茄、烏頭..."
-              class="w-full pl-10 pr-4 py-3 rounded-xl border border-linen-300 bg-white focus:outline-none focus:ring-2 focus:ring-sage-500 text-sm" />
-          </div>
-          <button type="button" onclick="searchRemedyByName()"
-            class="px-5 py-3 rounded-xl bg-sage-700 hover:bg-sage-800 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-book-medical"></i>
-            <span>查詢藥典說明</span>
-          </button>
-          <button type="button" id="btn-ai-remedy" onclick="runAIRemedyLookup()"
-            class="px-5 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-sparkles"></i>
-            <span>AI 查詢任意藥方</span>
-          </button>
-        </div>
-
-        <!-- Quick Select Classic Remedies Grid -->
-        <div>
-          <p class="text-xs font-bold text-sage-700 uppercase tracking-wider mb-2.5">常用經典順勢藥物快速點選（點擊立即檢視完整藥典）：</p>
-          <div id="quick-remedy-pills" class="flex flex-wrap gap-2">
-            <!-- Populated dynamically via JS -->
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================================= -->
-    <!-- RESULTS DISPLAY CONTAINER (Strict Format Output)          -->
-    <!-- ========================================================= -->
-    <section id="results-container" class="hidden mt-8 space-y-6">
-      <!-- Dynamic Content Injected Here -->
-    </section>
-
-  </main>
-
-  <!-- Footer: Data Sources & Medical Disclaimer -->
-  <footer class="bg-sage-900 text-sage-200 border-t border-sage-800 mt-12">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-5">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-sage-800">
-        <div>
-          <h3 class="text-sm font-bold text-linen-50 flex items-center gap-2 mb-2">
-            <i class="fa-solid fa-database text-amber-200"></i>
-            <span>經典藥典與花精資料來源</span>
-          </h3>
-          <ul class="text-xs text-sage-300 space-y-1.5 leading-relaxed">
-            <li>• 順勢藥物學理與關鍵症狀參考：<strong class="text-linen-100">S.R. Phatak Concise Materia Medica</strong> (homeopathybooks.in) 與 <strong class="text-linen-100">materiamedica.info</strong> 知識體系。</li>
-            <li>• 情緒平衡花精系統參考：<strong class="text-linen-100">Bach Centre</strong> 英國巴赫中心完整 38 種原創花精體系。</li>
-          </ul>
-        </div>
-        <div class="bg-sage-800/70 p-4 rounded-xl border border-sage-700">
-          <h3 class="text-sm font-bold text-amber-200 flex items-center gap-2 mb-1.5">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <span>重要醫療與使用免責聲明</span>
-          </h3>
-          <p class="text-xs text-sage-200 leading-relaxed">
-            本系統「順勢療方助手」<strong>不進行任何醫療診斷</strong>，所有搜尋、評估與配對結果僅供順勢療法學術研究與日常保健參考用途。若您有持續、劇烈或緊急身體不適，請務必諮詢專業順勢療法醫師或合格醫療人士。
-          </p>
-        </div>
-      </div>
-      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
-        <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>遵循經典順勢辨證規範・Potency: 5CH / 9CH / 15CH / 30CH / 200CH / 200K</span>
-      </div>
-    </div>
-  </footer>
-
-  <!-- API Key Settings Modal -->
-  <div id="settings-modal" class="hidden fixed inset-0 bg-sage-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity">
-    <div class="bg-linen-50 rounded-2xl w-full max-w-md shadow-2xl border border-sage-300 overflow-hidden">
-      <div class="bg-sage-800 px-5 py-4 flex items-center justify-between text-linen-50">
-        <h3 class="font-bold flex items-center gap-2"><i class="fa-solid fa-key text-amber-300"></i> 設定 Gemini API Key</h3>
-        <button onclick="closeSettings()" class="text-sage-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-      </div>
-      <div class="p-5 space-y-4">
-        <p class="text-sm text-sage-700 leading-relaxed">
-          若要啟用「AI 深度辨證」功能，請填入您的 Google Gemini API Key。金鑰僅會儲存於您的瀏覽器內（Local Storage），關閉瀏覽器後依然會保留。
-        </p>
-        <input type="password" id="api-key-input" placeholder="AIzaSy..." class="w-full px-4 py-2.5 rounded-xl border border-linen-300 focus:ring-2 focus:ring-sage-500 focus:outline-none text-sm font-mono bg-white" />
-        <div class="text-xs text-sage-500">
-          尚未擁有金鑰？請至 <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-amber-600 hover:text-amber-700 hover:underline font-bold">Google AI Studio</a> 免費申請。
-        </div>
-      </div>
-      <div class="px-5 py-4 bg-linen-100 border-t border-linen-200 flex justify-end gap-3">
-        <button onclick="closeSettings()" class="px-4 py-2 text-sm font-bold text-sage-600 hover:text-sage-900 transition">取消</button>
-        <button onclick="saveApiKey()" class="px-5 py-2 text-sm font-bold bg-sage-700 hover:bg-sage-800 text-white rounded-xl shadow transition">儲存設定</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Custom Tailwind Component Styling for Quick Chips -->
-  <style type="text/tailwindcss">
-    .tag-chip {
-      @apply text-xs px-2.5 py-1 rounded-lg bg-linen-100 hover:bg-sage-100 text-sage-800 border border-linen-300 hover:border-sage-300 transition cursor-pointer select-none active:scale-95;
-    }
-  </style>
-
-  <script>
-    // =========================================================================
-    // 1. COMPLETE 38 BACH FLOWER REMEDIES DATABASE (Strict Traditional Chinese)
-    // =========================================================================
-    const BACH_FLOWERS = [
-      { id: 1, en: "Agrimony", zh: "龍芽草", keywords: ["強顏歡笑", "表面快樂", "隱藏痛苦", "逃避衝突", "心事重重", "焦慮掩飾"], desc: "表面看起來開朗幽默、喜歡和平，內心卻隱藏著深層的焦慮、折磨與不安，常藉忙碌或社交來逃避面對內心痛苦。" },
-      { id: 2, en: "Aspen", zh: "白揚", keywords: ["莫名恐懼", "未知恐慌", "預感不祥", "半夜驚醒", "擔憂", "焦慮不安"], desc: "對未知事物產生莫名的恐懼、擔憂或預感會有壞事發生，卻說不出具體害怕什麼，常伴隨突然的顫抖或夜間驚懼。" },
-      { id: 3, en: "Beech", zh: "山毛橘", keywords: ["挑剔", "批判", "缺乏包容", "易怒", "看不順眼", "苛刻"], desc: "容易對周遭人事物感到不耐煩、挑剔與批判，難以包容他人的缺點或不同做法，內心容易積累煩躁。" },
-      { id: 4, en: "Centaury", zh: "矢車菊", keywords: ["不會拒絕", "討好", "軟弱", "過度順從", "疲憊", "委屈"], desc: "心地善良卻過度順從他人，難以說「不」，常為了滿足別人需求而忽略自己，導致身心耗竭。" },
-      { id: 5, en: "Cerato", zh: "水蕨", keywords: ["懷疑自己", "缺乏主見", "反覆詢問", "猶豫不決", "不信任直覺"], desc: "不信任自己的判斷與直覺，做決定後總是不斷向他人尋求意見與確認，容易受他人建議左右。" },
-      { id: 6, en: "Cherry Plum", zh: "樱桃李", keywords: ["情緒失控", "崩潰邊緣", "極度緊繃", "害怕失控", "暴怒衝動"], desc: "內心承受極大壓力，彷彿處於理智崩潰的邊緣，害怕自己會失控做出衝動或傷害性的行為。" },
-      { id: 7, en: "Chestnut Bud", zh: "栗樹芽苞", keywords: ["重複犯錯", "記取教訓", "粗心", "難以吸收經驗"], desc: "在生活或健康上反覆跌入相同的模式與錯誤中，無法從過去的經驗中真正學習與轉化。" },
-      { id: 8, en: "Chicory", zh: "菊苣", keywords: ["佔有慾", "過度關心", "索求回報", "自憐", "控制"], desc: "對親近的人過度保護與干涉，渴望獲得同等的關注與愛，若未得到回應容易感到委屈與自憐。" },
-      { id: 9, en: "Clematis", zh: "鐵線蓮", keywords: ["白日夢", "恍惚", "不切實際", "注意力不集中", "昏沉"], desc: "思緒容易飄向未來或幻想中，對當下現實缺乏興趣，顯得心不在焉、精神恍惚或嗜睡。" },
-      { id: 10, en: "Crab Apple", zh: "野生酸蘋果", keywords: ["潔癖", "排毒", "自我厭惡", "皮膚困擾", "在意細節"], desc: "淨化與排毒花精。適合覺得自己身體或環境不夠潔淨、過度在意微小瑕疵，或因皮膚疹、感染而感到厭惡者。" },
-      { id: 11, en: "Elm", zh: "榆樹", keywords: ["責任過重", "暫時不堪負荷", "壓力大", "優秀卻疲憊"], desc: "平時能力出眾、樂於承擔責任，但因一時任務過多而感到不堪重負、懷疑自己無法勝任。" },
-      { id: 12, en: "Gentian", zh: "龍膽根", keywords: ["受挫氣餒", "悲觀", "容易放棄", "懷疑復原"], desc: "遇到小挫折或病情稍有反覆就容易感到氣餒、悲觀與懷疑，需要重新建立信心與毅力。" },
-      { id: 13, en: "Gorse", zh: "荊豆", keywords: ["絕望", "放棄希望", "覺得沒救了", "無奈"], desc: "經歷長期困擾後感到深沉的絕望與無助，認為一切努力都無濟於事，只是勉強配合他人嘗試。" },
-      { id: 14, en: "Heather", zh: "石楠", keywords: ["害怕孤單", "喋喋不休", "渴望被關注", "自我中心"], desc: "極度害怕獨處，渴望有人傾聽自己說話，容易不斷傾訴自己的煩惱與病痛以獲得陪伴。" },
-      { id: 15, en: "Holly", zh: "冬青", keywords: ["嫉妒", "憤怒", "猜忌", "報復心", "怨恨", "暴躁"], desc: "內心充滿強烈的憤怒、嫉妒、多疑或怨恨情緒，需要開啟內在的愛與寬容來平息怒火。" },
-      { id: 16, en: "Honeysuckle", zh: "忍冬", keywords: ["懷念過去", "無法釋懷", "思鄉", "活在回憶", "悲傷失落"], desc: "思緒停留在過去的美好時光或遺憾中，難以放下舊日回憶與失落感，無法全心投入當下生活。" },
-      { id: 17, en: "Hornbeam", zh: "鵝耳櫪", keywords: ["星期一症候群", "精神疲勞", "提不起勁", "拖延", "腦力耗損"], desc: "尚未開始做事就先感到精神疲倦、提不起勁（如週一早晨的無力感），但一旦開始行動又能順利完成。" },
-      { id: 18, en: "Impatiens", zh: "鳳仙花", keywords: ["沒耐心", "急躁", "易怒", "嫌別人慢", "緊張"], desc: "思考與行動極快，對動作緩慢的人事物極度缺乏耐心、容易煩躁發火，喜歡獨自快速完成事情。" },
-      { id: 19, en: "Larch", zh: "落葉松", keywords: ["缺乏自信", "自卑", "害怕失敗", "猶豫不前"], desc: "總覺得自己不如別人、認定自己一定會失敗，因此連嘗試都不敢嘗試，錯失發揮潛能的機會。" },
-      { id: 20, en: "Mimulus", zh: "构酸醬", keywords: ["具體恐懼", "害怕生病", "害羞", "怕黑怕痛", "敏感膽小"], desc: "對日常生活中具體明確的事物感到恐懼（如怕生病、怕痛、怕冷、怕吵、害羞內向），性格細膩敏感。" },
-      { id: 21, en: "Mustard", zh: "芥末", keywords: ["莫名憂鬱", "烏雲罩頂", "低落", "說不出原因的悲傷"], desc: "沒有任何明確原因，突然被一陣深沉的憂鬱與悲傷籠罩，彷彿烏雲遮蔽陽光，情緒來去皆突然。" },
-      { id: 22, en: "Oak", zh: "橡樹", keywords: ["硬撐", "工作狂", "永不放棄", "過度勞累", "責任感強"], desc: "像橡樹般堅毅勇敢，即使身體已發出極度疲憊的警訊仍咬牙硬撐、絕不示弱或休息。" },
-      { id: 23, en: "Olive", zh: "橄欖", keywords: ["身心耗竭", "極度疲倦", "大病初癒", "能量枯竭", "想睡覺"], desc: "經歷長期熬夜、壓力、疾病或照護他人後，身心能量完全耗盡，連日常小事都覺得精疲力竭。" },
-      { id: 24, en: "Pine", zh: "松樹", keywords: ["自責", "內疚", "罪惡感", "道歉", "覺得自己不夠好"], desc: "習慣把所有錯都攬在自己身上，即使不是自己的責任也容易感到內疚、自責，對自己要求過高。" },
-      { id: 25, en: "Red Chestnut", zh: "紅栗子", keywords: ["過度擔憂親友", "牽掛家人", "焦慮孩子安危"], desc: "過度擔憂家人或親愛的人會發生意外或生病，總是為他人的安危提心吊膽，反而忽略自己。" },
-      { id: 26, en: "Rock Rose", zh: "岩薔薇", keywords: ["極度恐慌", "驚嚇", "急症驚恐", "嚇呆", "危機"], desc: "面臨突發意外、劇烈疼痛或急症時的極度驚恐與慌亂（亦是急救花精的重要成分），幫助迅速鎮定。" },
-      { id: 27, en: "Rock Water", zh: "岩清水", keywords: ["嚴格自律", "完美主義", "壓抑需求", "僵化"], desc: "對自己設定極高的道德與生活標準，過度自律與克制，忽略身體與情感的柔軟需求。" },
-      { id: 28, en: "Scleranthus", zh: "線球草", keywords: ["猶豫不決", "二選一困難", "情緒起伏", "暈車暈眩"], desc: "在兩個選項之間反覆搖擺、難以抉擇，情緒與生理狀態（如體溫、暈眩感）也容易忽高忽低不穩定。" },
-      { id: 29, en: "Star of Bethlehem", zh: "聖星白合", keywords: ["創傷", "驚嚇後遺症", "悲痛", "心靈震撼", "安慰"], desc: "撫平身心曾遭受的突發驚嚇、意外創傷或悲痛打擊（不論是剛發生或多年前未癒的創傷）。" },
-      { id: 30, en: "Sweet Chestnut", zh: "甜西洋栗", keywords: ["極度痛苦", "黑暗盡頭", "心碎煎熬", "無路可走"], desc: "內心承受已達極限的深沉痛苦與煎熬，彷彿走到絕望的盡頭，卻依然不願輕易放棄。" },
-      { id: 31, en: "Vervain", zh: "馬鞭草", keywords: ["過度亢奮", "神經緊繃", "熱血執著", "難以放鬆", "失眠"], desc: "對理念充滿熱情與正義感，精神長期處於過度亢奮與緊繃狀態，夜晚大腦仍高速運轉難以入睡。" },
-      { id: 32, en: "Vine", zh: "葡萄樹", keywords: ["強勢", "支配欲", "固執己見", "領導霸道"], desc: "意志堅定、能力強，但容易變得強勢專斷、習慣發號施令，希望他人完全依照自己的方式行事。" },
-      { id: 33, en: "Walnut", zh: "胡桃", keywords: ["人生轉變期", "環境適應", "易受外界影響", "保護屏障"], desc: "幫助適應人生各階段的重大轉變（搬家、換工作、青春期、更年期、天氣劇變），並隔絕外界雜訊干擾。" },
-      { id: 34, en: "Water Violet", zh: "水堇", keywords: ["想獨處", "冷靜疏離", "驕傲獨立", "靜靜別煩我"], desc: "性格獨立優雅、喜歡安靜獨處，生病或有煩惱時習慣自己默默承受，不喜歡別人過度打擾或干涉。" },
-      { id: 35, en: "White Chestnut", zh: "白栗花", keywords: ["反覆思慮", "腦袋停不下來", "鑽牛角尖", "思緒打轉失眠"], desc: "腦海中不斷重複播放同一件事或擔憂，思緒像唱片跳針般停不下來，導致精神疲憊與失眠。" },
-      { id: 36, en: "Wild Oat", zh: "野燕麥", keywords: ["方向迷惘", "人生目標不明", "懷才不遇", "不滿足"], desc: "有能力與抱負，卻不確定自己真正的人生方向與使命，嘗試許多事物後仍感到迷惘與不滿足。" },
-      { id: 37, en: "Wild Rose", zh: "野玫瑰", keywords: ["冷漠放棄", "順其自然", "缺乏動力", "提不起熱情"], desc: "對生活與健康抱持消極順命、無所謂的態度，缺乏改變現狀的熱情與生命動力。" },
-      { id: 38, en: "Willow", zh: "柳樹", keywords: ["怨天尤人", "委屈不平", "心懷怨懟", "覺得命運不公"], desc: "覺得命運對自己不公平，內心積壓委屈、抱怨與苦澀感，難以釋懷並重新掌握生活主動權。" }
-    ];
-
-    // =========================================================================
-    // 2. CLASSIC MATERIA MEDICA REMEDIES DATABASE (S.R. Phatak & Classic)
-    // =========================================================================
-    const REMEDY_DB = [
-      {
-        en: "Aconitum napellus",
-        zh: "烏頭",
-        role: ["acute"],
-        indications: "突發性高燒、急性感冒初期、受乾冷風吹襲後發作、急性驚恐與焦慮發作、急性喉炎或耳痛。",
-        sensation: "劇烈灼熱、針刺與麻木感，心悸強烈，感覺身體發燙但內部發冷，伴隨「快要死掉」般的極度恐慌。",
-        modality: "【惡化】乾冷風吹拂、半夜（尤其午夜12點左右）、待在溫暖悶熱房間、受驚嚇後。【好轉】新鮮空氣、休息後大量出汗（一旦開始流汗即不再適合此藥）。",
-        concomitants: "極度口渴想喝大量冷水、一側臉紅一側臉白、坐起時臉色發白。",
-        mind: "極度焦躁不安、恐懼、驚慌失措、害怕死亡或人群。",
-        sensitivities: "對冷風、光線、噪音與疼痛極度敏感。",
-        keywords: ["吹冷風", "受寒", "突然高燒", "高燒", "驚嚇", "恐懼", "焦慮不安", "恐慌", "極度口渴", "喝冷水", "半夜", "乾咳", "畏寒", "怕冷風"]
-      },
-      {
-        en: "Belladonna",
-        zh: "顛茄",
-        role: ["acute"],
-        indications: "來勢洶洶的急性高燒、搏動性劇烈頭痛、急性扁桃腺炎、中耳炎、日曬中暑、紅腫熱痛的急性發炎。",
-        sensation: "血管劇烈跳動感（搏動痛）、表面發燙灼熱、充血腫脹感，症狀來得快去得也快。",
-        modality: "【惡化】下午3點左右、頭部受風吹、震動或顛簸、光線與噪音刺激、躺下。【好轉】半坐臥姿勢、安靜黑暗的房間、頭部輕微保暖。",
-        concomitants: "臉部通紅發燙、瞳孔放大、皮膚乾熱但手腳卻冰冷、發高燒時反而不太口渴（或只想喝檸檬水）。",
-        mind: "煩躁易怒、高燒時可能出現譫妄說夢話、想逃跑或咬人、精神亢奮。",
-        sensitivities: "極度怕強光、怕吵雜聲音、怕震動與觸碰。",
-        keywords: ["突然高燒", "高燒", "劇烈頭痛", "跳動搏動痛", "臉紅發燙", "手腳冰冷", "日曬中暑", "喉嚨痛", "怕強光", "怕聲音吵雜", "拒絕被觸碰"]
-      },
-      {
-        en: "Arnica montana",
-        zh: "山金車",
-        role: ["acute"],
-        indications: "各種外傷、跌打損傷、肌肉拉傷、運動過度疲勞、手術或牙科治療前後、瘀青腫脹、時差或長途勞頓。",
-        sensation: "全身像被棒子打過般的痠痛與瘀傷感，覺得床鋪太硬、怎麼躺都不舒服。",
-        modality: "【惡化】最輕微的觸碰、移動、潮濕寒冷天氣、用力過度。【好轉】躺下且頭部放低、安靜休息。",
-        concomitants: "頭部發熱但身體與四肢發冷、口氣可能帶苦味。",
-        mind: "拒絕別人靠近與觸碰，受傷後常說「我沒事、不用看醫生」，想一個人靜靜休息。",
-        sensitivities: "極度害怕被觸碰或撞到受傷部位。",
-        keywords: ["外傷撞擊瘀青", "肌肉痠痛無力", "全身被打傷痠痛", "拒絕被觸碰", "想一個人靜靜", "跌倒", "瘀青", "勞累"]
-      },
-      {
-        en: "Nux vomica",
-        zh: "馬錢子",
-        role: ["acute", "chronic"],
-        indications: "工作壓力大與熬夜後的腸胃不適、消化不良、胃痙攣、宿醉、便秘（便意頻仍卻排不乾淨）、受寒初期鼻塞。",
-        sensation: "腹部緊縮痙攣痛、胃部像有石頭壓住的沉重脹痛、頭痛欲裂感。",
-        modality: "【惡化】清晨醒來時、熬夜、飲酒咖啡與辛辣食物後、吹冷風、腦力過度消耗。【好轉】小睡片刻後、熱飲與熱敷、傍晚安靜休息、排便或嘔吐後。",
-        concomitants: "極度畏寒怕冷（稍微掀被子就打寒顫）、清晨鼻塞但白天流鼻水、反胃想吐卻吐不出來。",
-        mind: "追求完美、工作狂、極度易怒暴躁、沒耐心、對噪音光線和別人的慢動作感到煩躁。",
-        sensitivities: "對聲音、強光、氣味、寒冷與藥物刺激極度敏感。",
-        keywords: ["熬夜壓力大", "飲食不潔/過食", "胃痛脹氣反胃", "易怒暴躁沒耐心", "極度畏寒怕冷", "熱敷保暖好轉", "怕強光", "怕聲音吵雜", "對氣味敏感", "鼻塞"]
-      },
-      {
-        en: "Arsenicum album",
-        zh: "白砷",
-        role: ["acute", "chronic"],
-        indications: "急性腸胃炎、食物中毒（上吐下瀉）、夜間發作的哮喘或過敏性鼻炎、伴隨強烈焦慮的發燒或皮膚濕疹。",
-        sensation: "劇烈的灼燒感（像火燒一樣痛，但奇怪的是熱敷反而會覺得舒服）、極度虛弱無力感。",
-        modality: "【惡化】半夜與凌晨1點至3點之間、寒冷與冷飲、看到或聞到食物氣味。【好轉】熱敷、喝溫熱開水、頭部墊高、有人陪伴。",
-        concomitants: "非常口渴但每次只能小口小口啜飲溫水、劇烈畏寒、上吐下瀉同時發生。",
-        mind: "極度焦躁不安（坐立難安、不停換位置）、害怕獨處、過度擔憂健康與死亡、喜歡整齊完美。",
-        sensitivities: "對寒冷、食物氣味與環境雜亂極度敏感。",
-        keywords: ["飲食不潔/過食", "灼燒熱辣感", "半夜/凌晨1-3點惡化", "熱敷保暖好轉", "口渴但只小口啜飲", "極度恐慌焦慮不安", "極度畏寒怕冷", "對氣味敏感", "上吐下瀉"]
-      },
-      {
-        en: "Pulsatilla",
-        zh: "白頭翁",
-        role: ["acute", "chronic"],
-        indications: "黃綠色濃稠分泌物的感冒或鼻竇炎、消化油膩食物後的胃脹、月經延遲或經期情緒波動、兒童中耳炎或發燒。",
-        sensation: "游走性疼痛（痛處不固定、跑來跑去）、悶脹沉重感、口乾舌燥。",
-        modality: "【惡化】待在溫暖悶熱的室內、傍晚時分、吃油膩或冰冷食物後、休息不動時。【好轉】戶外新鮮涼爽空氣、溫和慢走、得到安慰與陪伴、冷敷。",
-        concomitants: "即使發燒或口乾也「完全不口渴」、怕熱但又容易手腳冰冷、症狀變化多端。",
-        mind: "溫柔順從、情感豐富、非常愛哭、委屈、極度渴望別人的安慰與陪伴。",
-        sensitivities: "對悶熱不通風的房間、油膩食物與冷落感敏感。",
-        keywords: ["發燒卻完全不口渴", "冷敷新鮮空氣好轉", "愛哭委屈需要安慰", "胃痛脹氣反胃", "鼻塞流清涕", "油膩"]
-      },
-      {
-        en: "Bryonia alba",
-        zh: "瀉根",
-        role: ["acute"],
-        indications: "伴隨劇烈乾燥與移動痛的感冒、乾咳胸痛、急性關節炎或腰痛、壓力或受熱後的前額劇痛、嚴重便秘。",
-        sensation: "尖銳的針刺痛、撕裂痛、全身黏膜極度乾燥感。",
-        modality: "【惡化】任何最輕微的移動（甚至轉動眼球或深呼吸）、觸碰、早晨剛起床、溫暖房間。【好轉】完全靜止不動、用力按壓疼痛部位（例如壓住胸口咳嗽或側躺壓住痛處）、喝大量冷水。",
-        concomitants: "極度口渴、一次要喝進大量冷水，嘴唇乾裂，大便乾硬。",
-        mind: "只想一個人靜靜躺著、非常討厭被打擾或問問題、容易煩躁生氣、腦中常想著工作瑣事。",
-        sensitivities: "對動作、震動與別人打擾極度敏感。",
-        keywords: ["乾咳喉嚨痛", "劇烈頭痛", "針刺尖銳痛", "稍微移動就惡化", "用力按壓好轉", "極度口渴喝大量冷水", "想一個人靜靜別煩我"]
-      },
-      {
-        en: "Rhus toxicodendron",
-        zh: "野葛",
-        role: ["acute", "chronic"],
-        indications: "淋雨或流汗吹風後的感冒痠痛、肌腱拉傷、落枕、腰痛、關節僵硬、帶狀皰疹或水泡型皮膚紅疹。",
-        sensation: "肌肉筋骨像被拉扯撕裂般的僵硬痠痛、皮膚劇烈搔癢與刺痛。",
-        modality: "【惡化】剛開始移動的第一步、靜止休息太久、潮濕寒冷天氣、夜間。【好轉】持續溫和活動後（越動越鬆開）、洗熱水澡、熱敷保暖。",
-        concomitants: "舌尖呈現獨特的紅色三角形、夜間在床上輾轉反側找不到舒服姿勢。",
-        mind: "身體極度不安躁動（必須不停變換姿勢）、內心感到煩悶。",
-        sensitivities: "對潮濕、冷空氣與吹風極度敏感。",
-        keywords: ["淋雨受濕", "肌肉痠痛無力", "持續活動後好轉", "熱敷保暖好轉", "皮膚紅腫癢疹", "潮濕天氣敏感", "僵硬"]
-      },
-      {
-        en: "Gelsemium",
-        zh: "黃素馨",
-        role: ["acute"],
-        indications: "漸進式發作的流行性感冒（伴隨極度沉重疲倦）、考試或上台前的「舞台恐懼症」、緊張性腹瀉與頭痛。",
-        sensation: "四肢與眼皮極度沉重無力（眼皮重得睜不開）、後腦勺向頭頂延伸的悶痛緊箍感。",
-        modality: "【惡化】潮濕天氣、情緒緊張或壞消息、上午10點、思慮過多。【好轉】大量排尿後、戶外新鮮空氣、流汗、繼續移動。",
-        concomitants: "背脊一陣陣發冷顫抖、發燒卻完全不口渴、肌肉發抖無力。",
-        mind: "呆滯昏沉、只想安靜躺著不動、面對考試或公開演講時極度緊張怯場。",
-        sensitivities: "對情緒壓力、壞消息與潮濕環境敏感。",
-        keywords: ["肌肉痠痛無力", "沉重無力感", "悶痛緊箍感", "發燒卻完全不口渴", "極度畏寒怕冷", "緊張", "疲倦"]
-      },
-      {
-        en: "Chamomilla",
-        zh: "洋甘菊",
-        role: ["acute"],
-        indications: "疼痛耐受度極低的急症、嬰幼兒長牙發燒哭鬧、劇烈牙痛或耳痛、生氣後的腹絞痛。",
-        sensation: "難以忍受的劇烈疼痛、發燙與麻木感並存。",
-        modality: "【惡化】夜間9點至午夜、生氣憤怒後、吹風、溫暖被窩。【好轉】被抱著搖晃走動（兒童）、冷敷。",
-        concomitants: "一側臉頰通紅發燙、另一側臉頰蒼白冰冷；流熱汗。",
-        mind: "極度暴躁易怒、歇斯底里、對疼痛完全無法忍受、要東西拿到後又立刻丟掉、只有被抱著走動才會安靜。",
-        sensitivities: "對疼痛、噪音、咖啡與風吹極度敏感。",
-        keywords: ["易怒暴躁沒耐心", "突然高燒", "臉紅發燙手腳冰冷", "怕聲音吵雜", "牙痛", "疼痛"]
-      },
-      {
-        en: "Apis mellifica",
-        zh: "蜜蜂",
-        role: ["acute"],
-        indications: "蚊蟲叮咬、急性蕁麻疹、過敏性水腫（眼皮或嘴唇腫脹）、伴隨灼熱刺痛的咽喉腫痛或泌尿道不適。",
-        sensation: "像被蜜蜂螫到的尖銳針刺痛與灼燒感、局部緊繃發亮的水腫感。",
-        modality: "【惡化】熱敷、溫暖房間、觸碰按壓、下午3至4點。【好轉】冰敷冷敷、洗冷水澡、吹涼風。",
-        concomitants: "即使發燒或水腫也「完全不口渴」、尿量減少。",
-        mind: "煩躁坐立不安、容易受驚、做事笨手笨腳容易掉東西。",
-        sensitivities: "極度怕熱、拒絕被觸碰。",
-        keywords: ["皮膚紅腫癢疹", "針刺尖銳痛", "灼燒熱辣感", "冷敷新鮮空氣好轉", "發燒卻完全不口渴", "拒絕被觸碰", "過敏"]
-      },
-      {
-        en: "Ignatia amara",
-        zh: "呂宋果",
-        role: ["acute", "chronic"],
-        indications: "情緒打擊、悲傷失戀、親人離世或重大壓力後的身心失調、喉嚨梗阻感（梅核氣）、情緒性失眠或痙攣頭痛。",
-        sensation: "喉嚨裡像卡著一顆硬球（吞不下也吐不出）、太陽穴像被釘子釘進去的痛感、胃部空虛下墜感。",
-        modality: "【惡化】悲傷思慮、安慰（越安慰越想哭）、咖啡與菸味、早晨。【好轉】獨處、深呼吸嘆氣、轉移注意力、吃點東西。",
-        concomitants: "不自主地頻頻長嘆氣、打哈欠、症狀充滿矛盾（例如喉嚨痛反而吞固體食物時比較舒服）。",
-        mind: "強忍悲傷、情緒起伏劇烈（一會兒哭一會兒笑）、敏感內斂、不斷反覆嘆氣。",
-        sensitivities: "對情緒波動、氣味（尤其菸味）與安慰敏感。",
-        keywords: ["悲傷失落", "喉嚨有異物梗阻感", "失眠多夢", "反覆思慮停不下來", "對氣味敏感", "嘆氣", "壓力"]
-      },
-      {
-        en: "Lycopodium",
-        zh: "石松",
-        role: ["chronic", "acute"],
-        indications: "慢性消化不良與嚴重腹脹（吃一點就飽）、右側為主的頭痛或喉嚨痛、肝膽代謝疲勞、慢性焦慮與自信不足。",
-        sensation: "腹部像鼓一樣脹滿發酵感、右側身體的抽痛與灼熱感。",
-        modality: "【惡化】下午4點至晚上8點之間、吃冷飲或產氣食物（豆類、洋蔥）、緊身衣物束縛腰部。【好轉】喝溫熱飲料、溫和散步活動、傍晚8點過後、打嗝排氣後。",
-        concomitants: "非常喜歡吃甜食、喜歡喝熱飲、只吃幾口飯就覺得肚子脹到不行、右腳發熱左腳冰冷。",
-        mind: "表面看起來理性愛主導，內心其實缺乏自信、害怕承擔新責任與失敗，但一旦開始做又能表現很好。",
-        sensitivities: "對腰部緊繃衣物、冷食與時間（下午4-8點）高度敏感。",
-        keywords: ["胃痛脹氣反胃", "下午4-8點惡化", "缺乏自信猶豫不決", "熱敷保暖好轉", "疲倦", "甜食", "右側"]
-      },
-      {
-        en: "Sulphur",
-        zh: "硫",
-        role: ["chronic"],
-        indications: "慢性皮膚濕疹與乾癢、長期消化與代謝循環不暢、大病後恢復緩慢、早晨腹瀉、體質燥熱易出汗。",
-        sensation: "皮膚與孔竅（嘴唇、眼瞼、肛門）發紅與灼燒搔癢感、頭頂與腳底發熱（睡覺時想把腳伸出被子外）。",
-        modality: "【惡化】洗熱水澡、溫暖被窩（一進被窩就開始癢）、站立太久、上午11點左右（突然肚子餓無力）。【好轉】乾燥溫暖的天氣、戶外新鮮空氣、流汗。",
-        concomitants: "上午11點準時感到胃部空虛飢餓、喜歡甜食與辛辣重口味、怕熱但偶爾又怕吹風。",
-        mind: "思緒活躍、喜歡思考哲學與理論、對生活細節較隨性不拘小節、有時顯得固執。",
-        sensitivities: "對熱水、羊毛衣物與悶熱環境敏感。",
-        keywords: ["皮膚紅腫癢疹", "灼燒熱辣感", "冷敷新鮮空氣好轉", "反覆思慮停不下來", "怕熱", "濕疹"]
-      },
-      {
-        en: "Phosphorus",
-        zh: "磷",
-        role: ["acute", "chronic"],
-        indications: "容易向下蔓延至胸腔的乾咳與聲音沙啞、容易流鼻血、神經耗弱疲倦、胃部灼熱反胃、高度敏感體質。",
-        sensation: "胸口緊迫壓迫感、手掌與肩胛骨之間發熱灼燒感、胃部空虛感。",
-        modality: "【惡化】傍晚黃昏時分、打雷閃電天氣變化前、左側躺、喝溫熱飲料（胃一暖就想吐）、獨處。【好轉】睡一覺後、喝冰涼飲料、按摩揉背、有人陪伴。",
-        concomitants: "非常口渴且特別想喝「冰水」（但冰水在胃裡變暖後可能又吐出來）、容易疲倦需靠小睡恢復。",
-        mind: "熱情、富有同情心、想像力豐富、但能量消耗極快；害怕打雷、黑暗與獨處，非常需要陪伴。",
-        sensitivities: "對天氣變化（打雷）、強光、聲音、氣味與他人情緒極度敏感。",
-        keywords: ["乾咳喉嚨痛", "極度口渴喝大量冷水", "身心耗竭無力", "怕強光", "怕聲音吵雜", "對氣味敏感", "恐懼"]
-      }
-    ];
-
-    // =========================================================================
-    // 3. STATE & INITIALIZATION
-    // =========================================================================
-    let currentMode = 'symptom'; // 'symptom' | 'remedy'
-    let diseaseNature = 'acute'; // 'acute' | 'chronic'
-    
-    // 因為我們已經改用 Vercel 後端隱藏金鑰，前端不需要再設定 API Key 了！
-    // 這裡我們自動隱藏設定按鈕
-    window.onload = function () {
-      renderQuickRemedyPills();
-      const settingsBtn = document.querySelector('button[onclick="openSettings()"]');
-      if (settingsBtn) settingsBtn.style.display = 'none';
-    };
-
-    function showToast(message, isError = false) {
-      const box = document.getElementById('toast-box');
-      const msg = document.getElementById('toast-msg');
-      const icon = document.getElementById('toast-icon');
-      msg.textContent = message;
-      icon.className = isError
-        ? "fa-solid fa-circle-exclamation text-amber-400"
-        : "fa-solid fa-circle-check text-amber-200";
-      box.classList.remove('hidden');
-      clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => {
-        box.classList.add('hidden');
-      }, 3600);
-    }
-
-    // =========================================================================
-    // 設定 API KEY 的邏輯
-    // =========================================================================
-    function openSettings() {
-      document.getElementById('api-key-input').value = apiKey;
-      document.getElementById('settings-modal').classList.remove('hidden');
-    }
-
-    function closeSettings() {
-      document.getElementById('settings-modal').classList.add('hidden');
-    }
-
-    function saveApiKey() {
-      const key = document.getElementById('api-key-input').value.trim();
-      apiKey = key;
-      localStorage.setItem('geminiApiKey', key);
-      closeSettings();
-      showToast("API Key 已儲存更新！");
-    }
-
-    function switchMode(mode) {
-      currentMode = mode;
-      const tabSymptom = document.getElementById('tab-symptom');
-      const tabRemedy = document.getElementById('tab-remedy');
-      const viewSymptom = document.getElementById('view-symptom');
-      const viewRemedy = document.getElementById('view-remedy');
-      const results = document.getElementById('results-container');
-
-      results.classList.add('hidden');
-      results.innerHTML = '';
-
-      if (mode === 'symptom') {
-        tabSymptom.className = "flex-1 sm:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 bg-linen-50 text-sage-900 shadow-sm";
-        tabRemedy.className = "flex-1 sm:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 text-sage-200 hover:text-white";
-        viewSymptom.classList.remove('hidden');
-        viewRemedy.classList.add('hidden');
-      } else {
-        tabRemedy.className = "flex-1 sm:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 bg-linen-50 text-sage-900 shadow-sm";
-        tabSymptom.className = "flex-1 sm:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 text-sage-200 hover:text-white";
-        viewRemedy.classList.remove('hidden');
-        viewSymptom.classList.add('hidden');
-      }
-    }
-
-    function setDiseaseNature(nature) {
-      diseaseNature = nature;
-      const btnAcute = document.getElementById('nature-acute');
-      const btnChronic = document.getElementById('nature-chronic');
-      if (nature === 'acute') {
-        btnAcute.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-amber-500 text-white shadow";
-        btnChronic.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition text-sage-200 hover:text-white";
-      } else {
-        btnChronic.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-amber-500 text-white shadow";
-        btnAcute.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition text-sage-200 hover:text-white";
-      }
-    }
-
-    function appendTag(inputId, text) {
-      const input = document.getElementById(inputId);
-      const current = input.value.trim();
-      if (!current) {
-        input.value = text;
-      } else if (!current.includes(text)) {
-        input.value = current + "、" + text;
-      }
-      input.focus();
-    }
-
-    function clearSymptomForm() {
-      ['dim-cause', 'dim-symptom', 'dim-sensation', 'dim-modality', 'dim-concomitant', 'dim-emotion', 'dim-sensitive'].forEach(id => {
-        document.getElementById(id).value = '';
-      });
-      document.getElementById('results-container').classList.add('hidden');
-      showToast("已清空所有問診欄位");
-    }
-
-    function applyScenario(type) {
-      if (type === 'coldFever') {
-        setDiseaseNature('acute');
-        document.getElementById('dim-cause').value = "半夜吹冷風受寒後突然發作";
-        document.getElementById('dim-symptom').value = "突然高燒、乾咳喉嚨痛";
-        document.getElementById('dim-sensation').value = "身體發燙灼熱、心悸強烈";
-        document.getElementById('dim-modality').value = "半夜午夜惡化、在溫暖悶熱房間更不舒服";
-        document.getElementById('dim-concomitant').value = "極度口渴喝大量冷水、極度畏寒怕冷";
-        document.getElementById('dim-emotion').value = "極度恐慌焦慮不安、害怕生病";
-        document.getElementById('dim-sensitive').value = "怕冷風吹拂、怕聲音吵雜";
-      } else if (type === 'stressStomach') {
-        setDiseaseNature('acute');
-        document.getElementById('dim-cause').value = "工作熬夜壓力大、飲食不潔/過食飲酒";
-        document.getElementById('dim-symptom').value = "胃痛脹氣反胃、清晨頭痛";
-        document.getElementById('dim-sensation').value = "腹部緊縮痙攣、胃像有石頭壓住悶痛";
-        document.getElementById('dim-modality').value = "清晨醒來惡化、熱敷保暖好轉、小睡後好轉";
-        document.getElementById('dim-concomitant').value = "極度畏寒怕冷、掀被子就發冷";
-        document.getElementById('dim-emotion').value = "易怒暴躁沒耐心、嫌別人慢";
-        document.getElementById('dim-sensitive').value = "怕強光、怕聲音吵雜、對氣味敏感";
-      } else if (type === 'chronicFatigue') {
-        setDiseaseNature('chronic');
-        document.getElementById('dim-cause').value = "長期工作壓力、消化機能弱";
-        document.getElementById('dim-symptom').value = "慢性胃痛脹氣反胃、容易疲倦";
-        document.getElementById('dim-sensation').value = "吃一點就脹滿發酵感、沉重無力感";
-        document.getElementById('dim-modality').value = "下午4-8點惡化、熱敷保暖好轉、溫和散步好轉";
-        document.getElementById('dim-concomitant').value = "喜歡甜食與熱飲、手腳容易冰冷";
-        document.getElementById('dim-emotion').value = "缺乏自信猶豫不決、害怕失敗";
-        document.getElementById('dim-sensitive').value = "對腰部緊繃衣物與冷飲敏感";
-      }
-      showToast("已帶入情境範例，正在為您比對經典藥典...");
-      runLocalSymptomMatch();
-    }
-
-    function renderQuickRemedyPills() {
-      const container = document.getElementById('quick-remedy-pills');
-      container.innerHTML = REMEDY_DB.map(r => `
-        <button type="button" onclick="selectQuickRemedy('${r.en}')"
-          class="px-3 py-1.5 rounded-xl bg-white hover:bg-sage-700 hover:text-white text-sage-900 border border-linen-300 hover:border-sage-700 text-xs sm:text-sm font-medium transition shadow-xs flex items-center gap-1.5">
-          <span class="font-bold">${r.en}</span>
-          <span class="opacity-75">(${r.zh})</span>
-        </button>
-      `).join('');
-    }
-
-    function selectQuickRemedy(enName) {
-      document.getElementById('remedy-search-input').value = enName;
-      searchRemedyByName();
-    }
-
-    // =========================================================================
-    // 4. LOCAL ENGINE: SYMPTOM ASSESSMENT & BACH FLOWER MATCHING
-    // =========================================================================
-    function getFormInputs() {
-      return {
-        cause: document.getElementById('dim-cause').value.trim(),
-        symptom: document.getElementById('dim-symptom').value.trim(),
-        sensation: document.getElementById('dim-sensation').value.trim(),
-        modality: document.getElementById('dim-modality').value.trim(),
-        concomitant: document.getElementById('dim-concomitant').value.trim(),
-        emotion: document.getElementById('dim-emotion').value.trim(),
-        sensitive: document.getElementById('dim-sensitive').value.trim()
-      };
-    }
-
-    function countFilledDimensions(inputs) {
-      return Object.values(inputs).filter(v => v.length > 0).length;
-    }
-
-    function matchBachFlower(emotionText, allText) {
-      const query = (emotionText + " " + allText).toLowerCase();
-      let bestFlower = BACH_FLOWERS[25]; // Default: #26 Rock Rose (急症安神) or #11 Elm
-      let bestScore = -1;
-
-      BACH_FLOWERS.forEach(flower => {
-        let score = 0;
-        flower.keywords.forEach(kw => {
-          if (emotionText.includes(kw)) score += 5;
-          else if (query.includes(kw)) score += 2;
-        });
-        // Partial character overlap boost
-        for (const kw of flower.keywords) {
-          for (let i = 0; i < kw.length - 1; i++) {
-            const bigram = kw.slice(i, i + 2);
-            if (emotionText.includes(bigram)) score += 2;
-            else if (query.includes(bigram)) score += 0.5;
-          }
-        }
-        if (score > bestScore) {
-          bestScore = score;
-          bestFlower = flower;
-        }
-      });
-
-      if (bestScore <= 0) {
-        // Fallback intelligent selection based on diseaseNature
-        bestFlower = diseaseNature === 'acute'
-          ? BACH_FLOWERS.find(f => f.en === "Rock Rose")
-          : BACH_FLOWERS.find(f => f.en === "Olive");
-      }
-      return bestFlower;
-    }
-
-    function generateConventionalAdvice(inputs) {
-      const combined = Object.values(inputs).join(" ");
-      let causes = "可能與近期氣候溫差變化、病原體感染、自律神經緊繃、作息不規律或飲食負擔有關。";
-      let lifestyle = [
-        "保持充足睡眠與規律作息，避免熬夜耗損免疫與自我修復力。",
-        "飲食清淡溫熱，減少生冷、油膩、辛辣刺激及精製糖分攝取，多補充溫開水。"
-      ];
-
-      if (combined.includes("燒") || combined.includes("寒") || combined.includes("咳") || combined.includes("喉")) {
-        causes = "常見原因包含病毒或細菌引起的上呼吸道感染、受寒著涼導致體溫調節中樞啟動防禦反應，或過度勞累使黏膜屏障下降。";
-        lifestyle = [
-          "注意頭頸部與背部保暖，避免直接吹冷氣或冷風；發燒流汗後應及時擦乾並更換乾爽衣物。",
-          "分次補充溫開水或電解質飲品，保持室內空氣流通與適度濕度，切勿強行抑汗或過度進補。",
-          "若持續高燒超過 48 小時、呼吸急促或意識不清，請立即就醫檢查。"
-        ];
-      } else if (combined.includes("胃") || combined.includes("脹") || combined.includes("吐") || combined.includes("飲食")) {
-        causes = "可能源於飲食不潔、暴飲暴食、進食過快，或長期壓力與情緒緊繃影響迷走神經與腸胃蠕動功能。";
-        lifestyle = [
-          "採取少量多餐、細嚼慢嚥，暫時避開咖啡因、酒精、乳製品、油炸及產氣食物。",
-          "飯後避免立即平躺或劇烈工作，可進行 10-15 分鐘溫和散步並保持腹部溫暖。",
-          "若出現劇烈腹痛、血便、黑便或持續嘔吐無法進食，請儘速至腸胃科就診。"
-        ];
-      } else if (combined.includes("頭") || combined.includes("失眠") || combined.includes("焦慮") || combined.includes("疲倦")) {
-        causes = "可能與長期用腦過度、睡眠品質不佳、頸肩肌肉緊繃、荷爾蒙波動或慢性壓力累積有關。";
-        lifestyle = [
-          "睡前 1 小時遠離藍光螢幕，可透過溫水泡腳、腹式深呼吸或輕柔伸展放鬆交感神經。",
-          "工作每 50 分鐘起身活動肩頸與雙眼，確保日間有適度自然光照射以穩定生理時鐘。",
-          "若頭痛伴隨視力模糊、肢體無力或突發劇痛，請務必尋求神經內科專業評估。"
-        ];
-      } else if (combined.includes("皮膚") || combined.includes("癢") || combined.includes("腫")) {
-        causes = "可能與接觸過敏原、環境濕熱變化、免疫系統過度反應或皮膚屏障受損有關。";
-        lifestyle = [
-          "避免用過熱的水洗澡或過度搔抓患處，穿著寬鬆透氣的純棉衣物。",
-          "減少海鮮、堅果、酒類及辛辣發物攝取，保持環境清潔並留意近期新接觸的洗潔劑或保養品。"
-        ];
-      }
-
-      return { causes, lifestyle };
-    }
-
-    function runLocalSymptomMatch() {
-      const inputs = getFormInputs();
-      const filledCount = countFilledDimensions(inputs);
-
-      if (filledCount === 0) {
-        showToast("請至少輸入或點選一項症狀或感受條件！", true);
-        return;
-      }
-
-      const allText = Object.values(inputs).join(" ");
-      const scoredRemedies = REMEDY_DB.map(remedy => {
-        let score = 0;
-        let matchedTags = [];
-
-        remedy.keywords.forEach(kw => {
-          if (allText.includes(kw)) {
-            score += 18;
-            matchedTags.push(kw);
-          } else {
-            // Check 2-char overlap
-            for (let i = 0; i < kw.length - 1; i++) {
-              const sub = kw.slice(i, i + 2);
-              if (allText.includes(sub)) {
-                score += 6;
-                if (!matchedTags.includes(kw)) matchedTags.push(kw);
-              }
-            }
-          }
-        });
-
-        // Additional semantic matches against descriptions
-        const textPool = `${remedy.indications} ${remedy.sensation} ${remedy.modality} ${remedy.concomitants} ${remedy.mind} ${remedy.sensitivities}`;
-        const userTokens = allText.split(/[\s、，,。；;！!？?]+/).filter(t => t.length >= 2);
-        userTokens.forEach(token => {
-          if (textPool.includes(token)) {
-            score += 12;
-            if (!matchedTags.includes(token)) matchedTags.push(token);
-          }
-        });
-
-        // Disease nature alignment bonus
-        if (remedy.role.includes(diseaseNature)) {
-          score += 10;
-        }
-
-        return {
-          ...remedy,
-          rawScore: score,
-          matchedTags: matchedTags.slice(0, 5)
+    <script>
+        // 預設翻譯對照表 (包含您提供的校正)
+        const REMEDY_DB = {
+            "Arsenicum Album": "白砷",
+            "Gelsemium": "黃素馨",
+            "Sulphur": "硫",
+            "Rhus toxicodendron": "野葛 (毒漆藤)",
+            "Aconitum Napellus": "烏頭",
+            "Belladonna": "顛茄",
+            "Bryonia": "瀉根",
+            "Arnica Montana": "山金車",
+            "Pulsatilla": "白頭翁",
+            "Lycopodium Clavatum": "石松",
+            "Nux Vomica": "馬錢子",
+            "Ignatia Amara": "呂宋果",
+            "Natrum Muriaticum": "海鹽"
         };
-      });
 
-      // Sort descending
-      scoredRemedies.sort((a, b) => b.rawScore - a.rawScore);
+        let currentType = '急性 (Acute)';
 
-      // Normalize percentages nicely for top candidates
-      const topScore = Math.max(scoredRemedies[0].rawScore, 20);
-      const ranked = scoredRemedies.slice(0, 4).map((r, idx) => {
-        let pct = Math.min(98, Math.max(42, Math.round((r.rawScore / topScore) * 92) - idx * 4));
-        if (r.rawScore === 0) pct = 35 - idx * 5;
-        return { ...r, matchPercent: pct };
-      });
-
-      const selectedBach = matchBachFlower(inputs.emotion, allText);
-      const medicalAdvice = generateConventionalAdvice(inputs);
-
-      renderSymptomResults({
-        sourceLabel: "經典順勢藥典資料庫比對 (S.R. Phatak 體系)",
-        filledCount,
-        inputs,
-        ranked,
-        selectedBach,
-        medicalAdvice
-      });
-    }
-
-    // =========================================================================
-    // 5. LOCAL ENGINE: DIRECT REMEDY LOOKUP (NO BACH FLOWERS SHOWN!)
-    // =========================================================================
-    function searchRemedyByName() {
-      const query = document.getElementById('remedy-search-input').value.trim();
-      if (!query) {
-        showToast("請輸入欲查詢的順勢藥名（英文或中文）", true);
-        return;
-      }
-
-      const qLower = query.toLowerCase();
-      const matches = REMEDY_DB.filter(r =>
-        r.en.toLowerCase().includes(qLower) ||
-        r.zh.includes(query) ||
-        r.indications.includes(query)
-      );
-
-      if (matches.length === 0) {
-        showToast("內建精選藥典未直接收錄此名稱，正在為您啟動 AI 完整藥典檢索...");
-        runAIRemedyLookup();
-        return;
-      }
-
-      renderDirectRemedyResults(matches, "經典順勢藥典資料庫檢索");
-    }
-
-    // =========================================================================
-    // 6. GEMINI API INTEGRATION (AI 深度辨證 & 任意藥典檢索)
-    // =========================================================================
-    async function fetchGeminiWithBackoff(payload, retries = 3) {
-      // ⭐ 更新：不再直接呼叫 Google 網址，而是呼叫我們的 Vercel 後端 API
-      const apiUrl = `/api/gemini`;
-      
-      for (let i = 0; i < retries; i++) {
-        try {
-          const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          
-          if (!response.ok) {
-            const errData = await response.json();
-            throw new Error(errData.error || `HTTP ${response.status}`);
-          }
-          
-          const result = await response.json();
-          const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (!text) throw new Error("Empty response");
-          return JSON.parse(text);
-        } catch (err) {
-          if (i === retries - 1) throw err;
-          await new Promise(res => setTimeout(res, Math.pow(2, i) * 1000));
-        }
-      }
-    }
-
-    async function runAISymptomAnalysis() {
-      // 移除原本檢查 apiKey 的邏輯，因為金鑰現在在伺服器上
-      const inputs = getFormInputs();
-      const filledCount = countFilledDimensions(inputs);
-      if (filledCount === 0) {
-        showToast("請至少輸入一項症狀或感受，再進行 AI 深度辨證！", true);
-        return;
-      }
-
-      const btn = document.getElementById('btn-ai-symptom');
-      const originalHtml = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>AI 辨證分析中...</span>`;
-
-      const systemPrompt = `你是一位精通 S.R. Phatak Concise Materia Medica、materiamedica.info 與英國 Bach Centre 38 種巴赫花精的順勢療法專家。
-請根據使用者提供的 7 維度問診資訊與病程性質（${diseaseNature === 'acute' ? '急性' : '慢性'}），嚴格遵守以下規則輸出 JSON：
-1. 除了藥物英文名稱外，所有內容一律使用「繁體中文」。
-2. 藥物建議 3 至 4 種最匹配的順勢藥物，依匹配度由高至低排列。
-3. Potency 只能從 "5CH", "9CH", "15CH", "30CH", "200CH", "200K" 中選擇。急性症狀建議 "9CH" 或 "200K"（用量固定為「1 天 3 次，餐前使用」）；慢性體質建議 "30CH" 或 "200CH"（用量固定為「1 天 1 次，或 1 周 1 次」）。
-4. 若為慢性體質，請明確標註該藥屬於「症狀藥」或「體質藥」；若為急性症狀，全部標註為「症狀藥」。
-5. 從完整 38 種巴赫花精中選擇最符合情緒的一種（編號 1~38，英文名與繁體中文名）。
-6. 提供常規醫療建議（可能原因與生活起居衛教）。`;
-
-      const userPrompt = `病程性質：${diseaseNature === 'acute' ? '急性 (Acute)' : '慢性 (Chronic)'}
-1. 病因：${inputs.cause || '未提供'}
-2. 主要症狀：${inputs.symptom || '未提供'}
-3. 自己感覺 Sensation：${inputs.sensation || '未提供'}
-4. 惡化與好轉因子 Modality：${inputs.modality || '未提供'}
-5. 伴隨症狀：${inputs.concomitant || '未提供'}
-6. 情緒與行為：${inputs.emotion || '未提供'}
-7. 對什麼較敏感：${inputs.sensitive || '未提供'}`;
-
-      const payload = {
-        contents: [{ parts: [{ text: userPrompt }] }],
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        generationConfig: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: "OBJECT",
-            properties: {
-              remedies: {
-                type: "ARRAY",
-                items: {
-                  type: "OBJECT",
-                  properties: {
-                    en: { type: "STRING" },
-                    zh: { type: "STRING" },
-                    matchPercent: { type: "INTEGER" },
-                    categoryType: { type: "STRING", description: "症狀藥 或 體質藥" },
-                    indications: { type: "STRING" },
-                    sensation: { type: "STRING" },
-                    modality: { type: "STRING" },
-                    potency: { type: "STRING", enum: ["5CH", "9CH", "15CH", "30CH", "200CH", "200K"] },
-                    dosage: { type: "STRING" },
-                    matchedTags: { type: "ARRAY", items: { type: "STRING" } }
-                  },
-                  required: ["en", "zh", "matchPercent", "categoryType", "indications", "sensation", "modality", "potency", "dosage", "matchedTags"]
-                }
-              },
-              bachFlower: {
-                type: "OBJECT",
-                properties: {
-                  id: { type: "INTEGER" },
-                  en: { type: "STRING" },
-                  zh: { type: "STRING" },
-                  desc: { type: "STRING" }
-                },
-                required: ["id", "en", "zh", "desc"]
-              },
-              medicalAdvice: {
-                type: "OBJECT",
-                properties: {
-                  causes: { type: "STRING" },
-                  lifestyle: { type: "ARRAY", items: { type: "STRING" } }
-                },
-                required: ["causes", "lifestyle"]
-              },
-              followUpQuestions: {
-                type: "ARRAY",
-                items: { type: "STRING" }
-              }
-            },
-            required: ["remedies", "bachFlower", "medicalAdvice", "followUpQuestions"]
-          }
-        }
-      };
-
-      try {
-        const aiData = await fetchGeminiWithBackoff(payload);
-        renderSymptomResults({
-          sourceLabel: "Gemini AI 深度順勢辨證解析 (參考 S.R. Phatak 藥典)",
-          filledCount,
-          inputs,
-          ranked: aiData.remedies,
-          selectedBach: aiData.bachFlower,
-          medicalAdvice: aiData.medicalAdvice,
-          aiFollowUps: aiData.followUpQuestions,
-          isAI: true
-        });
-        showToast("AI 深度順勢辨證已完成！");
-      } catch (err) {
-        console.error(err);
-        showToast("AI 連線錯誤，請確認 API Key 是否正確。已為您切換為內建經典藥典比對。", true);
-        runLocalSymptomMatch();
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = originalHtml;
-      }
-    }
-
-    async function runAIRemedyLookup() {
-      // 移除原本檢查 apiKey 的邏輯
-      const query = document.getElementById('remedy-search-input').value.trim();
-      if (!query) {
-        showToast("請輸入欲查詢的順勢藥名！", true);
-        return;
-      }
-
-      const btn = document.getElementById('btn-ai-remedy');
-      const originalHtml = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>AI 檢索藥典中...</span>`;
-
-      const systemPrompt = `你是一位精通 S.R. Phatak Concise Materia Medica 與 materiamedica.info 的順勢療法專家。
-使用者正在「單純查詢順勢藥名」，請輸出該藥物的完整繁體中文藥典說明（藥名保留英文拉丁學名）。
-注意：單純查詢藥名時絕對不要包含巴赫花精。Potency 只能從 "5CH", "9CH", "15CH", "30CH", "200CH", "200K" 中選擇。`;
-
-      const payload = {
-        contents: [{ parts: [{ text: `請查詢順勢療法藥物：${query}` }] }],
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        generationConfig: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: "ARRAY",
-            items: {
-              type: "OBJECT",
-              properties: {
-                en: { type: "STRING" },
-                zh: { type: "STRING" },
-                indications: { type: "STRING" },
-                sensation: { type: "STRING" },
-                modality: { type: "STRING" },
-                concomitants: { type: "STRING" },
-                mind: { type: "STRING" },
-                sensitivities: { type: "STRING" }
-              },
-              required: ["en", "zh", "indications", "sensation", "modality", "concomitants", "mind", "sensitivities"]
+        // 初始化 API Key 檢查
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedKey = localStorage.getItem("gemini_api_key");
+            if(savedKey) {
+                document.getElementById('apiKeyInput').value = savedKey;
             }
-          }
+        });
+
+        function toggleSettings() {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.toggle('hidden');
         }
-      };
 
-      try {
-        const remedies = await fetchGeminiWithBackoff(payload);
-        renderDirectRemedyResults(remedies, "Gemini AI 順勢藥典深度解析");
-        showToast("已完成藥典檢索！");
-      } catch (err) {
-        console.error(err);
-        showToast("AI 檢索錯誤，請確認您的 API Key 是否正確無誤。", true);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = originalHtml;
-      }
-    }
-
-    // =========================================================================
-    // 7. RENDERERS (100% STRICT FORMAT ENFORCEMENT)
-    // =========================================================================
-    function renderSymptomResults({ sourceLabel, filledCount, inputs, ranked, selectedBach, medicalAdvice, aiFollowUps = [], isAI = false }) {
-      const container = document.getElementById('results-container');
-      container.classList.remove('hidden');
-
-      // Missing dimensions check for interactive follow-up guide
-      const missingDims = [];
-      if (!inputs.cause) missingDims.push({ label: "病因誘發因素（如受寒、驚嚇、飲食）", id: "dim-cause" });
-      if (!inputs.sensation) missingDims.push({ label: "具體感受 Sensation（如跳動痛、灼燒感、針刺痛）", id: "dim-sensation" });
-      if (!inputs.modality) missingDims.push({ label: "惡化與好轉因子 Modality（如熱敷好轉、幾點惡化）", id: "dim-modality" });
-      if (!inputs.concomitant) missingDims.push({ label: "伴隨症狀（如口渴程度、流汗、怕冷或發熱）", id: "dim-concomitant" });
-      if (!inputs.emotion) missingDims.push({ label: "情緒與心理狀態（決定巴赫花精精準度）", id: "dim-emotion" });
-
-      // Potency & Dosage strict rules
-      const getPotencyRule = (rem, index) => {
-        if (isAI && rem.potency && rem.dosage) {
-          return {
-            category: rem.categoryType || (diseaseNature === 'acute' ? '症狀藥' : (index === 0 ? '體質藥' : '症狀藥')),
-            potency: rem.potency,
-            dosage: rem.dosage
-          };
+        function saveApiKey() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            if(key) {
+                localStorage.setItem("gemini_api_key", key);
+                alert("API 金鑰已安全儲存於您的瀏覽器中！");
+                toggleSettings();
+            } else {
+                alert("請輸入有效的 API 金鑰");
+            }
         }
-        if (diseaseNature === 'acute') {
-          return {
-            category: "症狀藥",
-            potency: index === 0 ? "200K" : "9CH",
-            dosage: "1 天 3 次，餐前使用"
-          };
-        } else {
-          const isConstitutional = index === 0 || (rem.role && rem.role.includes('chronic') && !rem.role.includes('acute'));
-          return {
-            category: isConstitutional ? "體質藥" : "症狀藥",
-            potency: isConstitutional ? "200CH" : "30CH",
-            dosage: "1 天 1 次，或 1 周 1 次"
-          };
+
+        function setConditionType(type) {
+            currentType = type;
+            document.getElementById('conditionType').value = type;
+            
+            const btnAcute = document.getElementById('btnAcute');
+            const btnChronic = document.getElementById('btnChronic');
+
+            if(type === '急性 (Acute)') {
+                btnAcute.className = 'px-4 py-1.5 rounded-full text-sm font-bold transition accent-gold text-white shadow';
+                btnChronic.className = 'px-4 py-1.5 rounded-full text-sm font-bold transition text-gray-300 hover:text-white';
+            } else {
+                btnChronic.className = 'px-4 py-1.5 rounded-full text-sm font-bold transition accent-gold text-white shadow';
+                btnAcute.className = 'px-4 py-1.5 rounded-full text-sm font-bold transition text-gray-300 hover:text-white';
+            }
         }
-      };
 
-      // Build Remedy Cards HTML
-      const remedyCardsHtml = ranked.map((rem, idx) => {
-        const rule = getPotencyRule(rem, idx);
-        const badgeColor = rule.category === "體質藥"
-          ? "bg-amber-100 text-amber-800 border-amber-300"
-          : "bg-sage-100 text-sage-800 border-sage-300";
+        async function startConsultation() {
+            const apiKey = localStorage.getItem("gemini_api_key");
+            if (!apiKey) {
+                alert("請先點擊右上角「⚙️設定」輸入您的 Gemini API 金鑰，即可開始諮詢！");
+                toggleSettings();
+                return;
+            }
 
-        const tagsHtml = (rem.matchedTags && rem.matchedTags.length > 0)
-          ? rem.matchedTags.map(t => `<span class="text-[11px] px-2 py-0.5 rounded-md bg-linen-100 text-sage-800 border border-linen-300"># ${t}</span>`).join('')
-          : `<span class="text-[11px] px-2 py-0.5 rounded-md bg-linen-100 text-sage-600">整體症候群比對</span>`;
+            const symptomText = document.getElementById('symptomInput').value.trim();
+            if(!symptomText) {
+                alert('請先輸入您的諮詢症狀描述。');
+                return;
+            }
 
-        return `
-          <article class="bg-white rounded-2xl border ${idx === 0 ? 'border-sage-500 ring-2 ring-sage-500/15' : 'border-linen-300'} shadow-sm overflow-hidden transition hover:shadow-md">
-            <!-- Card Top Banner -->
-            <div class="px-5 py-4 bg-linen-50 border-b border-linen-200 flex flex-wrap items-center justify-between gap-3">
-              <div class="flex flex-wrap items-center gap-2.5">
-                <span class="w-7 h-7 rounded-lg ${idx === 0 ? 'bg-sage-700 text-white' : 'bg-sage-200 text-sage-800'} font-bold text-sm flex items-center justify-center">
-                  ${idx + 1}
-                </span>
-                <!-- STRICT FORMAT: **Bold English** +(中文藥名) -->
-                <h3 class="text-lg sm:text-xl text-sage-900 tracking-tight">
-                  <strong class="font-bold font-mono text-sage-900">${rem.en}</strong> <span class="font-semibold text-sage-700">+(${rem.zh})</span>
-                </h3>
-                <span class="text-xs font-bold px-2.5 py-1 rounded-full border ${badgeColor}">
-                  ${rule.category}
-                </span>
-              </div>
+            // UI 狀態切換
+            document.getElementById('resultsContainer').innerHTML = '';
+            document.getElementById('loadingUI').classList.remove('hidden');
 
-              <!-- Match Percentage -->
-              <div class="flex items-center gap-2">
-                <span class="text-xs text-sage-600 font-medium">匹配程度</span>
-                <div class="flex items-center gap-1.5 bg-sage-800 text-linen-50 px-3 py-1 rounded-full text-xs font-bold">
-                  <i class="fa-solid fa-bullseye text-amber-300"></i>
-                  <span>${rem.matchPercent}%</span>
-                </div>
-              </div>
-            </div>
+            // 系統提示詞設定 (嚴格規定 dosage)
+            const systemPrompt = `你是一位專業的古典順勢療法專家。請根據 S.R. Phatak 藥典分析以下諮詢內容。
+病程性質：${currentType}。
+請輸出 JSON 格式的陣列 (Array)，包含 1 到 3 個最匹配的建議藥物。
 
-            <!-- Card Body -->
-            <div class="p-5 space-y-4">
-              <!-- Potency & Dosage Highlight Strip -->
-              <div class="bg-sage-50 border border-sage-200 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold text-sage-700 uppercase">建議順勢層級 (Potency)：</span>
-                  <span class="px-3 py-1 rounded-lg bg-sage-800 text-amber-200 font-mono font-bold text-sm tracking-wider shadow-xs">
-                    ${rule.potency}
-                  </span>
-                </div>
-                <div class="flex items-center gap-2 text-sm font-bold text-sage-900">
-                  <i class="fa-regular fa-clock text-sage-600"></i>
-                  <span>建議用量：${rule.dosage}</span>
-                </div>
-              </div>
+嚴格 JSON 格式：
+[
+  {
+    "remedyName": "英文藥名 (首字母大寫)",
+    "chineseName": "中文藥名",
+    "remedyType": "症狀藥 或是 體質藥",
+    "potency": "建議層級 (如 30CH 或 200CH)",
+    "dosage": "嚴格規則：若 remedyType 為『症狀藥』，請一律填寫『1天3次』；若為『體質藥』，請一律填寫『1天1次，或1周1次』",
+    "sensation": "核心感受 (20字內)",
+    "modality": "惡化與好轉因子 (30字內)",
+    "matchingFeatures": ["吻合特徵1", "吻合特徵2", "吻合特徵3"],
+    "matchPercentage": "匹配程度(例如 90%)",
+    "indications": "主要適應症 (30字內)"
+  }
+]
+`;
 
-              <!-- Materia Medica Details -->
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm leading-relaxed">
-                <div class="bg-linen-50/70 p-3.5 rounded-xl border border-linen-200">
-                  <div class="font-bold text-sage-800 mb-1 flex items-center gap-1.5">
-                    <i class="fa-solid fa-notes-medical text-sage-600"></i>
-                    <span>主要適應症</span>
-                  </div>
-                  <p class="text-sage-900 text-xs sm:text-sm">${rem.indications}</p>
-                </div>
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: `系統指令：${systemPrompt}\n\n病患諮詢內容：${symptomText}` }] }],
+                        generationConfig: { response_mime_type: "application/json" }
+                    })
+                });
 
-                <div class="bg-linen-50/70 p-3.5 rounded-xl border border-linen-200">
-                  <div class="font-bold text-sage-800 mb-1 flex items-center gap-1.5">
-                    <i class="fa-solid fa-wave-square text-amber-600"></i>
-                    <span>Sensation（核心感受）</span>
-                  </div>
-                  <p class="text-sage-900 text-xs sm:text-sm">${rem.sensation}</p>
-                </div>
+                if (!response.ok) throw new Error('API 請求失敗，請檢查金鑰是否正確。');
 
-                <div class="bg-linen-50/70 p-3.5 rounded-xl border border-linen-200">
-                  <div class="font-bold text-sage-800 mb-1 flex items-center gap-1.5">
-                    <i class="fa-solid fa-sliders text-sage-600"></i>
-                    <span>Modality（惡化與好轉因子）</span>
-                  </div>
-                  <p class="text-sage-900 text-xs sm:text-sm">${rem.modality}</p>
-                </div>
-              </div>
+                const data = await response.json();
+                let resultText = data.candidates[0].content.parts[0].text;
+                let remedies = JSON.parse(resultText);
 
-              <!-- Matched Feature Tags -->
-              <div class="pt-1 flex flex-wrap items-center gap-1.5">
-                <span class="text-xs text-sage-500 mr-1">吻合特徵：</span>
-                ${tagsHtml}
-              </div>
-            </div>
-          </article>
-        `;
-      }).join('');
+                renderResults(remedies);
 
-      // Interactive Follow-up Card (if dimensions < 5)
-      const followUpHtml = (missingDims.length > 0 || aiFollowUps.length > 0) ? `
-        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 shadow-xs">
-          <div class="flex items-start gap-3">
-            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5">
-              <i class="fa-solid fa-comments"></i>
-            </div>
-            <div class="space-y-2 flex-1">
-              <h4 class="font-bold text-sage-900 text-sm sm:text-base">
-                智能問診引導：補充以下細節可讓順勢配對更精準（目前填寫 ${filledCount} / 7 維度）
-              </h4>
-              <p class="text-xs sm:text-sm text-sage-700">
-                順勢療法講究「個體化辨證」，相同的病名因感受與惡化條件不同，使用的藥物完全不同。您可以點擊下方項目返回補充：
-              </p>
-              <div class="flex flex-wrap gap-2 pt-1">
-                ${missingDims.map(m => `
-                  <button type="button" onclick="focusDimension('${m.id}')"
-                    class="text-xs px-3 py-1.5 rounded-lg bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 font-medium transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-plus text-[10px]"></i>
-                    <span>補充${m.label}</span>
-                  </button>
-                `).join('')}
-              </div>
-              ${aiFollowUps.length > 0 ? `
-                <div class="mt-2 pt-2 border-t border-amber-200/70 text-xs text-sage-800 space-y-1">
-                  <span class="font-bold text-amber-800">AI 辨證追問建議：</span>
-                  <ul class="list-disc list-inside space-y-0.5">
-                    ${aiFollowUps.map(q => `<li>${q}</li>`).join('')}
-                  </ul>
-                </div>
-              ` : ''}
-            </div>
-          </div>
-        </div>
-      ` : '';
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById('resultsContainer').innerHTML = `<div class="bg-red-50 text-red-600 p-4 rounded-lg border border-red-200">發生錯誤：${error.message}<br>請確認您的 API 金鑰已正確設定。</div>`;
+            } finally {
+                document.getElementById('loadingUI').classList.add('hidden');
+            }
+        }
 
-      // Final Combined Results View
-      container.innerHTML = `
-        <!-- Results Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b-2 border-sage-700">
-          <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-sage-600">${sourceLabel}</span>
-            <h2 class="font-serif text-xl sm:text-2xl font-bold text-sage-900">
-              順勢療方評估與配對報告（${diseaseNature === 'acute' ? '急性模式' : '慢性模式'}）
-            </h2>
-          </div>
-          <span class="text-xs bg-sage-100 text-sage-800 px-3 py-1.5 rounded-lg font-medium self-start sm:self-auto">
-            已依匹配程度由高至低排列
-          </span>
-        </div>
+        function renderResults(remedies) {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '';
 
-        <!-- 1. Homeopathic Remedies Ranked List -->
-        <div class="space-y-4">
-          ${remedyCardsHtml}
-        </div>
+            remedies.forEach((remedy, index) => {
+                // 套用自訂中文翻譯庫
+                const finalChineseName = REMEDY_DB[remedy.remedyName] || remedy.chineseName;
+                
+                // 判斷徽章顏色 (症狀藥 vs 體質藥)
+                const typeColor = remedy.remedyType.includes('體質') ? 'bg-orange-100 text-orange-700 border-orange-200' : 'bg-gray-100 text-gray-600 border-gray-200';
+                
+                const tagsHTML = remedy.matchingFeatures.map(f => `<span class="bg-white border border-gray-200 text-gray-500 text-xs px-2 py-1 rounded shadow-sm mr-2">#${f}</span>`).join('');
 
-        <!-- 2. Emotional Detox: Bach Flower Remedy Card (Strictly included for Symptom queries) -->
-        <div class="bg-gradient-to-br from-sage-800 to-sage-900 text-linen-50 rounded-2xl p-5 sm:p-6 shadow-md border border-sage-700">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-sage-700">
-            <div class="flex items-center gap-3">
-              <div class="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-400/40 text-amber-200 flex items-center justify-center text-xl">
-                <i class="fa-solid fa-seedling"></i>
-              </div>
-              <div>
-                <span class="text-xs font-bold uppercase tracking-wider text-amber-300">情緒排毒・英國巴赫花精系統 (Bach Flower Remedies)</span>
-                <h3 class="text-lg sm:text-xl font-bold text-white mt-0.5">
-                  #${selectedBach.id} <strong class="font-mono text-amber-200">${selectedBach.en}</strong> +(${selectedBach.zh})
-                </h3>
-              </div>
-            </div>
-            <div class="bg-amber-500 text-sage-950 font-bold text-sm px-4 py-2 rounded-xl shadow-xs self-start md:self-auto flex items-center gap-2">
-              <i class="fa-solid fa-pills"></i>
-              <span>建議用量：每次吃 3 粒糖球</span>
-            </div>
-          </div>
-          <p class="pt-4 text-sm text-sage-100 leading-relaxed">
-            <strong class="text-amber-200">情緒對應解析：</strong>${selectedBach.desc}
-          </p>
-        </div>
+                const cardHTML = `
+                <div class="card-bg rounded-xl shadow-sm border border-green-700/20 overflow-hidden mb-6">
+                    <!-- Top Bar -->
+                    <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                        <div class="flex items-center space-x-3">
+                            <span class="brand-green text-white w-8 h-8 flex justify-center items-center rounded-lg font-bold shadow-sm">${index + 1}</span>
+                            <h3 class="text-xl font-bold text-gray-800">${remedy.remedyName} +<span class="text-lg font-medium text-gray-600">(${finalChineseName})</span></h3>
+                            <span class="text-xs font-bold px-2 py-1 border rounded-md ${typeColor}">${remedy.remedyType}</span>
+                        </div>
+                        <div class="text-sm font-medium text-gray-500 flex items-center space-x-2">
+                            <span>匹配程度</span>
+                            <span class="bg-gray-800 text-accent-gold px-2 py-1 rounded-md shadow-inner text-xs"><i class="fa-solid fa-bullseye mr-1"></i> ${remedy.matchPercentage}</span>
+                        </div>
+                    </div>
 
-        <!-- 3. Conventional Medical Advice & Lifestyle Guidance -->
-        <div class="bg-linen-50 border border-linen-300 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div class="flex items-center gap-2.5 text-sage-900 border-b border-linen-200 pb-3">
-            <i class="fa-solid fa-heart-pulse text-sage-700 text-lg"></i>
-            <h3 class="font-serif text-lg font-bold">常規醫療分析與生活起居衛教建議</h3>
-          </div>
-          <div class="space-y-3 text-sm leading-relaxed">
-            <div>
-              <h4 class="font-bold text-sage-800 mb-1">• 可能原因分析：</h4>
-              <p class="text-sage-900 bg-white p-3.5 rounded-xl border border-linen-200">${medicalAdvice.causes}</p>
-            </div>
-            <div>
-              <h4 class="font-bold text-sage-800 mb-1.5">• 病人需配合調整的生活起居與照護建議：</h4>
-              <ul class="bg-white p-4 rounded-xl border border-linen-200 space-y-2 text-sage-900">
-                ${medicalAdvice.lifestyle.map(item => `
-                  <li class="flex items-start gap-2">
-                    <i class="fa-solid fa-check text-sage-600 mt-1 text-xs"></i>
-                    <span>${item}</span>
-                  </li>
-                `).join('')}
-              </ul>
-            </div>
-          </div>
-        </div>
+                    <!-- Dosage Bar -->
+                    <div class="px-6 py-3 bg-green-50/30 border-b border-gray-100 flex justify-between items-center">
+                        <div class="text-sm font-medium text-gray-700">
+                            建議順勢層級 (POTENCY)： <span class="bg-gray-800 text-white px-2 py-1 rounded text-xs ml-1">${remedy.potency}</span>
+                        </div>
+                        <div class="text-sm font-bold text-red-600">
+                            <i class="fa-regular fa-clock mr-1"></i> 建議用量：${remedy.dosage}
+                        </div>
+                    </div>
 
-        <!-- 4. Interactive Follow-Up Prompt (If applicable) -->
-        ${followUpHtml}
-      `;
+                    <!-- Detail Columns -->
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-white border border-gray-100 p-4 rounded-lg shadow-sm">
+                            <h4 class="text-sm font-bold text-gray-700 mb-2"><i class="fa-solid fa-briefcase-medical mr-1 text-gray-400"></i> 主要適應症</h4>
+                            <p class="text-sm text-gray-600">${remedy.indications}</p>
+                        </div>
+                        <div class="bg-white border border-gray-100 p-4 rounded-lg shadow-sm">
+                            <h4 class="text-sm font-bold text-gray-700 mb-2"><i class="fa-solid fa-wave-square mr-1 text-gray-400"></i> Sensation (核心感受)</h4>
+                            <p class="text-sm text-gray-600">${remedy.sensation}</p>
+                        </div>
+                        <div class="bg-white border border-gray-100 p-4 rounded-lg shadow-sm">
+                            <h4 class="text-sm font-bold text-gray-700 mb-2"><i class="fa-solid fa-sliders mr-1 text-gray-400"></i> Modality (惡化與好轉因子)</h4>
+                            <p class="text-sm text-gray-600">${remedy.modality}</p>
+                        </div>
+                    </div>
 
-      container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function focusDimension(id) {
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        el.focus();
-        el.classList.add('ring-2', 'ring-amber-500');
-        setTimeout(() => el.classList.remove('ring-2', 'ring-amber-500'), 2000);
-      }
-    }
-
-    function renderDirectRemedyResults(remedies, sourceLabel) {
-      const container = document.getElementById('results-container');
-      container.classList.remove('hidden');
-
-      // Note: Per strict rules, direct remedy lookup MUST NOT display Bach Flower Remedies.
-      const cardsHtml = remedies.map(rem => `
-        <article class="bg-white rounded-2xl border border-linen-300 shadow-sm overflow-hidden">
-          <div class="px-5 py-4 bg-sage-800 text-linen-50 flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <span class="text-[11px] uppercase tracking-wider text-sage-300 block">Materia Medica 藥物專論</span>
-              <!-- STRICT FORMAT: **Bold English** +(中文藥名) -->
-              <h3 class="text-xl sm:text-2xl mt-0.5">
-                <strong class="font-bold font-mono text-amber-200">${rem.en}</strong> <span class="font-semibold text-white">+(${rem.zh})</span>
-              </h3>
-            </div>
-            <div class="flex flex-wrap gap-2 text-xs">
-              <span class="px-3 py-1 rounded-lg bg-sage-700 border border-sage-600 text-linen-100">
-                急性建議：<strong class="text-amber-200 font-mono">9CH / 200K</strong>（1 天 3 次，餐前使用）
-              </span>
-              <span class="px-3 py-1 rounded-lg bg-sage-700 border border-sage-600 text-linen-100">
-                慢性建議：<strong class="text-amber-200 font-mono">30CH / 200CH</strong>（1 天 1 次，或 1 周 1 次）
-              </span>
-            </div>
-          </div>
-
-          <div class="p-5 sm:p-6 space-y-4 text-sm leading-relaxed">
-            <div class="bg-linen-50 p-4 rounded-xl border border-linen-200">
-              <h4 class="font-bold text-sage-900 mb-1 flex items-center gap-2">
-                <i class="fa-solid fa-notes-medical text-sage-600"></i>
-                <span>主要適應症 (Key Indications)</span>
-              </h4>
-              <p class="text-sage-800">${rem.indications}</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="bg-linen-50 p-4 rounded-xl border border-linen-200">
-                <h4 class="font-bold text-sage-900 mb-1 flex items-center gap-2">
-                  <i class="fa-solid fa-wave-square text-amber-600"></i>
-                  <span>Sensation（核心感受）</span>
-                </h4>
-                <p class="text-sage-800">${rem.sensation}</p>
-              </div>
-
-              <div class="bg-linen-50 p-4 rounded-xl border border-linen-200">
-                <h4 class="font-bold text-sage-900 mb-1 flex items-center gap-2">
-                  <i class="fa-solid fa-sliders text-sage-600"></i>
-                  <span>Modality（惡化與好轉因子）</span>
-                </h4>
-                <p class="text-sage-800">${rem.modality}</p>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="bg-white p-3.5 rounded-xl border border-linen-200">
-                <h4 class="font-bold text-sage-800 text-xs uppercase mb-1">伴隨症狀 (Concomitants)</h4>
-                <p class="text-sage-700 text-xs sm:text-sm">${rem.concomitants || '依整體臨床表現而定'}</p>
-              </div>
-              <div class="bg-white p-3.5 rounded-xl border border-linen-200">
-                <h4 class="font-bold text-sage-800 text-xs uppercase mb-1">情緒與心智特徵 (Mind)</h4>
-                <p class="text-sage-700 text-xs sm:text-sm">${rem.mind || '依整體臨床表現而定'}</p>
-              </div>
-              <div class="bg-white p-3.5 rounded-xl border border-linen-200">
-                <h4 class="font-bold text-sage-800 text-xs uppercase mb-1">敏感特質 (Sensitivities)</h4>
-                <p class="text-sage-700 text-xs sm:text-sm">${rem.sensitivities || '依整體臨床表現而定'}</p>
-              </div>
-            </div>
-          </div>
-        </article>
-      `).join('');
-
-      container.innerHTML = `
-        <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b-2 border-sage-700">
-          <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-sage-600">${sourceLabel}</span>
-            <h2 class="font-serif text-xl sm:text-2xl font-bold text-sage-900">順勢藥典查詢結果</h2>
-          </div>
-          <span class="text-xs bg-linen-200 text-sage-800 px-3 py-1 rounded-lg">
-            單純查詢順勢藥名模式（不顯示巴赫花精）
-          </span>
-        </div>
-        <div class="space-y-5">
-          ${cardsHtml}
-        </div>
-      `;
-
-      container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  </script>
+                    <!-- Tags -->
+                    <div class="px-6 pb-5 pt-2 flex items-center">
+                        <span class="text-sm font-medium text-gray-500 mr-3">吻合特徵：</span>
+                        <div class="flex flex-wrap">${tagsHTML}</div>
+                    </div>
+                </div>`;
+                
+                container.innerHTML += cardHTML;
+            });
+        }
+    </script>
 </body>
 </html>
