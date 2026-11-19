@@ -1368,30 +1368,44 @@
       if (!inputs.concomitant) missingDims.push({ label: "伴隨症狀（如口渴程度、流汗、怕冷或發熱）", id: "dim-concomitant" });
       if (!inputs.emotion) missingDims.push({ label: "情緒與心理狀態（決定巴赫花精精準度）", id: "dim-emotion" });
 
-      // Potency & Dosage strict rules
+      // Potency & Dosage strict rules (依症狀藥/體質藥與匹配程度自動計算)
       const getPotencyRule = (rem, index) => {
-        if (isAI && rem.potency) {
-          const category = rem.categoryType || (diseaseNature === 'acute' ? '症狀藥' : (index === 0 ? '體質藥' : '症狀藥'));
-          return {
-            category,
-            potency: rem.potency,
-            dosage: category === '症狀藥' ? '1 天 3 次，餐前使用' : '1 天 1 次，或 1 周 1 次'
-          };
-        }
-        if (diseaseNature === 'acute') {
-          return {
-            category: "症狀藥",
-            potency: index === 0 ? "200K" : "9CH",
-            dosage: "1 天 3 次，餐前使用"
-          };
+        let category;
+        if (isAI && rem.categoryType) {
+          category = rem.categoryType.includes('體質') ? '體質藥' : '症狀藥';
+        } else if (diseaseNature === 'acute') {
+          category = '症狀藥';
         } else {
           const isConstitutional = index === 0 || (rem.role && rem.role.includes('chronic') && !rem.role.includes('acute'));
-          return {
-            category: isConstitutional ? "體質藥" : "症狀藥",
-            potency: isConstitutional ? "200CH" : "30CH",
-            dosage: isConstitutional ? "1 天 1 次，或 1 周 1 次" : "1 天 3 次，餐前使用"
-          };
+          category = isConstitutional ? '體質藥' : '症狀藥';
         }
+
+        const pct = Number(rem.matchPercent) || 0;
+        let potencies;
+
+        if (category === '症狀藥') {
+          if (pct >= 80) {
+            potencies = ['30CH', '200K'];
+          } else if (pct >= 60) {
+            potencies = ['15CH', '200K'];
+          } else {
+            potencies = ['9CH', '200K'];
+          }
+        } else {
+          if (pct >= 90) {
+            potencies = ['200CH'];
+          } else if (pct >= 80) {
+            potencies = ['30CH'];
+          } else {
+            potencies = ['15CH'];
+          }
+        }
+
+        return {
+          category,
+          potencies,
+          dosage: category === '症狀藥' ? '1 天 3 次，餐前使用' : '1 天 1 次，或 1 周 1 次'
+        };
       };
 
       // Build Remedy Cards HTML
@@ -1436,11 +1450,9 @@
             <div class="p-5 space-y-4">
               <!-- Potency & Dosage Highlight Strip -->
               <div class="bg-sage-50 border border-sage-200 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold text-sage-700 uppercase">建議順勢層級 (Potency)：</span>
-                  <span class="px-3 py-1 rounded-lg bg-sage-800 text-amber-200 font-mono font-bold text-sm tracking-wider shadow-xs">
-                    ${rule.potency}
-                  </span>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="text-xs font-bold text-sage-700 uppercase">建議順勢勢能 (Potency)：</span>
+                  ${rule.potencies.map(p => `<span class="px-3 py-1 rounded-lg bg-sage-800 text-amber-200 font-mono font-bold text-sm tracking-wider shadow-xs">${p}</span>`).join('')}
                 </div>
                 <div class="flex items-center gap-2 text-sm font-bold text-sage-900">
                   <i class="fa-regular fa-clock text-sage-600"></i>
