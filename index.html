@@ -275,18 +275,18 @@
               <span><span class="inline-block w-5 h-5 rounded-full bg-sage-700 text-white text-xs text-center leading-5 mr-1.5">1</span>病因與誘發因素 (Etiology)</span>
               <span class="text-[11px] font-normal text-sage-500">何時開始、起因</span>
             </label>
-            <div class="flex flex-col sm:flex-row gap-3">
+            <div class="space-y-2">
               <input type="text" id="dim-cause" placeholder="例如：昨晚吹冷風後突然發作、受到驚嚇、吃壞肚子..."
-                class="flex-1 sm:min-w-[260px] px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
+                class="w-full px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
               <div class="flex flex-wrap gap-1.5 items-center" data-target="dim-cause">
-                <button type="button" onclick="appendTag('dim-cause', '吹冷風受寒')" class="tag-chip">吹冷風受寒</button>
-                <button type="button" onclick="appendTag('dim-cause', '淋雨受濕')" class="tag-chip">淋雨受濕</button>
-                <button type="button" onclick="appendTag('dim-cause', '驚嚇恐懼')" class="tag-chip">驚嚇恐懼</button>
-                <button type="button" onclick="appendTag('dim-cause', '飲食不潔/過食')" class="tag-chip">飲食不潔/過食</button>
-                <button type="button" onclick="appendTag('dim-cause', '熬夜壓力大')" class="tag-chip">熬夜壓力大</button>
-                <button type="button" onclick="appendTag('dim-cause', '外傷撞擊瘀青')" class="tag-chip">外傷撞擊瘀青</button>
-                <button type="button" onclick="appendTag('dim-cause', '悲傷失落')" class="tag-chip">悲傷失落</button>
-                <button type="button" onclick="appendTag('dim-cause', '日曬中暑')" class="tag-chip">日曬中暑</button>
+                <button type="button" onclick="appendTag('dim-cause', '吹冷風受寒')" class="tag-chip extra-tag hidden">吹冷風受寒</button>
+                <button type="button" onclick="appendTag('dim-cause', '淋雨受濕')" class="tag-chip extra-tag hidden">淋雨受濕</button>
+                <button type="button" onclick="appendTag('dim-cause', '驚嚇恐懼')" class="tag-chip extra-tag hidden">驚嚇恐懼</button>
+                <button type="button" onclick="appendTag('dim-cause', '飲食不潔/過食')" class="tag-chip extra-tag hidden">飲食不潔/過食</button>
+                <button type="button" onclick="appendTag('dim-cause', '熬夜壓力大')" class="tag-chip extra-tag hidden">熬夜壓力大</button>
+                <button type="button" onclick="appendTag('dim-cause', '外傷撞擊瘀青')" class="tag-chip extra-tag hidden">外傷撞擊瘀青</button>
+                <button type="button" onclick="appendTag('dim-cause', '悲傷失落')" class="tag-chip extra-tag hidden">悲傷失落</button>
+                <button type="button" onclick="appendTag('dim-cause', '日曬中暑')" class="tag-chip extra-tag hidden">日曬中暑</button>
                 <button type="button" onclick="appendTag('dim-cause', '生氣憤怒壓抑')" class="tag-chip extra-tag hidden">生氣憤怒壓抑</button>
                 <button type="button" onclick="appendTag('dim-cause', '委屈羞辱受挫')" class="tag-chip extra-tag hidden">委屈羞辱受挫</button>
                 <button type="button" onclick="appendTag('dim-cause', '期待焦慮/考試上台')" class="tag-chip extra-tag hidden">期待焦慮/考試上台</button>
@@ -311,14 +311,14 @@
             <input type="text" id="dim-symptom" placeholder="例如：突然高燒、右側頭痛、乾咳、胃脹痛、紅腫癢..."
               class="w-full px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
             <div class="flex flex-wrap gap-1.5 pt-0.5">
-              <button type="button" onclick="appendTag('dim-symptom', '突然高燒')" class="tag-chip">突然高燒</button>
-              <button type="button" onclick="appendTag('dim-symptom', '劇烈頭痛')" class="tag-chip">劇烈頭痛</button>
-              <button type="button" onclick="appendTag('dim-symptom', '乾咳喉嚨痛')" class="tag-chip">乾咳喉嚨痛</button>
-              <button type="button" onclick="appendTag('dim-symptom', '胃痛脹氣反胃')" class="tag-chip">胃痛脹氣反胃</button>
-              <button type="button" onclick="appendTag('dim-symptom', '肌肉痠痛無力')" class="tag-chip">肌肉痠痛無力</button>
-              <button type="button" onclick="appendTag('dim-symptom', '失眠多夢')" class="tag-chip">失眠多夢</button>
-              <button type="button" onclick="appendTag('dim-symptom', '皮膚紅腫癢疹')" class="tag-chip">皮膚紅腫癢疹</button>
-              <button type="button" onclick="appendTag('dim-symptom', '鼻塞流清涕')" class="tag-chip">鼻塞流清涕</button>
+              <button type="button" onclick="appendTag('dim-symptom', '突然高燒')" class="tag-chip extra-tag hidden">突然高燒</button>
+              <button type="button" onclick="appendTag('dim-symptom', '劇烈頭痛')" class="tag-chip extra-tag hidden">劇烈頭痛</button>
+              <button type="button" onclick="appendTag('dim-symptom', '乾咳喉嚨痛')" class="tag-chip extra-tag hidden">乾咳喉嚨痛</button>
+              <button type="button" onclick="appendTag('dim-symptom', '胃痛脹氣反胃')" class="tag-chip extra-tag hidden">胃痛脹氣反胃</button>
+              <button type="button" onclick="appendTag('dim-symptom', '肌肉痠痛無力')" class="tag-chip extra-tag hidden">肌肉痠痛無力</button>
+              <button type="button" onclick="appendTag('dim-symptom', '失眠多夢')" class="tag-chip extra-tag hidden">失眠多夢</button>
+              <button type="button" onclick="appendTag('dim-symptom', '皮膚紅腫癢疹')" class="tag-chip extra-tag hidden">皮膚紅腫癢疹</button>
+              <button type="button" onclick="appendTag('dim-symptom', '鼻塞流清涕')" class="tag-chip extra-tag hidden">鼻塞流清涕</button>
                 <button type="button" onclick="appendTag('dim-symptom', '黃綠濃稠鼻涕/痰')" class="tag-chip extra-tag hidden">黃綠濃稠鼻涕/痰</button>
                 <button type="button" onclick="appendTag('dim-symptom', '聲音沙啞/失聲')" class="tag-chip extra-tag hidden">聲音沙啞/失聲</button>
                 <button type="button" onclick="appendTag('dim-symptom', '頭暈目眩/暈車')" class="tag-chip extra-tag hidden">頭暈目眩/暈車</button>
@@ -342,13 +342,13 @@
             <input type="text" id="dim-sensation" placeholder="例如：血管跳動痛、灼燒感、針刺痛、像被重物壓住..."
               class="w-full px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
             <div class="flex flex-wrap gap-1.5 pt-0.5">
-              <button type="button" onclick="appendTag('dim-sensation', '跳動搏動痛')" class="tag-chip">跳動搏動痛</button>
-              <button type="button" onclick="appendTag('dim-sensation', '灼燒熱辣感')" class="tag-chip">灼燒熱辣感</button>
-              <button type="button" onclick="appendTag('dim-sensation', '針刺尖銳痛')" class="tag-chip">針刺尖銳痛</button>
-              <button type="button" onclick="appendTag('dim-sensation', '悶痛緊箍感')" class="tag-chip">悶痛緊箍感</button>
-              <button type="button" onclick="appendTag('dim-sensation', '沉重無力感')" class="tag-chip">沉重無力感</button>
-              <button type="button" onclick="appendTag('dim-sensation', '全身被打傷痠痛')" class="tag-chip">全身被打傷痠痛</button>
-              <button type="button" onclick="appendTag('dim-sensation', '喉嚨有異物梗阻感')" class="tag-chip">喉嚨有異物梗阻感</button>
+              <button type="button" onclick="appendTag('dim-sensation', '跳動搏動痛')" class="tag-chip extra-tag hidden">跳動搏動痛</button>
+              <button type="button" onclick="appendTag('dim-sensation', '灼燒熱辣感')" class="tag-chip extra-tag hidden">灼燒熱辣感</button>
+              <button type="button" onclick="appendTag('dim-sensation', '針刺尖銳痛')" class="tag-chip extra-tag hidden">針刺尖銳痛</button>
+              <button type="button" onclick="appendTag('dim-sensation', '悶痛緊箍感')" class="tag-chip extra-tag hidden">悶痛緊箍感</button>
+              <button type="button" onclick="appendTag('dim-sensation', '沉重無力感')" class="tag-chip extra-tag hidden">沉重無力感</button>
+              <button type="button" onclick="appendTag('dim-sensation', '全身被打傷痠痛')" class="tag-chip extra-tag hidden">全身被打傷痠痛</button>
+              <button type="button" onclick="appendTag('dim-sensation', '喉嚨有異物梗阻感')" class="tag-chip extra-tag hidden">喉嚨有異物梗阻感</button>
                 <button type="button" onclick="appendTag('dim-sensation', '撕裂拉扯痛')" class="tag-chip extra-tag hidden">撕裂拉扯痛</button>
                 <button type="button" onclick="appendTag('dim-sensation', '絞痛痙攣/像被擠壓')" class="tag-chip extra-tag hidden">絞痛痙攣/像被擠壓</button>
                 <button type="button" onclick="appendTag('dim-sensation', '游走性疼痛(跑來跑去)')" class="tag-chip extra-tag hidden">游走性疼痛(跑來跑去)</button>
@@ -372,13 +372,13 @@
             <input type="text" id="dim-modality" placeholder="例如：一動就痛、熱敷好轉、凌晨1-3點惡化、吹風好轉..."
               class="w-full px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
             <div class="flex flex-wrap gap-1.5 pt-0.5">
-              <button type="button" onclick="appendTag('dim-modality', '稍微移動就惡化')" class="tag-chip">稍微移動就惡化</button>
-              <button type="button" onclick="appendTag('dim-modality', '持續活動後好轉')" class="tag-chip">持續活動後好轉</button>
-              <button type="button" onclick="appendTag('dim-modality', '熱敷保暖好轉')" class="tag-chip">熱敷保暖好轉</button>
-              <button type="button" onclick="appendTag('dim-modality', '冷敷新鮮空氣好轉')" class="tag-chip">冷敷新鮮空氣好轉</button>
-              <button type="button" onclick="appendTag('dim-modality', '用力按壓好轉')" class="tag-chip">用力按壓好轉</button>
-              <button type="button" onclick="appendTag('dim-modality', '半夜/凌晨1-3點惡化')" class="tag-chip">半夜/凌晨1-3點惡化</button>
-              <button type="button" onclick="appendTag('dim-modality', '下午4-8點惡化')" class="tag-chip">下午4-8點惡化</button>
+              <button type="button" onclick="appendTag('dim-modality', '稍微移動就惡化')" class="tag-chip extra-tag hidden">稍微移動就惡化</button>
+              <button type="button" onclick="appendTag('dim-modality', '持續活動後好轉')" class="tag-chip extra-tag hidden">持續活動後好轉</button>
+              <button type="button" onclick="appendTag('dim-modality', '熱敷保暖好轉')" class="tag-chip extra-tag hidden">熱敷保暖好轉</button>
+              <button type="button" onclick="appendTag('dim-modality', '冷敷新鮮空氣好轉')" class="tag-chip extra-tag hidden">冷敷新鮮空氣好轉</button>
+              <button type="button" onclick="appendTag('dim-modality', '用力按壓好轉')" class="tag-chip extra-tag hidden">用力按壓好轉</button>
+              <button type="button" onclick="appendTag('dim-modality', '半夜/凌晨1-3點惡化')" class="tag-chip extra-tag hidden">半夜/凌晨1-3點惡化</button>
+              <button type="button" onclick="appendTag('dim-modality', '下午4-8點惡化')" class="tag-chip extra-tag hidden">下午4-8點惡化</button>
                 <button type="button" onclick="appendTag('dim-modality', '剛開始動最痛')" class="tag-chip extra-tag hidden">剛開始動最痛</button>
                 <button type="button" onclick="appendTag('dim-modality', '輕微觸碰/震動就惡化')" class="tag-chip extra-tag hidden">輕微觸碰/震動就惡化</button>
                 <button type="button" onclick="appendTag('dim-modality', '進溫暖房間就惡化')" class="tag-chip extra-tag hidden">進溫暖房間就惡化</button>
@@ -404,12 +404,12 @@
             <input type="text" id="dim-concomitant" placeholder="例如：極度口渴想喝冷水、完全不口渴、畏寒怕冷、盜汗..."
               class="w-full px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
             <div class="flex flex-wrap gap-1.5 pt-0.5">
-              <button type="button" onclick="appendTag('dim-concomitant', '極度口渴喝大量冷水')" class="tag-chip">極度口渴喝大量冷水</button>
-              <button type="button" onclick="appendTag('dim-concomitant', '口渴但只小口啜飲')" class="tag-chip">口渴但只小口啜飲</button>
-              <button type="button" onclick="appendTag('dim-concomitant', '發燒卻完全不口渴')" class="tag-chip">發燒卻完全不口渴</button>
-              <button type="button" onclick="appendTag('dim-concomitant', '極度畏寒怕冷')" class="tag-chip">極度畏寒怕冷</button>
-              <button type="button" onclick="appendTag('dim-concomitant', '臉紅發燙手腳冰冷')" class="tag-chip">臉紅發燙手腳冰冷</button>
-              <button type="button" onclick="appendTag('dim-concomitant', '大量流汗')" class="tag-chip">大量流汗</button>
+              <button type="button" onclick="appendTag('dim-concomitant', '極度口渴喝大量冷水')" class="tag-chip extra-tag hidden">極度口渴喝大量冷水</button>
+              <button type="button" onclick="appendTag('dim-concomitant', '口渴但只小口啜飲')" class="tag-chip extra-tag hidden">口渴但只小口啜飲</button>
+              <button type="button" onclick="appendTag('dim-concomitant', '發燒卻完全不口渴')" class="tag-chip extra-tag hidden">發燒卻完全不口渴</button>
+              <button type="button" onclick="appendTag('dim-concomitant', '極度畏寒怕冷')" class="tag-chip extra-tag hidden">極度畏寒怕冷</button>
+              <button type="button" onclick="appendTag('dim-concomitant', '臉紅發燙手腳冰冷')" class="tag-chip extra-tag hidden">臉紅發燙手腳冰冷</button>
+              <button type="button" onclick="appendTag('dim-concomitant', '大量流汗')" class="tag-chip extra-tag hidden">大量流汗</button>
                 <button type="button" onclick="appendTag('dim-concomitant', '特別想喝冰水')" class="tag-chip extra-tag hidden">特別想喝冰水</button>
                 <button type="button" onclick="appendTag('dim-concomitant', '喜歡喝溫熱飲')" class="tag-chip extra-tag hidden">喜歡喝溫熱飲</button>
                 <button type="button" onclick="appendTag('dim-concomitant', '嗜吃甜食')" class="tag-chip extra-tag hidden">嗜吃甜食</button>
@@ -433,13 +433,13 @@
             <input type="text" id="dim-emotion" placeholder="例如：焦躁不安怕死、易怒沒耐心、愛哭想人陪伴、想獨處..."
               class="w-full px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
             <div class="flex flex-wrap gap-1.5 pt-0.5">
-              <button type="button" onclick="appendTag('dim-emotion', '極度恐慌焦慮不安')" class="tag-chip">極度恐慌焦慮不安</button>
-              <button type="button" onclick="appendTag('dim-emotion', '易怒暴躁沒耐心')" class="tag-chip">易怒暴躁沒耐心</button>
-              <button type="button" onclick="appendTag('dim-emotion', '愛哭委屈需要安慰')" class="tag-chip">愛哭委屈需要安慰</button>
-              <button type="button" onclick="appendTag('dim-emotion', '想一個人靜靜別煩我')" class="tag-chip">想一個人靜靜別煩我</button>
-              <button type="button" onclick="appendTag('dim-emotion', '反覆思慮停不下來')" class="tag-chip">反覆思慮停不下來</button>
-              <button type="button" onclick="appendTag('dim-emotion', '缺乏自信猶豫不決')" class="tag-chip">缺乏自信猶豫不決</button>
-              <button type="button" onclick="appendTag('dim-emotion', '身心耗竭無力')" class="tag-chip">身心耗竭無力</button>
+              <button type="button" onclick="appendTag('dim-emotion', '極度恐慌焦慮不安')" class="tag-chip extra-tag hidden">極度恐慌焦慮不安</button>
+              <button type="button" onclick="appendTag('dim-emotion', '易怒暴躁沒耐心')" class="tag-chip extra-tag hidden">易怒暴躁沒耐心</button>
+              <button type="button" onclick="appendTag('dim-emotion', '愛哭委屈需要安慰')" class="tag-chip extra-tag hidden">愛哭委屈需要安慰</button>
+              <button type="button" onclick="appendTag('dim-emotion', '想一個人靜靜別煩我')" class="tag-chip extra-tag hidden">想一個人靜靜別煩我</button>
+              <button type="button" onclick="appendTag('dim-emotion', '反覆思慮停不下來')" class="tag-chip extra-tag hidden">反覆思慮停不下來</button>
+              <button type="button" onclick="appendTag('dim-emotion', '缺乏自信猶豫不決')" class="tag-chip extra-tag hidden">缺乏自信猶豫不決</button>
+              <button type="button" onclick="appendTag('dim-emotion', '身心耗竭無力')" class="tag-chip extra-tag hidden">身心耗竭無力</button>
                 <button type="button" onclick="appendTag('dim-emotion', '越安慰越生氣/越想哭')" class="tag-chip extra-tag hidden">越安慰越生氣/越想哭</button>
                 <button type="button" onclick="appendTag('dim-emotion', '坐立難安不停換姿勢')" class="tag-chip extra-tag hidden">坐立難安不停換姿勢</button>
                 <button type="button" onclick="appendTag('dim-emotion', '過度擔憂健康與死亡')" class="tag-chip extra-tag hidden">過度擔憂健康與死亡</button>
@@ -463,12 +463,12 @@
             <input type="text" id="dim-sensitive" placeholder="例如：怕光、怕吵雜聲音、對氣味敏感、討厭別人碰觸、天氣變冷就發作..."
               class="w-full px-3.5 py-2 text-sm rounded-lg border border-linen-300 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-linen-50/50" />
             <div class="flex flex-wrap gap-1.5 pt-0.5">
-              <button type="button" onclick="appendTag('dim-sensitive', '怕強光')" class="tag-chip">怕強光</button>
-              <button type="button" onclick="appendTag('dim-sensitive', '怕聲音吵雜')" class="tag-chip">怕聲音吵雜</button>
-              <button type="button" onclick="appendTag('dim-sensitive', '對氣味敏感')" class="tag-chip">對氣味敏感</button>
-              <button type="button" onclick="appendTag('dim-sensitive', '拒絕被觸碰')" class="tag-chip">拒絕被觸碰</button>
-              <button type="button" onclick="appendTag('dim-sensitive', '怕冷風吹拂')" class="tag-chip">怕冷風吹拂</button>
-              <button type="button" onclick="appendTag('dim-sensitive', '潮濕天氣敏感')" class="tag-chip">潮濕天氣敏感</button>
+              <button type="button" onclick="appendTag('dim-sensitive', '怕強光')" class="tag-chip extra-tag hidden">怕強光</button>
+              <button type="button" onclick="appendTag('dim-sensitive', '怕聲音吵雜')" class="tag-chip extra-tag hidden">怕聲音吵雜</button>
+              <button type="button" onclick="appendTag('dim-sensitive', '對氣味敏感')" class="tag-chip extra-tag hidden">對氣味敏感</button>
+              <button type="button" onclick="appendTag('dim-sensitive', '拒絕被觸碰')" class="tag-chip extra-tag hidden">拒絕被觸碰</button>
+              <button type="button" onclick="appendTag('dim-sensitive', '怕冷風吹拂')" class="tag-chip extra-tag hidden">怕冷風吹拂</button>
+              <button type="button" onclick="appendTag('dim-sensitive', '潮濕天氣敏感')" class="tag-chip extra-tag hidden">潮濕天氣敏感</button>
                 <button type="button" onclick="appendTag('dim-sensitive', '怕悶熱不通風房間')" class="tag-chip extra-tag hidden">怕悶熱不通風房間</button>
                 <button type="button" onclick="appendTag('dim-sensitive', '怕領口/腰部緊繃衣物')" class="tag-chip extra-tag hidden">怕領口/腰部緊繃衣物</button>
                 <button type="button" onclick="appendTag('dim-sensitive', '怕打雷閃電天氣變化')" class="tag-chip extra-tag hidden">怕打雷閃電天氣變化</button>
@@ -588,7 +588,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.24</span>
+        <span>Version 1.25</span>
       </div>
     </div>
   </footer>
