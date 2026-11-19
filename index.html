@@ -588,7 +588,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.26</span>
+        <span>Version 1.27</span>
       </div>
     </div>
   </footer>
@@ -1984,14 +1984,14 @@ function render(){
         <div class="grid">\${[['male','男性'],['female','女性'],['other','其他／不便回答']].map(([v,l])=>\`<button type="button" class="\${state.sex===v?'primary':'secondary'}" onclick="chooseBasicSex('\${v}')">\${l}</button>\`).join('')}</div>
       </div>
     </div>
-    <div class="actions"><button class="secondary" onclick="back()">上一題</button><button class="primary" onclick="saveBasicFields()">下一步</button></div>\`;
+    <div class="actions"><button class="secondary" onclick="back()">上一題</button><button class="primary" onclick="saveBasicFields()">下一題</button></div>\`;
   }else if(q.type==='choice'){
     input=\`<div class="grid">\${q.options.map(([v,l])=>\`<button class="\${state[q.id]===v?'primary':'secondary'}" onclick="choose('\${q.id}','\${v}')">\${l}</button>\`).join('')}</div>\`;
   }else{
     input=\`<label class="mini" for="answer">你的答案（可自行補充）</label><textarea id="answer" placeholder="\${q.placeholder||''}" oninput="storeAnswer('\${q.id}',this)" onkeydown="handleAnswerKey(event, '\${q.id}')">\${escapeHtml(state[q.id]||'')}</textarea>\${chipButtons(q)}
       <div class="actions">
         <button class="secondary" onclick="back()" \${step===0?'disabled':''}>上一題</button>
-        <button class="primary" onclick="saveText('\${q.id}')">下一步</button>
+        <button class="primary" onclick="saveText('\${q.id}')">下一題</button>
       </div>\`;
   }
   document.getElementById('screen').innerHTML=\`
@@ -1999,7 +1999,7 @@ function render(){
     <h2>\${q.title}</h2>
     <p class="hint">\${q.hint}</p>
     \${input}
-    \${q.type==='choice'?\`<div class="actions"><button class="secondary" onclick="back()">上一題</button><button class="primary" onclick="choiceNext('\${q.id}')">下一步</button></div>\`:''}
+    \${q.type==='choice'?\`<div class="actions"><button class="secondary" onclick="back()">上一題</button><button class="primary" onclick="choiceNext('\${q.id}')">下一題</button></div>\`:''}
     \${q.id==='safety' ? '' : \`
     <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap">
       <button class="ghost clear-all-btn" onclick="confirmResetAll()">清除全部資料</button>
