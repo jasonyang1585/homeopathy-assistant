@@ -81,6 +81,52 @@
       background-size: 28px 28px;
       background-position: 0 0, 14px 14px;
     }
+
+    /* Print Report Styles */
+    @media print {
+      @page {
+        size: A4;
+        margin: 12mm 14mm;
+      }
+      body {
+        background: #FFFFFF !important;
+        color: #1D2E25 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      header,
+      footer,
+      #view-symptom,
+      #view-remedy,
+      #toast-box,
+      #guided-modal,
+      #import-modal,
+      #settings-modal,
+      .no-print {
+        display: none !important;
+      }
+      main {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      #results-container {
+        display: block !important;
+        margin-top: 0 !important;
+      }
+      #results-container article,
+      .print-block {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        box-shadow: none !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+    }
+    .print-only {
+      display: none;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-sage-200 selection:text-sage-900">
@@ -542,7 +588,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.17</span>
+        <span>Version 1.18</span>
       </div>
     </div>
   </footer>
@@ -2898,20 +2944,61 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         </div>
       ` : '';
 
+      // Build 7-Dimension Summary for Screen & Print
+      const dimSummaryItems = [
+        { num: 1, label: '病因與誘發因素', val: document.getElementById('dim-cause')?.value.trim() || '' },
+        { num: 2, label: '主要症狀', val: document.getElementById('dim-symptom')?.value.trim() || '' },
+        { num: 3, label: '自己感覺 (Sensation)', val: document.getElementById('dim-sensation')?.value.trim() || '' },
+        { num: 4, label: '惡化與好轉因子 (Modality)', val: document.getElementById('dim-modality')?.value.trim() || '' },
+        { num: 5, label: '伴隨症狀 (Concomitants)', val: document.getElementById('dim-concomitant')?.value.trim() || '' },
+        { num: 6, label: '情緒與行為 (Mind)', val: document.getElementById('dim-emotion')?.value.trim() || '' },
+        { num: 7, label: '對什麼較敏感', val: document.getElementById('dim-sensitive')?.value.trim() || '' }
+      ];
+      const nowStr = new Date().toLocaleString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false });
+      const dimSummaryHtml = `
+        <div class="print-block bg-linen-50 border border-linen-300 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-linen-200 pb-2.5">
+            <h3 class="font-serif text-base font-bold text-sage-900 flex items-center gap-2">
+              <i class="fa-solid fa-clipboard-check text-sage-700"></i>
+              <span>7 大維度評估摘要</span>
+            </h3>
+            <span class="text-xs text-sage-600 font-mono">評估時間：${nowStr}｜病程：${diseaseNature === 'acute' ? '急性 (Acute)' : '慢性 (Chronic)'}</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs sm:text-sm">
+            ${dimSummaryItems.map(d => `
+              <div class="bg-white px-3.5 py-2.5 rounded-xl border border-linen-200 ${d.num === 1 ? 'md:col-span-2' : ''}">
+                <span class="font-bold text-sage-800">${d.num}. ${d.label}：</span>
+                <span class="${d.val ? 'text-sage-900' : 'text-sage-400'}">${d.val ? escapeHtml(d.val) : '未填寫'}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
       // Final Combined Results View
       container.innerHTML = `
         <!-- Results Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b-2 border-sage-700">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2.5 border-b-2 border-sage-700">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-sage-600">${sourceLabel}</span>
             <h2 class="font-serif text-xl sm:text-2xl font-bold text-sage-900">
               順勢療方評估與配對報告（${diseaseNature === 'acute' ? '急性模式' : '慢性模式'}）
             </h2>
           </div>
-          <span class="text-xs bg-sage-100 text-sage-800 px-3 py-1.5 rounded-lg font-medium self-start sm:self-auto">
-            已依匹配程度由高至低排列
-          </span>
+          <div class="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+            <span class="text-xs bg-sage-100 text-sage-800 px-3 py-1.5 rounded-lg font-medium">
+              已依匹配程度由高至低排列
+            </span>
+            <button type="button" onclick="printReport()"
+              class="no-print px-3.5 py-1.5 rounded-lg bg-sage-700 hover:bg-sage-800 text-white text-xs font-bold shadow-xs transition flex items-center gap-1.5">
+              <i class="fa-solid fa-print"></i>
+              <span>列印報告</span>
+            </button>
+          </div>
         </div>
+
+        <!-- 0. 7-Dimension Summary -->
+        ${dimSummaryHtml}
 
         <!-- 1. Homeopathic Remedies Ranked List -->
         <div class="space-y-4">
@@ -2919,7 +3006,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         </div>
 
         <!-- 2. Emotional Detox: Bach Flower Remedy Card (Strictly included for Symptom queries) -->
-        <div class="bg-gradient-to-br from-sage-800 to-sage-900 text-linen-50 rounded-2xl p-5 sm:p-6 shadow-md border border-sage-700">
+        <div class="print-block bg-gradient-to-br from-sage-800 to-sage-900 text-linen-50 rounded-2xl p-5 sm:p-6 shadow-md border border-sage-700">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-sage-700">
             <div class="flex items-center gap-3">
               <div class="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-400/40 text-amber-200 flex items-center justify-center text-xl">
@@ -2943,7 +3030,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         </div>
 
         <!-- 3. Conventional Medical Advice & Lifestyle Guidance -->
-        <div class="bg-linen-50 border border-linen-300 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+        <div class="print-block bg-linen-50 border border-linen-300 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
           <div class="flex items-center gap-2.5 text-sage-900 border-b border-linen-200 pb-3">
             <i class="fa-solid fa-heart-pulse text-sage-700 text-lg"></i>
             <h3 class="font-serif text-lg font-bold">常規醫療分析與生活起居衛教建議</h3>
@@ -2968,10 +3055,25 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         </div>
 
         <!-- 4. Interactive Follow-Up Prompt (If applicable) -->
-        ${followUpHtml}
+        <div class="no-print">
+          ${followUpHtml}
+        </div>
+
+        <!-- 5. Print-only Medical Disclaimer Footer -->
+        <div class="print-only pt-4 mt-4 border-t border-sage-300 text-[11px] text-sage-600 leading-relaxed">
+          <strong>重要聲明：</strong>本「順勢療方評估與配對報告」由順勢療方助手（Materia Medica & Bach System）產生，內容參考 S.R. Phatak Concise Materia Medica、materiamedica.info 與 Bach Centre 體系，僅供順勢療法學術研究與日常保健參考，不取代醫療診斷或必要治療。若出現嚴重或快速惡化症狀，請優先尋求合格醫療協助。
+        </div>
       `;
 
       container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+
+    function printReport() {
+      window.print();
     }
 
     function focusDimension(id) {
