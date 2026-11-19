@@ -152,12 +152,12 @@
       <!-- Mode Switcher Pills & Settings -->
       <nav class="flex bg-sage-800 p-1 rounded-xl border border-sage-700 w-full sm:w-auto items-center">
         <button id="tab-symptom" onclick="switchMode('symptom')"
-          class="flex-1 sm:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 bg-linen-50 text-sage-900 shadow-sm">
+          class="flex-1 sm:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 text-sage-200 hover:text-white">
           <i class="fa-solid fa-stethoscope text-sage-600"></i>
           <span>症狀評估與配對</span>
         </button>
         <button id="tab-remedy" onclick="switchMode('remedy')"
-          class="flex-1 sm:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 text-sage-200 hover:text-white">
+          class="flex-1 sm:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 bg-linen-50 text-sage-900 shadow-sm">
           <i class="fa-solid fa-book-medical"></i>
           <span>順勢藥名直接查詢</span>
         </button>
@@ -181,7 +181,7 @@
     <!-- ========================================================= -->
     <!-- MODE 1: 症狀評估與配對 (7-Dimension Assessment)             -->
     <!-- ========================================================= -->
-    <section id="view-symptom" class="space-y-6">
+    <section id="view-symptom" class="hidden space-y-6">
 
       <!-- Quick Scenario Examples Bar -->
       <div class="bg-linen-50 border border-linen-300 rounded-2xl p-4 sm:p-5 shadow-sm">
@@ -509,7 +509,7 @@
     <!-- ========================================================= -->
     <!-- MODE 2: 順勢藥名直接查詢 (Direct Remedy Lookup)             -->
     <!-- ========================================================= -->
-    <section id="view-remedy" class="hidden space-y-6">
+    <section id="view-remedy" class="space-y-6">
       <div class="bg-linen-50 border border-linen-300 rounded-2xl p-5 sm:p-6 shadow-sm space-y-5">
         <div class="border-b border-linen-200 pb-4">
           <h2 class="font-serif text-xl font-bold text-sage-900 flex items-center gap-2">
@@ -588,7 +588,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.19</span>
+        <span>Version 1.20</span>
       </div>
     </div>
   </footer>
@@ -1215,7 +1215,7 @@
     // =========================================================================
     // 3. STATE & INITIALIZATION
     // =========================================================================
-    let currentMode = 'symptom'; // 'symptom' | 'remedy'
+    let currentMode = 'remedy'; // 'symptom' | 'remedy'
     let diseaseNature = 'acute'; // 'acute' | 'chronic'
     
     // 因為我們已經改用 Vercel 後端隱藏金鑰，前端不需要再設定 API Key 了！
