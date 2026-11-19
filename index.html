@@ -588,7 +588,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.25</span>
+        <span>Version 1.26</span>
       </div>
     </div>
   </footer>
@@ -2001,8 +2001,9 @@ function render(){
     \${input}
     \${q.type==='choice'?\`<div class="actions"><button class="secondary" onclick="back()">上一題</button><button class="primary" onclick="choiceNext('\${q.id}')">下一步</button></div>\`:''}
     \${q.id==='safety' ? '' : \`
-    <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--line);text-align:center">
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap">
       <button class="ghost clear-all-btn" onclick="confirmResetAll()">清除全部資料</button>
+      <button type="button" class="primary" onclick="desktopFinish('\${q.id}')">填寫完成，下一步</button>
     </div>\`}
   \`;
 }
@@ -2208,6 +2209,16 @@ function renderMobileForm(){
 }
 
 function mobileFinish(){
+  save();
+  renderResult();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function desktopFinish(id){
+  const ansEl=document.getElementById('answer');
+  if(ansEl && id) state[id]=ansEl.value.trim();
+  const ageEl=document.getElementById('basicAge');
+  if(ageEl) state.age=ageEl.value.trim();
   save();
   renderResult();
   window.scrollTo({top:0,behavior:'smooth'});
