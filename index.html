@@ -588,7 +588,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.18</span>
+        <span>Version 1.19</span>
       </div>
     </div>
   </footer>
@@ -2601,6 +2601,77 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       }
     }
 
+    // =========================================================================
+    // 藥名防呆校正：對照內建 39 種經典順勢藥與 38 種巴赫花精標準譯名
+    // =========================================================================
+    const REMEDY_ALIAS_MAP = {
+      'aconitum': 'Aconitum napellus',
+      'aconite': 'Aconitum napellus',
+      'arnica': 'Arnica montana',
+      'arsenicum': 'Arsenicum album',
+      'bryonia': 'Bryonia alba',
+      'rhus tox': 'Rhus toxicodendron',
+      'apis': 'Apis mellifica',
+      'ignatia': 'Ignatia amara',
+      'lycopodium': 'Lycopodium clavatum',
+      'sulfur': 'Sulphur',
+      'aurum': 'Aurum metallicum',
+      'calcarea carb': 'Calcarea carbonica',
+      'calc carb': 'Calcarea carbonica',
+      'calcarea phos': 'Calcarea phosphorica',
+      'calc phos': 'Calcarea phosphorica',
+      'carbo veg': 'Carbo vegetabilis',
+      'kali carb': 'Kalium carbonicum',
+      'kalium carb': 'Kalium carbonicum',
+      'lachesis': 'Lachesis muta',
+      'natrum mur': 'Natrum muriaticum',
+      'nat mur': 'Natrum muriaticum',
+      'natrum sulph': 'Natrum sulfuricum',
+      'natrum sulphuricum': 'Natrum sulfuricum',
+      'nat sulph': 'Natrum sulfuricum',
+      'nitric acid': 'Nitricum acidum',
+      'silica': 'Silicea',
+      'thuja': 'Thuja occidentalis',
+      'oscillococcinum': 'Anas barbariae',
+      'antimonium tart': 'Antimonium tartaricum',
+      'ant tart': 'Antimonium tartaricum',
+      'ferrum phos': 'Ferrum phosphoricum',
+      'coffea': 'Coffea cruda',
+      'hypericum': 'Hypericum perforatum',
+      'mercurius': 'Mercurius solubilis',
+      'merc sol': 'Mercurius solubilis',
+      'pulsatilla nigricans': 'Pulsatilla',
+      'pulsatilla pratensis': 'Pulsatilla',
+      'gelsemium sempervirens': 'Gelsemium',
+      'matricaria chamomilla': 'Chamomilla',
+      'sepia officinalis': 'Sepia'
+    };
+
+    function normalizeRemedyNames(rem) {
+      if (!rem || typeof rem !== 'object') return rem;
+      const rawEn = String(rem.en || '').trim();
+      const lowerEn = rawEn.toLowerCase().replace(/\./g, '').replace(/\s+/g, ' ');
+      const aliasTarget = REMEDY_ALIAS_MAP[lowerEn];
+      const match = REMEDY_DB.find(r => {
+        const dbEn = r.en.toLowerCase();
+        return dbEn === lowerEn || (aliasTarget && r.en === aliasTarget);
+      });
+      if (match) {
+        return { ...rem, en: match.en, zh: match.zh };
+      }
+      return rem;
+    }
+
+    function normalizeBachFlowerName(bach) {
+      if (!bach || typeof bach !== 'object') return bach;
+      const rawEn = String(bach.en || '').trim().toLowerCase();
+      const match = BACH_FLOWERS.find(b => b.id === Number(bach.id) || b.en.toLowerCase() === rawEn);
+      if (match) {
+        return { ...bach, id: match.id, en: match.en, zh: match.zh };
+      }
+      return bach;
+    }
+
     async function runAISymptomAnalysis() {
       // 移除原本檢查 apiKey 的邏輯，因為金鑰現在在伺服器上
       const inputs = getFormInputs();
@@ -2622,7 +2693,8 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 3. Potency 只能從 "5CH", "9CH", "15CH", "30CH", "200CH", "200K" 中選擇。急性建議 "9CH" 或 "200K"；慢性建議 "30CH" 或 "200CH"。用量嚴格規則：凡屬「症狀藥」一律固定填寫「1 天 3 次，餐前使用」；凡屬「體質藥」一律固定填寫「1 天 1 次，或 1 周 1 次」。
 4. 若為慢性體質，請明確標註該藥屬於「症狀藥」或「體質藥」；若為急性症狀，全部標註為「症狀藥」。
 5. 從完整 38 種巴赫花精中選擇最符合情緒的一種（編號 1~38，英文名與繁體中文名）。
-6. 提供常規醫療建議（可能原因與生活起居衛教）。`;
+6. 提供常規醫療建議（可能原因與生活起居衛教）。
+7. 藥物的中文名稱（zh）必須嚴格使用台灣順勢療法標準繁體中文譯名（例如 Pulsatilla 為「白頭翁」、Nux vomica 為「馬錢子」、Aconitum napellus 為「烏頭」），嚴禁自行捏造別名、誤譯或加上多餘的括號備註。`;
 
       const userPrompt = `病程性質：${diseaseNature === 'acute' ? '急性 (Acute)' : '慢性 (Chronic)'}
 1. 病因：${inputs.cause || '未提供'}
@@ -2690,12 +2762,14 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 
       try {
         const aiData = await fetchGeminiWithBackoff(payload);
+        const normalizedRemedies = Array.isArray(aiData.remedies) ? aiData.remedies.map(normalizeRemedyNames) : [];
+        const normalizedBach = normalizeBachFlowerName(aiData.bachFlower);
         renderSymptomResults({
           sourceLabel: "Gemini AI 深度順勢辨證解析 (參考 S.R. Phatak 藥典)",
           filledCount,
           inputs,
-          ranked: aiData.remedies,
-          selectedBach: aiData.bachFlower,
+          ranked: normalizedRemedies,
+          selectedBach: normalizedBach,
           medicalAdvice: aiData.medicalAdvice,
           aiFollowUps: aiData.followUpQuestions,
           isAI: true
@@ -2726,7 +2800,8 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 
       const systemPrompt = `你是一位精通 S.R. Phatak Concise Materia Medica 與 materiamedica.info 的順勢療法專家。
 使用者正在「單純查詢順勢藥名」，請輸出該藥物的完整繁體中文藥典說明（藥名保留英文拉丁學名）。
-注意：單純查詢藥名時絕對不要包含巴赫花精。Potency 只能從 "5CH", "9CH", "15CH", "30CH", "200CH", "200K" 中選擇。`;
+注意：單純查詢藥名時絕對不要包含巴赫花精。Potency 只能從 "5CH", "9CH", "15CH", "30CH", "200CH", "200K" 中選擇。
+藥物的中文名稱（zh）必須嚴格使用台灣順勢療法標準繁體中文譯名（例如 Pulsatilla 為「白頭翁」、Nux vomica 為「馬錢子」），嚴禁自行捏造別名、誤譯或加上多餘的括號備註。`;
 
       const payload = {
         contents: [{ parts: [{ text: `請查詢順勢療法藥物：${query}` }] }],
@@ -2755,7 +2830,8 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 
       try {
         const remedies = await fetchGeminiWithBackoff(payload);
-        renderDirectRemedyResults(remedies, "Gemini AI 順勢藥典深度解析");
+        const normalizedRemedies = Array.isArray(remedies) ? remedies.map(normalizeRemedyNames) : [];
+        renderDirectRemedyResults(normalizedRemedies, "Gemini AI 順勢藥典深度解析");
         showToast("已完成藥典檢索！");
       } catch (err) {
         console.error(err);
