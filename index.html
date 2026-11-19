@@ -190,8 +190,15 @@
             <p class="text-xs text-sage-200 mt-0.5">填寫或點選越具體的感受與惡化好轉條件，順勢療方配對精準度越高</p>
           </div>
 
-          <!-- Disease Nature Selector: 急性 vs 慢性 -->
-          <div class="flex items-center gap-2 bg-sage-900/70 p-1.5 rounded-xl border border-sage-600 self-start md:self-auto">
+          <div class="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
+            <button type="button" onclick="openImportModal()"
+              class="px-3.5 py-2 rounded-xl bg-linen-50 hover:bg-amber-50 text-sage-900 border border-amber-300 text-xs font-bold shadow-sm transition flex items-center gap-1.5">
+              <i class="fa-solid fa-file-import text-amber-600"></i>
+              <span>貼入外部整理資料</span>
+            </button>
+
+            <!-- Disease Nature Selector: 急性 vs 慢性 -->
+            <div class="flex items-center gap-2 bg-sage-900/70 p-1.5 rounded-xl border border-sage-600">
             <span class="text-xs text-sage-200 pl-2 font-medium">病程性質：</span>
             <button type="button" id="nature-acute" onclick="setDiseaseNature('acute')"
               class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-amber-500 text-white shadow">
@@ -201,6 +208,7 @@
               class="px-3 py-1.5 rounded-lg text-xs font-bold transition text-sage-200 hover:text-white">
               慢性 (Chronic)
             </button>
+            </div>
           </div>
         </div>
 
@@ -526,10 +534,60 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.14</span>
+        <span>Version 1.15</span>
       </div>
     </div>
   </footer>
+
+  <!-- External Patient Info Import Modal (PrihomeKG Parser) -->
+  <div id="import-modal" class="hidden fixed inset-0 bg-sage-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity">
+    <div class="bg-linen-50 rounded-2xl w-full max-w-2xl shadow-2xl border border-sage-300 overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="bg-sage-800 px-5 py-4 flex items-center justify-between text-linen-50">
+        <h3 class="font-serif font-bold text-base sm:text-lg flex items-center gap-2">
+          <i class="fa-solid fa-file-import text-amber-300"></i>
+          <span>整塊貼入外部整理資料（自動分類至 7 大維度）</span>
+        </h3>
+        <button type="button" onclick="closeImportModal()" class="text-sage-300 hover:text-white transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-5 space-y-3 overflow-y-auto">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <p class="text-xs sm:text-sm text-sage-700 leading-relaxed">
+            請將外部整理好的病人資料（如 <strong class="text-sage-900">PrihomeKG 分類輸入 v1</strong> 格式）整塊貼入下方，系統將自動辨識【】內容並分類填入 7 大維度與病程性質。
+          </p>
+          <button type="button" onclick="fillImportSample()"
+            class="text-xs px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 font-semibold transition shrink-0">
+            <i class="fa-solid fa-flask mr-1"></i>帶入範例測試
+          </button>
+        </div>
+        <textarea id="import-raw-text" rows="11"
+          placeholder="請貼上資料，例如：&#10;PrihomeKG 分類輸入 v1&#10;基本資料：性別【女性】，年齡【50歲】。&#10;比對類型【慢性／反覆】。&#10;Symptoms 症狀【...】&#10;Sensation 主觀感受【...】&#10;Aggravation 惡化因素【...】&#10;Amelioration 改善因素【...】&#10;Concomitants 伴隨症狀【...】&#10;Etiology 病因／誘因【...】&#10;Sensitive Type 長期體質【...】"
+          class="w-full p-3.5 rounded-xl border border-linen-300 focus:ring-2 focus:ring-sage-500 focus:outline-none text-xs sm:text-sm bg-white leading-relaxed font-sans"></textarea>
+        <div class="text-[11px] text-sage-600 bg-sage-50 border border-sage-200 rounded-xl p-3 space-y-1">
+          <div class="font-bold text-sage-800"><i class="fa-solid fa-circle-info text-sage-600 mr-1"></i>自動分類對應規則：</div>
+          <p>• <strong>病因 (1)</strong>：Etiology、發病時間（從【…】開始）、基本資料 ｜ <strong>主要症狀 (2)</strong>：Symptoms、位置</p>
+          <p>• <strong>自己感覺 (3)</strong>：Sensation ｜ <strong>惡化與好轉 (4)</strong>：Aggravation、Amelioration、CRM 慢性反應模式</p>
+          <p>• <strong>伴隨 (5)／情緒 (6)／敏感 (7)</strong>：自動拆分 Concomitants 與 Sensitive Type 長期體質中的身體、情緒與環境敏感特徵</p>
+        </div>
+      </div>
+      <div class="px-5 py-4 bg-linen-100 border-t border-linen-200 flex flex-wrap items-center justify-between gap-2">
+        <button type="button" onclick="document.getElementById('import-raw-text').value=''"
+          class="text-xs text-sage-600 hover:text-sage-900 underline underline-offset-2 px-2 py-1">
+          清空文字框
+        </button>
+        <div class="flex items-center gap-2.5">
+          <button type="button" onclick="closeImportModal()"
+            class="px-4 py-2 text-sm font-bold text-sage-600 hover:text-sage-900 transition">取消</button>
+          <button type="button" onclick="parseAndFillFromImport()"
+            class="px-5 py-2 text-sm font-bold bg-sage-700 hover:bg-sage-800 text-white rounded-xl shadow transition flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>解析並填入 7 大維度</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- API Key Settings Modal -->
   <div id="settings-modal" class="hidden fixed inset-0 bg-sage-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity">
@@ -1201,6 +1259,141 @@
       });
       document.getElementById('results-container').classList.add('hidden');
       showToast("已清空所有諮詢欄位");
+    }
+
+    // =========================================================================
+    // 外部整理資料 (PrihomeKG) 對話窗口與自動分類解析器
+    // =========================================================================
+    function openImportModal() {
+      document.getElementById('import-modal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('import-raw-text').focus(), 50);
+    }
+
+    function closeImportModal() {
+      document.getElementById('import-modal').classList.add('hidden');
+    }
+
+    function fillImportSample() {
+      document.getElementById('import-raw-text').value = `PrihomeKG 分類輸入 v1
+基本資料：性別【女性】，年齡【50歲】。
+比對類型【慢性／反覆】。
+位置在【未提供】，從【已經很多年、慢慢出現】開始。
+Symptoms 症狀【黃斑部病變 飛蚊症 是網膜剝離 肝膽都不好 泡泡尿 血液循環不好】
+Sensation 主觀感受【刺麻、像冰塊貼著、脹痛】
+Aggravation 惡化因素【傍晚】
+Amelioration 改善因素【站立】
+Concomitants 伴隨症狀【動作笨拙】
+Etiology 病因／誘因【停經／更年期】
+Sensitive Type 長期體質【每次生病後都很虛弱、經期容易頭痛或不適 長年鼻子悶悶的 嗅覺不靈敏；喜歡溫暖環境、很怕冷；需要陪伴 易怒】
+CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
+    }
+
+    function parseAndFillFromImport() {
+      const raw = document.getElementById('import-raw-text').value.trim();
+      if (!raw) {
+        showToast("請先貼入病人整理資料！", true);
+        return;
+      }
+
+      const isValidVal = (v) => v && !['未提供', '無', '沒有', '不詳', 'N/A', 'none', '-'].includes(v.trim());
+      const extractBracket = (regex) => {
+        const m = raw.match(regex);
+        return m && m[1] ? m[1].trim() : '';
+      };
+
+      // 擷取各欄位【...】
+      const gender = extractBracket(/性別[：:\s]*【([^】]*)】/);
+      const age = extractBracket(/年齡[：:\s]*【([^】]*)】/);
+      const matchType = extractBracket(/比對類型[：:\s]*【([^】]*)】/);
+      const location = extractBracket(/位置在[：:\s]*【([^】]*)】/);
+      const onset = extractBracket(/從[：:\s]*【([^】]*)】開始/);
+      const symptoms = extractBracket(/(?:Symptoms\s*症狀|主要症狀|症狀)[：:\s]*【([^】]*)】/i);
+      const sensation = extractBracket(/(?:Sensation\s*主觀感受|主觀感受|自己感覺)[：:\s]*【([^】]*)】/i);
+      const aggravation = extractBracket(/(?:Aggravation\s*惡化因素|惡化因素|惡化)[：:\s]*【([^】]*)】/i);
+      const amelioration = extractBracket(/(?:Amelioration\s*改善因素|改善因素|好轉因素|好轉)[：:\s]*【([^】]*)】/i);
+      const concomitants = extractBracket(/(?:Concomitants\s*伴隨症狀|伴隨症狀)[：:\s]*【([^】]*)】/i);
+      const etiology = extractBracket(/(?:Etiology\s*病因[／/]誘因|Etiology|病因[／/與]?誘發?因素?)[：:\s]*【([^】]*)】/i);
+      const sensitiveType = extractBracket(/(?:Sensitive\s*Type\s*長期體質|長期體質|敏感特質)[：:\s]*【([^】]*)】/i);
+      const crm = extractBracket(/(?:CRM\s*慢性反應模式|慢性反應模式|反應模式)[：:\s]*【([^】]*)】/i);
+      const explicitMind = extractBracket(/(?:Mind|Emotion|情緒與行為|情緒)[：:\s]*【([^】]*)】/i);
+
+      // 判斷急性 / 慢性
+      if (matchType.includes('慢性') || matchType.includes('反覆') || crm) {
+        setDiseaseNature('chronic');
+      } else if (matchType.includes('急性')) {
+        setDiseaseNature('acute');
+      }
+
+      // 1. 病因與誘發因素 (Etiology)
+      const dim1Parts = [];
+      if (isValidVal(etiology)) dim1Parts.push(etiology);
+      if (isValidVal(onset)) dim1Parts.push(`病程起點：${onset}`);
+      const demo = [isValidVal(gender) ? gender : '', isValidVal(age) ? age : ''].filter(Boolean).join('、');
+      if (demo) dim1Parts.push(`基本資料：${demo}`);
+
+      // 2. 主要症狀 (Chief Complaint)
+      const dim2Parts = [];
+      if (isValidVal(symptoms)) dim2Parts.push(symptoms.replace(/\s+/g, '、'));
+      if (isValidVal(location)) dim2Parts.push(`位置：${location}`);
+
+      // 3. 自己感覺 (Sensation)
+      const dim3Parts = [];
+      if (isValidVal(sensation)) dim3Parts.push(sensation);
+
+      // 4. 惡化與好轉因子 (Modality)
+      const dim4Parts = [];
+      if (isValidVal(aggravation)) dim4Parts.push(`惡化：${aggravation}`);
+      if (isValidVal(amelioration)) dim4Parts.push(`改善：${amelioration}`);
+      if (isValidVal(crm)) dim4Parts.push(`反應模式：${crm}`);
+
+      // 5. 伴隨症狀 / 6. 情緒與行為 / 7. 對什麼較敏感
+      const dim5Parts = [];
+      const dim6Parts = [];
+      const dim7Parts = [];
+
+      if (isValidVal(concomitants)) dim5Parts.push(concomitants);
+      if (isValidVal(explicitMind)) dim6Parts.push(explicitMind);
+
+      // 智慧拆分 Sensitive Type 長期體質
+      if (isValidVal(sensitiveType)) {
+        const emotionKws = ['陪伴', '易怒', '生氣', '焦慮', '恐懼', '害怕', '愛哭', '哭', '憂鬱', '低落', '沒耐心', '急躁', '暴躁', '獨處', '安靜', '緊張', '悲傷', '委屈', '壓抑', '固執', '自信', '猶豫', '恐慌', '煩躁', '孤單', '敏感多疑', '壓力', '擔心', '情緒'];
+        const sensKws = ['溫暖', '怕冷', '怕熱', '冷風', '吹風', '怕光', '強光', '吵', '聲音', '噪音', '氣味', '菸味', '油煙', '潮濕', '下雨', '季節', '天氣', '冷氣', '悶熱', '觸碰', '緊繃', '環境', '空調', '打雷'];
+
+        const segments = sensitiveType.split(/[；;]+/).map(s => s.trim()).filter(Boolean);
+        segments.forEach(seg => {
+          const hasEmo = emotionKws.some(k => seg.includes(k));
+          const hasSens = sensKws.some(k => seg.includes(k));
+          if (hasEmo && !hasSens) {
+            dim6Parts.push(seg.replace(/\s+/g, '、'));
+          } else if (hasSens && !hasEmo) {
+            dim7Parts.push(seg.replace(/\s+/g, '、'));
+          } else if (hasEmo && hasSens) {
+            // 若同段同時含情緒與敏感，細分處理
+            seg.split(/[、，,\s]+/).filter(Boolean).forEach(tok => {
+              if (emotionKws.some(k => tok.includes(k))) dim6Parts.push(tok);
+              else if (sensKws.some(k => tok.includes(k))) dim7Parts.push(tok);
+              else dim5Parts.push(tok);
+            });
+          } else {
+            // 身體體質特徵歸入伴隨症狀
+            dim5Parts.push(seg.replace(/\s+/g, '、'));
+          }
+        });
+      }
+
+      // 寫入 7 大維度欄位
+      document.getElementById('dim-cause').value = dim1Parts.join('；');
+      document.getElementById('dim-symptom').value = dim2Parts.join('；');
+      document.getElementById('dim-sensation').value = dim3Parts.join('、');
+      document.getElementById('dim-modality').value = dim4Parts.join('；');
+      document.getElementById('dim-concomitant').value = dim5Parts.join('；');
+      document.getElementById('dim-emotion').value = dim6Parts.join('、');
+      document.getElementById('dim-sensitive').value = dim7Parts.join('、');
+
+      closeImportModal();
+      const filled = countFilledDimensions(getFormInputs());
+      showToast(`已成功解析並分類填入 ${filled} / 7 個維度！`);
+      document.getElementById('dim-cause').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     function applyScenario(type) {
