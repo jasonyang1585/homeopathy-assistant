@@ -202,9 +202,13 @@
               <span>貼入外部整理資料</span>
             </button>
 
-            <!-- Disease Nature Selector: 急性 vs 慢性 -->
-            <div class="flex items-center gap-2 bg-sage-900/70 p-1.5 rounded-xl border border-sage-600">
-            <span class="text-xs text-sage-200 pl-2 font-medium">病程性質：</span>
+          </div>
+        </div>
+
+        <!-- Disease Nature Selector Bar (Moved below header) -->
+        <div class="px-5 sm:px-6 pt-4 pb-0 flex flex-wrap items-center justify-between gap-2">
+          <div class="inline-flex items-center gap-2 bg-sage-800 p-1.5 rounded-xl border border-sage-700 shadow-xs">
+            <span class="text-xs text-linen-100 pl-2 font-medium">病程性質：</span>
             <button type="button" id="nature-acute" onclick="setDiseaseNature('acute')"
               class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-amber-500 text-white shadow">
               急性 (Acute)
@@ -213,12 +217,11 @@
               class="px-3 py-1.5 rounded-lg text-xs font-bold transition text-sage-200 hover:text-white">
               慢性 (Chronic)
             </button>
-            </div>
           </div>
         </div>
 
         <!-- 7 Dimensions Grid -->
-        <div class="p-5 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="p-5 sm:p-6 pt-4 grid grid-cols-1 md:grid-cols-2 gap-5">
 
           <!-- Dimension 1: 病因 -->
           <div class="bg-white p-4 rounded-xl border border-linen-200 shadow-sm space-y-2.5 md:col-span-2">
@@ -539,7 +542,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.16</span>
+        <span>Version 1.17</span>
       </div>
     </div>
   </footer>
