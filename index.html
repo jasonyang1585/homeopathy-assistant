@@ -115,6 +115,7 @@
       #results-container {
         display: block !important;
         margin-top: 0 !important;
+        filter: grayscale(100%) !important;
       }
       #results-container article,
       .print-block {
@@ -595,7 +596,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.33</span>
+        <span>Version 1.34</span>
       </div>
     </div>
   </footer>
@@ -4144,77 +4145,74 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       const natureText = data.diseaseNature === 'acute' ? '急性模式 (Acute)' : '慢性模式 (Chronic)';
       const dimRows = data.dimSummaryItems.map(d => `
         <tr>
-          <td style="width:28%; padding:6px 10px; background:#F3F7F4; border:1px solid #D5E0D9; font-weight:700; color:#2A4134; font-size:11.5px; vertical-align:top;">${d.num}. ${escapeHtml(d.label)}</td>
-          <td style="width:72%; padding:6px 10px; background:#FFFFFF; border:1px solid #D5E0D9; color:${d.val ? '#1D2E25' : '#94A39B'}; font-size:11.5px; line-height:1.5;">${d.val ? escapeHtml(d.val) : '未填寫'}</td>
+          <td style="width:28%; padding:6px 10px; background:#F3F3F3; border:1px solid #BFBFBF; font-weight:700; color:#111111; font-size:11.5px; vertical-align:top;">${d.num}. ${escapeHtml(d.label)}</td>
+          <td style="width:72%; padding:6px 10px; background:#FFFFFF; border:1px solid #BFBFBF; color:${d.val ? '#111111' : '#777777'}; font-size:11.5px; line-height:1.5;">${d.val ? escapeHtml(d.val) : '未填寫'}</td>
         </tr>
       `).join('');
 
       const remedyBlocks = data.ranked.map((rem, idx) => {
         const rule = rem._rule;
         const isTop = idx === 0;
-        const catBg = rule.category === '體質藥' ? '#FEF3C7' : '#E3ECE6';
-        const catColor = rule.category === '體質藥' ? '#92400E' : '#2A4134';
-        const catBorder = rule.category === '體質藥' ? '#F59E0B' : '#9DBCA9';
 
         const potPills = rule.potencies.map(p =>
-          `<span style="display:inline-block; padding:2px 8px; margin-right:4px; border-radius:4px; background:#2A4134; color:#F9EED6; font-family:Inter,monospace; font-weight:700; font-size:11px;">${escapeHtml(p)}</span>`
+          `<span style="display:inline-block; padding:2px 8px; margin-right:4px; border-radius:4px; background:#111111; color:#FFFFFF; font-family:Inter,monospace; font-weight:700; font-size:11px;">${escapeHtml(p)}</span>`
         ).join('');
 
         const tagPills = (rem.matchedTags && rem.matchedTags.length > 0)
           ? rem.matchedTags.map(t => {
               if (t.startsWith('★')) {
-                return `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:#FEF3C7; color:#92400E; border:1px solid #F59E0B; font-weight:700; font-size:10.5px;">${escapeHtml(t)}</span>`;
+                return `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:#EDEDED; color:#000000; border:1px solid #333333; font-weight:700; font-size:10.5px;">${escapeHtml(t)}</span>`;
               }
-              return `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:#F7F5EE; color:#2A4134; border:1px solid #DCD4C0; font-size:10.5px;"># ${escapeHtml(t)}</span>`;
+              return `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:#FFFFFF; color:#222222; border:1px solid #BBBBBB; font-size:10.5px;"># ${escapeHtml(t)}</span>`;
             }).join('')
-          : `<span style="font-size:10.5px; color:#6E7873;">整體症候群比對</span>`;
+          : `<span style="font-size:10.5px; color:#555555;">整體症候群比對</span>`;
 
         return `
-          <div style="page-break-inside:avoid; break-inside:avoid; margin-bottom:14px; border:1px solid ${isTop ? '#496E58' : '#D5E0D9'}; border-radius:10px; overflow:hidden; background:#FFFFFF;">
+          <div style="page-break-inside:avoid; break-inside:avoid; margin-bottom:14px; border:${isTop ? '1.5px solid #111111' : '1px solid #999999'}; border-radius:8px; overflow:hidden; background:#FFFFFF;">
             <!-- Header Row -->
-            <table style="width:100%; border-collapse:collapse; background:${isTop ? '#EAF2ED' : '#F7F5EE'}; border-bottom:1px solid #D5E0D9;">
+            <table style="width:100%; border-collapse:collapse; background:${isTop ? '#EAEAEA' : '#F6F6F6'}; border-bottom:1px solid #BFBFBF;">
               <tr>
                 <td style="padding:9px 12px; vertical-align:middle;">
-                  <span style="display:inline-block; width:22px; height:22px; line-height:22px; text-align:center; border-radius:6px; background:${isTop ? '#2A4134' : '#C5D8CC'}; color:${isTop ? '#FFFFFF' : '#1D2E25'}; font-weight:700; font-size:12px; margin-right:8px;">${idx + 1}</span>
-                  <span style="font-size:15px; font-weight:700; color:#1D2E25; font-family:Inter,sans-serif;">${escapeHtml(rem.en)}</span>
-                  <span style="font-size:14px; font-weight:600; color:#395746; margin-left:4px;">+(${escapeHtml(rem.zh)})</span>
-                  <span style="display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; background:${catBg}; color:${catColor}; border:1px solid ${catBorder}; font-size:10.5px; font-weight:700;">${escapeHtml(rule.category)}</span>
+                  <span style="display:inline-block; width:22px; height:22px; line-height:22px; text-align:center; border-radius:5px; background:${isTop ? '#111111' : '#FFFFFF'}; color:${isTop ? '#FFFFFF' : '#111111'}; border:1px solid #111111; font-weight:700; font-size:12px; margin-right:8px;">${idx + 1}</span>
+                  <span style="font-size:15px; font-weight:700; color:#000000; font-family:Inter,sans-serif;">${escapeHtml(rem.en)}</span>
+                  <span style="font-size:14px; font-weight:600; color:#222222; margin-left:4px;">+(${escapeHtml(rem.zh)})</span>
+                  <span style="display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; background:#FFFFFF; color:#111111; border:1px solid #555555; font-size:10.5px; font-weight:700;">${escapeHtml(rule.category)}</span>
                 </td>
                 <td style="padding:9px 12px; text-align:right; vertical-align:middle; white-space:nowrap;">
-                  <span style="font-size:11px; color:#496E58; margin-right:6px;">匹配程度</span>
-                  <span style="display:inline-block; padding:3px 10px; border-radius:999px; background:#1D2E25; color:#F9EED6; font-weight:700; font-size:12px;">${rem.matchPercent}%</span>
+                  <span style="font-size:11px; color:#333333; margin-right:6px;">匹配程度</span>
+                  <span style="display:inline-block; padding:3px 10px; border-radius:999px; background:#111111; color:#FFFFFF; font-weight:700; font-size:12px;">${rem.matchPercent}%</span>
                 </td>
               </tr>
             </table>
 
             <!-- Potency & Dosage Strip -->
-            <table style="width:100%; border-collapse:collapse; background:#F9FBF9; border-bottom:1px solid #E3ECE6;">
+            <table style="width:100%; border-collapse:collapse; background:#FAFAFA; border-bottom:1px solid #D9D9D9;">
               <tr>
-                <td style="padding:7px 12px; font-size:11.5px; color:#2A4134; vertical-align:middle;">
+                <td style="padding:7px 12px; font-size:11.5px; color:#111111; vertical-align:middle;">
                   <strong style="margin-right:6px;">建議勢能 (Potency)：</strong>${potPills}
                 </td>
-                <td style="padding:7px 12px; text-align:right; font-size:11.5px; font-weight:700; color:#1D2E25; vertical-align:middle; white-space:nowrap;">
+                <td style="padding:7px 12px; text-align:right; font-size:11.5px; font-weight:700; color:#000000; vertical-align:middle; white-space:nowrap;">
                   建議用量：${escapeHtml(rule.dosage)}
                 </td>
               </tr>
             </table>
 
             <!-- Structured Clinical Details Table -->
-            <table style="width:100%; border-collapse:collapse; font-size:11.5px; line-height:1.6;">
+            <table style="width:100%; border-collapse:collapse; font-size:11.5px; line-height:1.6; color:#111111;">
               <tr>
-                <td style="width:24%; padding:7px 12px; background:#FCFBF8; border-bottom:1px solid #ECE7DA; font-weight:700; color:#395746; vertical-align:top;">主要適應症</td>
-                <td style="width:76%; padding:7px 12px; border-bottom:1px solid #ECE7DA; color:#1D2E25; vertical-align:top;">${escapeHtml(rem.indications)}</td>
+                <td style="width:24%; padding:7px 12px; background:#F7F7F7; border-bottom:1px solid #E0E0E0; font-weight:700; color:#111111; vertical-align:top;">主要適應症</td>
+                <td style="width:76%; padding:7px 12px; border-bottom:1px solid #E0E0E0; color:#111111; vertical-align:top;">${escapeHtml(rem.indications)}</td>
               </tr>
               <tr>
-                <td style="padding:7px 12px; background:#FCFBF8; border-bottom:1px solid #ECE7DA; font-weight:700; color:#855617; vertical-align:top;">Sensation（核心感受）</td>
-                <td style="padding:7px 12px; border-bottom:1px solid #ECE7DA; color:#1D2E25; vertical-align:top;">${escapeHtml(rem.sensation)}</td>
+                <td style="padding:7px 12px; background:#F7F7F7; border-bottom:1px solid #E0E0E0; font-weight:700; color:#111111; vertical-align:top;">Sensation（核心感受）</td>
+                <td style="padding:7px 12px; border-bottom:1px solid #E0E0E0; color:#111111; vertical-align:top;">${escapeHtml(rem.sensation)}</td>
               </tr>
               <tr>
-                <td style="padding:7px 12px; background:#FCFBF8; border-bottom:1px solid #ECE7DA; font-weight:700; color:#395746; vertical-align:top;">Modality（惡化與好轉）</td>
-                <td style="padding:7px 12px; border-bottom:1px solid #ECE7DA; color:#1D2E25; vertical-align:top;">${escapeHtml(rem.modality)}</td>
+                <td style="padding:7px 12px; background:#F7F7F7; border-bottom:1px solid #E0E0E0; font-weight:700; color:#111111; vertical-align:top;">Modality（惡化與好轉）</td>
+                <td style="padding:7px 12px; border-bottom:1px solid #E0E0E0; color:#111111; vertical-align:top;">${escapeHtml(rem.modality)}</td>
               </tr>
               <tr>
-                <td style="padding:7px 12px; background:#FCFBF8; font-weight:700; color:#496E58; vertical-align:top;">吻合特徵</td>
+                <td style="padding:7px 12px; background:#F7F7F7; font-weight:700; color:#111111; vertical-align:top;">吻合特徵</td>
                 <td style="padding:6px 12px; vertical-align:top;">${tagPills}</td>
               </tr>
             </table>
@@ -4223,35 +4221,35 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       }).join('');
 
       const bachHtml = data.selectedBach ? `
-        <div style="page-break-inside:avoid; break-inside:avoid; margin-top:16px; margin-bottom:14px; border:1.5px solid #2A4134; border-radius:10px; overflow:hidden; background:#FFFFFF;">
-          <table style="width:100%; border-collapse:collapse; background:#1D2E25; color:#FCFBF8;">
+        <div style="page-break-inside:avoid; break-inside:avoid; margin-top:16px; margin-bottom:14px; border:1.5px solid #111111; border-radius:8px; overflow:hidden; background:#FFFFFF;">
+          <table style="width:100%; border-collapse:collapse; background:#EFEFEF; color:#000000; border-bottom:1px solid #999999;">
             <tr>
               <td style="padding:10px 14px;">
-                <div style="font-size:10px; letter-spacing:0.5px; color:#F1D9A6; font-weight:700;">情緒排毒・英國巴赫花精系統 (Bach Flower Remedies)</div>
-                <div style="font-size:15px; font-weight:700; margin-top:2px;">#${data.selectedBach.id} ${escapeHtml(data.selectedBach.en)} +(${escapeHtml(data.selectedBach.zh)})</div>
+                <div style="font-size:10px; letter-spacing:0.5px; color:#333333; font-weight:700;">情緒排毒・英國巴赫花精系統 (Bach Flower Remedies)</div>
+                <div style="font-size:15px; font-weight:700; color:#000000; margin-top:2px;">#${data.selectedBach.id} ${escapeHtml(data.selectedBach.en)} +(${escapeHtml(data.selectedBach.zh)})</div>
               </td>
               <td style="padding:10px 14px; text-align:right; vertical-align:middle; white-space:nowrap;">
-                <span style="display:inline-block; padding:4px 10px; border-radius:6px; background:#C88D32; color:#FFFFFF; font-weight:700; font-size:11.5px;">建議用量：每次吃 3 粒糖球</span>
+                <span style="display:inline-block; padding:4px 10px; border-radius:5px; background:#FFFFFF; color:#000000; border:1px solid #111111; font-weight:700; font-size:11.5px;">建議用量：每次吃 3 粒糖球</span>
               </td>
             </tr>
           </table>
-          <div style="padding:10px 14px; font-size:11.5px; line-height:1.65; color:#1D2E25; background:#F3F7F4;">
-            <strong style="color:#2A4134;">情緒對應解析：</strong>${escapeHtml(data.selectedBach.desc)}
+          <div style="padding:10px 14px; font-size:11.5px; line-height:1.65; color:#111111; background:#FFFFFF;">
+            <strong style="color:#000000;">情緒對應解析：</strong>${escapeHtml(data.selectedBach.desc)}
           </div>
         </div>
       ` : '';
 
       const adviceHtml = data.medicalAdvice ? `
-        <div style="page-break-inside:avoid; break-inside:avoid; margin-bottom:14px; border:1px solid #DCD4C0; border-radius:10px; overflow:hidden; background:#FFFFFF;">
-          <div style="padding:8px 14px; background:#F7F5EE; border-bottom:1px solid #DCD4C0; font-weight:700; font-size:13px; color:#1D2E25;">
+        <div style="page-break-inside:avoid; break-inside:avoid; margin-bottom:14px; border:1px solid #999999; border-radius:8px; overflow:hidden; background:#FFFFFF;">
+          <div style="padding:8px 14px; background:#F2F2F2; border-bottom:1px solid #BFBFBF; font-weight:700; font-size:13px; color:#000000;">
             常規醫療分析與生活起居衛教建議
           </div>
-          <div style="padding:10px 14px; font-size:11.5px; line-height:1.65; color:#1D2E25;">
+          <div style="padding:10px 14px; font-size:11.5px; line-height:1.65; color:#111111;">
             <div style="margin-bottom:8px;">
-              <strong style="color:#2A4134;">可能原因分析：</strong>${escapeHtml(data.medicalAdvice.causes)}
+              <strong style="color:#000000;">可能原因分析：</strong>${escapeHtml(data.medicalAdvice.causes)}
             </div>
             <div>
-              <strong style="color:#2A4134;">生活起居與照護建議：</strong>
+              <strong style="color:#000000;">生活起居與照護建議：</strong>
               <ul style="margin:4px 0 0 18px; padding:0;">
                 ${data.medicalAdvice.lifestyle.map(item => `<li style="margin-bottom:3px;">${escapeHtml(item)}</li>`).join('')}
               </ul>
@@ -4261,18 +4259,18 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       ` : '';
 
       return `
-        <div style="width:718px; box-sizing:border-box; font-family:'Noto Sans TC','Inter',sans-serif; color:#1D2E25; background:#FFFFFF; margin:0; padding:0;">
-          <!-- Formal Clinical Report Header -->
-          <div style="background:#1D2E25; color:#FCFBF8; padding:14px 18px; border-radius:10px; margin-bottom:14px;">
+        <div style="width:718px; box-sizing:border-box; font-family:'Noto Sans TC','Inter',sans-serif; color:#111111; background:#FFFFFF; margin:0; padding:0;">
+          <!-- Formal Clinical Report Header (Black & White) -->
+          <div style="border-top:3px solid #000000; border-bottom:1.5px solid #000000; padding:12px 4px; margin-bottom:14px; background:#FFFFFF;">
             <table style="width:100%; border-collapse:collapse;">
               <tr>
                 <td style="vertical-align:middle;">
-                  <div style="font-size:10px; color:#C5D8CC; letter-spacing:0.6px; font-weight:600;">${escapeHtml(data.sourceLabel)}</div>
-                  <div style="font-family:'Noto Serif TC',serif; font-size:20px; font-weight:700; margin-top:2px; letter-spacing:0.5px;">順勢療方評估與配對報告</div>
+                  <div style="font-size:10px; color:#444444; letter-spacing:0.6px; font-weight:600;">${escapeHtml(data.sourceLabel)}</div>
+                  <div style="font-family:'Noto Serif TC',serif; font-size:20px; font-weight:700; color:#000000; margin-top:2px; letter-spacing:0.5px;">順勢療方評估與配對報告</div>
                 </td>
-                <td style="text-align:right; vertical-align:middle; font-size:11px; color:#E3ECE6; line-height:1.6;">
-                  <div><strong style="color:#F1D9A6;">病程性質：</strong>${natureText}</div>
-                  <div><strong style="color:#F1D9A6;">評估時間：</strong>${escapeHtml(data.nowStr)}</div>
+                <td style="text-align:right; vertical-align:middle; font-size:11px; color:#222222; line-height:1.6;">
+                  <div><strong style="color:#000000;">病程性質：</strong>${natureText}</div>
+                  <div><strong style="color:#000000;">評估時間：</strong>${escapeHtml(data.nowStr)}</div>
                 </td>
               </tr>
             </table>
@@ -4280,7 +4278,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 
           <!-- Section 1: 7 Dimensions -->
           <div style="page-break-inside:avoid; break-inside:avoid; margin-bottom:16px;">
-            <div style="font-size:13px; font-weight:700; color:#1D2E25; border-left:4px solid #395746; padding-left:8px; margin-bottom:7px;">一、7 大維度評估摘要</div>
+            <div style="font-size:13px; font-weight:700; color:#000000; border-left:4px solid #111111; padding-left:8px; margin-bottom:7px;">一、7 大維度評估摘要</div>
             <table style="width:100%; border-collapse:collapse;">
               ${dimRows}
             </table>
@@ -4288,7 +4286,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 
           <!-- Section 2: Ranked Remedies -->
           <div style="margin-bottom:10px;">
-            <div style="font-size:13px; font-weight:700; color:#1D2E25; border-left:4px solid #C88D32; padding-left:8px; margin-bottom:8px;">二、順勢療方辨證配對結果（依匹配程度由高至低排列）</div>
+            <div style="font-size:13px; font-weight:700; color:#000000; border-left:4px solid #111111; padding-left:8px; margin-bottom:8px;">二、順勢療方辨證配對結果（依匹配程度由高至低排列）</div>
             ${remedyBlocks}
           </div>
 
@@ -4296,8 +4294,8 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
           ${adviceHtml}
 
           <!-- Disclaimer Footer -->
-          <div style="page-break-inside:avoid; break-inside:avoid; margin-top:12px; padding-top:8px; border-top:1px solid #C5D8CC; font-size:10px; color:#5D6D65; line-height:1.55;">
-            <strong>重要醫療與使用免責聲明：</strong>本報告由「順勢療方助手（Materia Medica &amp; Bach System）」產生，內容參考 S.R. Phatak Concise Materia Medica、materiamedica.info 與 Bach Centre 原創花精體系，僅供順勢療法學術研究與日常保健參考，不取代任何醫療診斷或必要治療。若出現持續、劇烈或緊急不適，請務必諮詢合格醫療專業人員。
+          <div style="page-break-inside:avoid; break-inside:avoid; margin-top:12px; padding-top:8px; border-top:1px solid #999999; font-size:10px; color:#444444; line-height:1.55;">
+            <strong style="color:#000000;">重要醫療與使用免責聲明：</strong>本報告由「順勢療方助手（Materia Medica &amp; Bach System）」產生，內容參考 S.R. Phatak Concise Materia Medica、materiamedica.info 與 Bach Centre 原創花精體系，僅供順勢療法學術研究與日常保健參考，不取代任何醫療診斷或必要治療。若出現持續、劇烈或緊急不適，請務必諮詢合格醫療專業人員。
           </div>
         </div>
       `;
@@ -4310,62 +4308,62 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         .map(([rel, nodes]) => {
           const meta = KG_RELATION_META[rel];
           const pills = nodes.map(n =>
-            `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:#F3F7F4; border:1px solid #C5D8CC; font-size:10.5px; color:#1D2E25;">${escapeHtml(n.label)} <span style="color:#6E7873; font-size:9.5px;">(${escapeHtml(n.id.split('|')[0])})</span></span>`
+            `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:#FFFFFF; border:1px solid #999999; font-size:10.5px; color:#111111;">${escapeHtml(n.label)} <span style="color:#555555; font-size:9.5px;">(${escapeHtml(n.id.split('|')[0])})</span></span>`
           ).join('');
           return `
             <tr>
-              <td style="width:28%; padding:6px 10px; background:#FDF2F2; border:1px solid #F2D0D0; font-weight:700; color:#7F1D1D; font-size:11.5px; vertical-align:top;">${escapeHtml(meta.label)}</td>
-              <td style="width:72%; padding:5px 10px; background:#FFFFFF; border:1px solid #F2D0D0; vertical-align:top;">${pills}</td>
+              <td style="width:28%; padding:6px 10px; background:#F3F3F3; border:1px solid #BFBFBF; font-weight:700; color:#111111; font-size:11.5px; vertical-align:top;">${escapeHtml(meta.label)}</td>
+              <td style="width:72%; padding:5px 10px; background:#FFFFFF; border:1px solid #BFBFBF; vertical-align:top;">${pills}</td>
             </tr>
           `;
         }).join('');
 
       const cards = data.topMatches.map((item, idx) => {
+        const isTop = idx === 0;
         const exactPills = item.exactTriples.map(t => {
           const meta = KG_RELATION_META[t.rel];
-          const bg = t.isKeynote ? '#FEF3C7' : '#F3F7F4';
-          const border = t.isKeynote ? '#F59E0B' : '#C5D8CC';
-          const color = t.isKeynote ? '#92400E' : '#1D2E25';
-          return `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:${bg}; border:1px solid ${border}; color:${color}; font-size:10.5px; ${t.isKeynote ? 'font-weight:700;' : ''}">${t.isKeynote ? '★ ' : ''}${escapeHtml(meta.label.split(' ')[0])} → ${escapeHtml(t.label)} (+${t.pts})</span>`;
+          const bg = t.isKeynote ? '#EAEAEA' : '#FFFFFF';
+          const border = t.isKeynote ? '#222222' : '#BBBBBB';
+          return `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:${bg}; border:1px solid ${border}; color:#111111; font-size:10.5px; ${t.isKeynote ? 'font-weight:700;' : ''}">${t.isKeynote ? '★ ' : ''}${escapeHtml(meta.label.split(' ')[0])} → ${escapeHtml(t.label)} (+${t.pts})</span>`;
         }).join('');
 
         const crossPills = item.crossHits.map(t =>
-          `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:#F7F5EE; border:1px solid #DCD4C0; color:#395746; font-size:10px;">跨維度：${escapeHtml(t.label)} (+${t.pts})</span>`
+          `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:#F7F7F7; border:1px dashed #999999; color:#333333; font-size:10px;">跨維度：${escapeHtml(t.label)} (+${t.pts})</span>`
         ).join('');
 
         const contraPills = item.contradictions.map(c =>
-          `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:#FEE2E2; border:1px solid #EF4444; color:#991B1B; font-size:10px; font-weight:700;">⚠ 模態反向衝突：${escapeHtml(c.label)}</span>`
+          `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:#FFFFFF; border:1.5px solid #000000; color:#000000; font-size:10px; font-weight:700;">[衝突] 模態反向：${escapeHtml(c.label)}</span>`
         ).join('');
 
         return `
-          <div style="page-break-inside:avoid; break-inside:avoid; margin-bottom:13px; border:1px solid #E5CACA; border-radius:10px; overflow:hidden; background:#FFFFFF;">
-            <table style="width:100%; border-collapse:collapse; background:#991B1B; color:#FFFFFF;">
+          <div style="page-break-inside:avoid; break-inside:avoid; margin-bottom:13px; border:${isTop ? '1.5px solid #111111' : '1px solid #999999'}; border-radius:8px; overflow:hidden; background:#FFFFFF;">
+            <table style="width:100%; border-collapse:collapse; background:${isTop ? '#EAEAEA' : '#F6F6F6'}; color:#000000; border-bottom:1px solid #BFBFBF;">
               <tr>
                 <td style="padding:8px 12px; font-size:14.5px; font-weight:700;">
-                  #${idx + 1} ${escapeHtml(item.remedy.en)} <span style="font-weight:500; color:#FEE2E2; margin-left:4px;">(${escapeHtml(item.remedy.zh)})</span>
+                  #${idx + 1} ${escapeHtml(item.remedy.en)} <span style="font-weight:500; color:#333333; margin-left:4px;">(${escapeHtml(item.remedy.zh)})</span>
                 </td>
                 <td style="padding:8px 12px; text-align:right; font-size:11.5px; font-weight:700; white-space:nowrap;">
-                  KG 圖譜分數：${item.score}
+                  <span style="display:inline-block; padding:2px 9px; border-radius:999px; background:#111111; color:#FFFFFF;">KG 圖譜分數：${item.score}</span>
                 </td>
               </tr>
             </table>
-            <div style="padding:8px 12px; border-bottom:1px solid #F2E6E6;">
-              <div style="font-size:11px; font-weight:700; color:#7F1D1D; margin-bottom:4px;">命中的知識圖譜三元組（關係邊 → 概念節點）：</div>
-              <div>${exactPills || '<span style="font-size:10.5px; color:#6E7873;">無同維度精準命中</span>'}</div>
+            <div style="padding:8px 12px; border-bottom:1px solid #E0E0E0;">
+              <div style="font-size:11px; font-weight:700; color:#111111; margin-bottom:4px;">命中的知識圖譜三元組（關係邊 → 概念節點）：</div>
+              <div>${exactPills || '<span style="font-size:10.5px; color:#555555;">無同維度精準命中</span>'}</div>
               ${crossPills ? `<div style="margin-top:4px;">${crossPills}</div>` : ''}
               ${contraPills ? `<div style="margin-top:4px;">${contraPills}</div>` : ''}
             </div>
-            <table style="width:100%; border-collapse:collapse; font-size:11px; line-height:1.55;">
+            <table style="width:100%; border-collapse:collapse; font-size:11px; line-height:1.55; color:#111111;">
               <tr>
-                <td style="width:20%; padding:6px 10px; background:#FCFBF8; border-bottom:1px solid #ECE7DA; font-weight:700; color:#2A4134;">主觀感受</td>
-                <td style="width:80%; padding:6px 10px; border-bottom:1px solid #ECE7DA;">${escapeHtml(item.remedy.sensation)}</td>
+                <td style="width:20%; padding:6px 10px; background:#F7F7F7; border-bottom:1px solid #E0E0E0; font-weight:700;">主觀感受</td>
+                <td style="width:80%; padding:6px 10px; border-bottom:1px solid #E0E0E0;">${escapeHtml(item.remedy.sensation)}</td>
               </tr>
               <tr>
-                <td style="padding:6px 10px; background:#FCFBF8; border-bottom:1px solid #ECE7DA; font-weight:700; color:#2A4134;">惡化與好轉</td>
-                <td style="padding:6px 10px; border-bottom:1px solid #ECE7DA;">${escapeHtml(item.remedy.modality)}</td>
+                <td style="padding:6px 10px; background:#F7F7F7; border-bottom:1px solid #E0E0E0; font-weight:700;">惡化與好轉</td>
+                <td style="padding:6px 10px; border-bottom:1px solid #E0E0E0;">${escapeHtml(item.remedy.modality)}</td>
               </tr>
               <tr>
-                <td style="padding:6px 10px; background:#FCFBF8; font-weight:700; color:#2A4134;">伴隨與心智</td>
+                <td style="padding:6px 10px; background:#F7F7F7; font-weight:700;">伴隨與心智</td>
                 <td style="padding:6px 10px;">${escapeHtml(item.remedy.concomitants)}｜${escapeHtml(item.remedy.mind)}</td>
               </tr>
             </table>
@@ -4374,36 +4372,36 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       }).join('');
 
       return `
-        <div style="width:718px; box-sizing:border-box; font-family:'Noto Sans TC','Inter',sans-serif; color:#1D2E25; background:#FFFFFF; margin:0; padding:0;">
-          <div style="background:#7F1D1D; color:#FFFFFF; padding:14px 18px; border-radius:10px; margin-bottom:14px;">
+        <div style="width:718px; box-sizing:border-box; font-family:'Noto Sans TC','Inter',sans-serif; color:#111111; background:#FFFFFF; margin:0; padding:0;">
+          <div style="border-top:3px solid #000000; border-bottom:1.5px solid #000000; padding:12px 4px; margin-bottom:14px; background:#FFFFFF;">
             <table style="width:100%; border-collapse:collapse;">
               <tr>
                 <td>
-                  <div style="font-size:10px; color:#FECACA; font-weight:600;">PrihomeKG Knowledge Graph 比對引擎</div>
-                  <div style="font-family:'Noto Serif TC',serif; font-size:20px; font-weight:700; margin-top:2px;">順勢療方知識圖譜概念比對報告</div>
+                  <div style="font-size:10px; color:#444444; font-weight:600;">PrihomeKG Knowledge Graph 比對引擎</div>
+                  <div style="font-family:'Noto Serif TC',serif; font-size:20px; font-weight:700; color:#000000; margin-top:2px;">順勢療方知識圖譜概念比對報告</div>
                 </td>
-                <td style="text-align:right; font-size:11px; color:#FEE2E2; line-height:1.6;">
-                  <div><strong>病程性質：</strong>${natureText}</div>
-                  <div><strong>分析時間：</strong>${escapeHtml(data.nowStr)}</div>
+                <td style="text-align:right; font-size:11px; color:#222222; line-height:1.6;">
+                  <div><strong style="color:#000000;">病程性質：</strong>${natureText}</div>
+                  <div><strong style="color:#000000;">分析時間：</strong>${escapeHtml(data.nowStr)}</div>
                 </td>
               </tr>
             </table>
           </div>
 
           <div style="page-break-inside:avoid; break-inside:avoid; margin-bottom:16px;">
-            <div style="font-size:13px; font-weight:700; color:#7F1D1D; border-left:4px solid #B91C1C; padding-left:8px; margin-bottom:7px;">一、個案萃取之知識圖譜概念節點</div>
+            <div style="font-size:13px; font-weight:700; color:#000000; border-left:4px solid #111111; padding-left:8px; margin-bottom:7px;">一、個案萃取之知識圖譜概念節點</div>
             <table style="width:100%; border-collapse:collapse;">
               ${nodeRows}
             </table>
           </div>
 
           <div>
-            <div style="font-size:13px; font-weight:700; color:#7F1D1D; border-left:4px solid #B91C1C; padding-left:8px; margin-bottom:8px;">二、圖譜候選藥物排序（★ 為藥典黑體字高鑑別節點）</div>
+            <div style="font-size:13px; font-weight:700; color:#000000; border-left:4px solid #111111; padding-left:8px; margin-bottom:8px;">二、圖譜候選藥物排序（★ 為藥典黑體字高鑑別節點）</div>
             ${cards}
           </div>
 
-          <div style="page-break-inside:avoid; break-inside:avoid; margin-top:12px; padding-top:8px; border-top:1px solid #D5E0D9; font-size:10px; color:#5D6D65; line-height:1.55;">
-            <strong>重要聲明：</strong>本知識圖譜比對報告僅供順勢療法學術研究與日常保健參考，不構成醫療診斷或處方建議。
+          <div style="page-break-inside:avoid; break-inside:avoid; margin-top:12px; padding-top:8px; border-top:1px solid #999999; font-size:10px; color:#444444; line-height:1.55;">
+            <strong style="color:#000000;">重要聲明：</strong>本知識圖譜比對報告僅供順勢療法學術研究與日常保健參考，不構成醫療診斷或處方建議。
           </div>
         </div>
       `;
