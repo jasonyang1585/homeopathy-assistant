@@ -222,7 +222,7 @@
               <span class="text-xs font-bold text-amber-700 bg-amber-200/70 px-2 py-0.5 rounded-md">慢性體質範例</span>
               <i class="fa-solid fa-arrow-right text-xs text-amber-500 group-hover:translate-x-0.5 transition"></i>
             </div>
-            <p class="text-xs sm:text-sm font-medium text-sage-900">長期疲倦消化脹氣、下午4點至8點惡化、缺乏自信猶豫不決</p>
+            <p class="text-xs sm:text-sm font-medium text-sage-900">56歲男性高血壓與牙周牙齦腫脹、疣增生、剛睡醒惡化、怕熱嗜鹹、恢復慢</p>
           </button>
         </div>
       </div>
@@ -596,7 +596,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.34</span>
+        <span>Version 1.35</span>
       </div>
     </div>
   </footer>
@@ -3007,13 +3007,13 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         document.getElementById('dim-sensitive').value = "怕強光、怕聲音吵雜、對氣味敏感";
       } else if (type === 'chronicFatigue') {
         setDiseaseNature('chronic');
-        document.getElementById('dim-cause').value = "長期工作壓力、消化機能弱";
-        document.getElementById('dim-symptom').value = "慢性胃痛脹氣反胃、容易疲倦";
-        document.getElementById('dim-sensation').value = "吃一點就脹滿發酵感、沉重無力感";
-        document.getElementById('dim-modality').value = "下午4-8點惡化、熱敷保暖好轉、溫和散步好轉";
-        document.getElementById('dim-concomitant').value = "喜歡甜食與熱飲、手腳容易冰冷";
-        document.getElementById('dim-emotion').value = "缺乏自信猶豫不決、害怕失敗";
-        document.getElementById('dim-sensitive').value = "對腰部緊繃衣物與冷飲敏感";
+        document.getElementById('dim-cause').value = "病程起點：已經很多年、慢慢出現；基本資料：男性、56歲";
+        document.getElementById('dim-symptom').value = "高血壓、牙周病、高血脂、疣／增生、牙齦腫脹；位置：眼睛周圍、右側、固定在同一位置";
+        document.getElementById('dim-sensation').value = "脹痛、腫脹感";
+        document.getElementById('dim-modality').value = "惡化：剛睡醒惡化；改善：緩慢活動；反應模式：生病後恢復很慢、慢慢越來越嚴重";
+        document.getElementById('dim-concomitant').value = "白天嗜睡、渴望鹹食、腋下冷汗";
+        document.getElementById('dim-emotion').value = "容易疲倦／意志低落";
+        document.getElementById('dim-sensitive').value = "怕熱";
       }
       showToast("已帶入情境範例，正在為您比對經典藥典...");
       runLocalSymptomMatch();
