@@ -596,7 +596,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.37</span>
+        <span>Version 1.38</span>
       </div>
     </div>
   </footer>
@@ -3797,6 +3797,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 
       const systemPrompt = `你是一位精通 S.R. Phatak Concise Materia Medica 與 materiamedica.info 的順勢療法專家。
 使用者正在「單純查詢順勢藥名」，請輸出該藥物的完整繁體中文藥典說明（藥名保留英文拉丁學名），包含 Origin（原料來源，說明屬於植物界、礦物界、動物界或生物製劑及具體取材部位）與 Affinity（作用部位／親和力，說明該藥物主要作用的器官、組織或系統）。
+【重要排版規範（黑體字標示）】：在 indications、sensation、modality、concomitants、mind、sensitivities 各欄位中，凡屬於 S.R. Phatak 藥典中的黑體字／大寫關鍵症狀（Bold / CAPITALS），或具備高 IDF 稀缺度與高度臨床鑑別力（Organon §153 奇特、罕見、具特徵性）的描述，請務必使用 Markdown 粗體 **關鍵詞彙** 包覆標示（例如：**凌晨1點至3點**、**完全不口渴**、**用力按壓好轉**），讓使用者能一眼辨識核心黑體字重點。
 注意：單純查詢藥名時絕對不要包含巴赫花精。Potency 只能從 "5CH", "9CH", "15CH", "30CH", "200CH", "200K" 中選擇。
 藥物的中文名稱（zh）必須嚴格使用台灣順勢療法標準繁體中文譯名（例如 Pulsatilla 為「白頭翁」、Nux vomica 為「馬錢子」），嚴禁自行捏造別名、誤譯或加上多餘的括號備註。`;
 
@@ -4549,6 +4550,59 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       }
     }
 
+    function getHighIdfAndKeynoteTerms(remedyEn) {
+      const terms = new Set();
+      // 1. S.R. Phatak Bold/CAPITALS Keynotes
+      if (typeof REMEDY_KEYNOTES !== 'undefined' && REMEDY_KEYNOTES[remedyEn]) {
+        REMEDY_KEYNOTES[remedyEn].forEach(t => {
+          if (t && t.trim().length >= 2) terms.add(t.trim());
+        });
+      }
+      // 2. High-IDF rare concepts (docFreq <= 3) from PrihomeKG
+      try {
+        if (!_cachedRemedyKG) {
+          _cachedRemedyKG = buildRemedyKnowledgeGraph();
+        }
+        const { graph, docFreq } = _cachedRemedyKG;
+        const entry = graph.find(g => g.remedy.en.toLowerCase() === String(remedyEn || '').toLowerCase());
+        if (entry) {
+          Object.values(entry.edges).forEach(list => {
+            list.forEach(c => {
+              const df = docFreq.get(c.id) || 99;
+              if (df <= 3) {
+                if (c.matchedTerm && c.matchedTerm.length >= 2) terms.add(c.matchedTerm);
+                if (c.label && c.label.length >= 2) terms.add(c.label);
+              }
+            });
+          });
+        }
+      } catch (e) {}
+
+      return Array.from(terms).sort((a, b) => b.length - a.length);
+    }
+
+    function formatMateriaMedicaBold(text, remedyEn) {
+      if (!text) return '';
+      let escaped = escapeHtml(text);
+
+      // Step 1: Convert AI Markdown **bold** into strong tags
+      escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-extrabold text-black">$1</strong>');
+
+      // Step 2: Highlight S.R. Phatak keynotes & High-IDF rare terms outside existing <strong> tags
+      const terms = getHighIdfAndKeynoteTerms(remedyEn);
+      if (terms.length > 0) {
+        const regexPattern = terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+        const re = new RegExp(`(${regexPattern})`, 'g');
+        // Split by existing <strong>...</strong> so we never nest tags
+        const parts = escaped.split(/(<strong[^>]*>[\s\S]*?<\/strong>)/g);
+        escaped = parts.map(part => {
+          if (part.startsWith('<strong')) return part;
+          return part.replace(re, '<strong class="font-extrabold text-black">$1</strong>');
+        }).join('');
+      }
+      return escaped;
+    }
+
     function renderDirectRemedyResults(remedies, sourceLabel) {
       const container = document.getElementById('results-container');
       container.classList.remove('hidden');
@@ -4561,7 +4615,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
               <span class="text-[11px] uppercase tracking-wider text-sage-300 block">Materia Medica 順勢藥典</span>
               <!-- STRICT FORMAT: **Bold English** +(中文藥名) -->
               <h3 class="text-xl sm:text-2xl mt-0.5">
-                <strong class="font-bold font-mono text-amber-200">${rem.en}</strong> <span class="font-semibold text-white">+(${rem.zh})</span>
+                <strong class="font-bold font-mono text-amber-200">${escapeHtml(rem.en)}</strong> <span class="font-semibold text-white">+(${escapeHtml(rem.zh)})</span>
               </h3>
             </div>
             <div class="flex flex-wrap gap-2 text-xs">
@@ -4581,7 +4635,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
                   <i class="fa-solid fa-seedling text-amber-600"></i>
                   <span>Origin（原料來源）</span>
                 </h4>
-                <p class="text-sage-800">${rem.origin || '依順勢藥典標準原料製備'}</p>
+                <p class="text-sage-800">${escapeHtml(rem.origin || '依順勢藥典標準原料製備')}</p>
               </div>
 
               <div class="bg-sage-50/80 p-4 rounded-xl border border-sage-200">
@@ -4589,7 +4643,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
                   <i class="fa-solid fa-bullseye text-sage-600"></i>
                   <span>Affinity（作用部位／親和力）</span>
                 </h4>
-                <p class="text-sage-800">${rem.affinity || '依整體臨床表現與體質而定'}</p>
+                <p class="text-sage-800">${escapeHtml(rem.affinity || '依整體臨床表現與體質而定')}</p>
               </div>
             </div>
 
@@ -4598,7 +4652,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
                 <i class="fa-solid fa-notes-medical text-sage-600"></i>
                 <span>主要適應症 (Key Indications)</span>
               </h4>
-              <p class="text-sage-800">${rem.indications}</p>
+              <p class="text-sage-800">${formatMateriaMedicaBold(rem.indications, rem.en)}</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -4607,7 +4661,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
                   <i class="fa-solid fa-wave-square text-amber-600"></i>
                   <span>Sensation（核心感受）</span>
                 </h4>
-                <p class="text-sage-800">${rem.sensation}</p>
+                <p class="text-sage-800">${formatMateriaMedicaBold(rem.sensation, rem.en)}</p>
               </div>
 
               <div class="bg-linen-50 p-4 rounded-xl border border-linen-200">
@@ -4615,22 +4669,22 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
                   <i class="fa-solid fa-sliders text-sage-600"></i>
                   <span>Modality（惡化與好轉因子）</span>
                 </h4>
-                <p class="text-sage-800">${rem.modality}</p>
+                <p class="text-sage-800">${formatMateriaMedicaBold(rem.modality, rem.en)}</p>
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div class="bg-white p-3.5 rounded-xl border border-linen-200">
                 <h4 class="font-bold text-sage-800 text-xs uppercase mb-1">伴隨症狀 (Concomitants)</h4>
-                <p class="text-sage-700 text-xs sm:text-sm">${rem.concomitants || '依整體臨床表現而定'}</p>
+                <p class="text-sage-700 text-xs sm:text-sm">${formatMateriaMedicaBold(rem.concomitants || '依整體臨床表現而定', rem.en)}</p>
               </div>
               <div class="bg-white p-3.5 rounded-xl border border-linen-200">
                 <h4 class="font-bold text-sage-800 text-xs uppercase mb-1">情緒與心智特徵 (Mind)</h4>
-                <p class="text-sage-700 text-xs sm:text-sm">${rem.mind || '依整體臨床表現而定'}</p>
+                <p class="text-sage-700 text-xs sm:text-sm">${formatMateriaMedicaBold(rem.mind || '依整體臨床表現而定', rem.en)}</p>
               </div>
               <div class="bg-white p-3.5 rounded-xl border border-linen-200">
                 <h4 class="font-bold text-sage-800 text-xs uppercase mb-1">敏感特質 (Sensitivities)</h4>
-                <p class="text-sage-700 text-xs sm:text-sm">${rem.sensitivities || '依整體臨床表現而定'}</p>
+                <p class="text-sage-700 text-xs sm:text-sm">${formatMateriaMedicaBold(rem.sensitivities || '依整體臨床表現而定', rem.en)}</p>
               </div>
             </div>
           </div>
@@ -4642,6 +4696,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-sage-600">${sourceLabel}</span>
             <h2 class="font-serif text-xl sm:text-2xl font-bold text-sage-900">順勢藥典查詢結果</h2>
+            <p class="text-xs text-sage-600 mt-0.5"><strong class="font-extrabold text-black">黑體字標示</strong>：S.R. Phatak 藥典核心關鍵症狀（Bold / CAPITALS）與高 IDF 稀缺鑑別特徵</p>
           </div>
           <span class="text-xs bg-linen-200 text-sage-800 px-3 py-1 rounded-lg">
             單純查詢順勢藥名模式（不顯示巴赫花精）
