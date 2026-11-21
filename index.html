@@ -641,7 +641,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.54</span>
+        <span>Version 1.55</span>
       </div>
     </div>
   </footer>
@@ -3504,29 +3504,30 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       if (isValidVal(concomitants)) dim5Parts.push(concomitants);
       if (isValidVal(explicitMind)) dim6Parts.push(explicitMind);
 
-      // 智慧拆分 Sensitive Type 長期體質
+      // 智慧拆分 Sensitive Type 長期體質（逐詞細分並依 Modality / 伴隨 / 情緒 / 敏感精準分流）
       if (isValidVal(sensitiveType)) {
+        const modalityKws = ['熱敷', '冷敷', '冰敷', '保暖', '按壓', '活動', '休息', '好轉', '惡化', '改善', '洗熱水澡', '冷水澡', '躺下', '坐起', '彎腰', '打嗝', '排氣', '新鮮空氣', '靜止'];
         const emotionKws = ['陪伴', '易怒', '生氣', '焦慮', '恐懼', '害怕', '愛哭', '哭', '憂鬱', '低落', '沒耐心', '急躁', '暴躁', '獨處', '安靜', '緊張', '悲傷', '委屈', '壓抑', '固執', '自信', '猶豫', '恐慌', '煩躁', '孤單', '敏感多疑', '壓力', '擔心', '情緒'];
-        const sensKws = ['溫暖', '怕冷', '怕熱', '冷風', '吹風', '怕光', '強光', '吵', '聲音', '噪音', '氣味', '菸味', '油煙', '潮濕', '下雨', '季節', '天氣', '冷氣', '悶熱', '觸碰', '緊繃', '環境', '空調', '打雷'];
+        const sensKws = ['怕冷', '怕熱', '冷風', '吹風', '怕光', '強光', '吵', '聲音', '噪音', '氣味', '菸味', '油煙', '潮濕', '下雨', '季節', '天氣', '冷氣', '悶熱', '觸碰', '緊繃', '環境', '空調', '打雷', '溫暖房間', '密閉', '過敏', '敏感'];
 
-        const segments = sensitiveType.split(/[；;]+/).map(s => s.trim()).filter(Boolean);
-        segments.forEach(seg => {
-          const hasEmo = emotionKws.some(k => seg.includes(k));
-          const hasSens = sensKws.some(k => seg.includes(k));
-          if (hasEmo && !hasSens) {
-            dim6Parts.push(seg.replace(/\s+/g, '、'));
-          } else if (hasSens && !hasEmo) {
-            dim7Parts.push(seg.replace(/\s+/g, '、'));
-          } else if (hasEmo && hasSens) {
-            // 若同段同時含情緒與敏感，細分處理
-            seg.split(/[、，,\s]+/).filter(Boolean).forEach(tok => {
-              if (emotionKws.some(k => tok.includes(k))) dim6Parts.push(tok);
-              else if (sensKws.some(k => tok.includes(k))) dim7Parts.push(tok);
-              else dim5Parts.push(tok);
-            });
+        const rawTokens = sensitiveType.split(/[；;、，,\s]+/).map(s => s.trim()).filter(Boolean);
+        const tokens = [];
+        rawTokens.forEach(t => {
+          // 遇到轉折詞（如「怕熱但局部喜歡熱敷」）再細切，避免跨維度誤歸類
+          const parts = t.split(/(?:但是|但|卻|不過)/).map(p => p.trim()).filter(Boolean);
+          tokens.push(...parts);
+        });
+
+        tokens.forEach(tok => {
+          if (modalityKws.some(k => tok.includes(k))) {
+            dim4Parts.push(tok);
+          } else if (emotionKws.some(k => tok.includes(k))) {
+            dim6Parts.push(tok);
+          } else if (sensKws.some(k => tok.includes(k))) {
+            dim7Parts.push(tok);
           } else {
-            // 身體體質特徵歸入伴隨症狀
-            dim5Parts.push(seg.replace(/\s+/g, '、'));
+            // 飲食渴望、出汗等身體體質特徵歸入伴隨症狀
+            dim5Parts.push(tok);
           }
         });
       }
@@ -4058,12 +4059,23 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       const allText = Object.values(inputs).join(" ");
       const dim67Text = `${inputs.emotion || ''} ${inputs.sensitive || ''}`.trim();
       const dim67Tokens = dim67Text.split(/[\s、，,。；;！!？?]+/).filter(t => t.length >= 2);
+      const modalityGuardKws = ['熱敷', '冷敷', '冰敷', '保暖', '按壓', '活動', '休息', '好轉', '惡化', '改善', '洗熱水澡', '冷水澡', '躺下', '坐起', '彎腰', '打嗝', '排氣', '靜止'];
+      const stopSubs67 = new Set(['喜歡', '容易', '非常', '特別', '感覺', '比較', '過度', '自己', '他人', '別人', '時間', '完全', '無法']);
 
       const scoredRemedies = REMEDY_DB.map(remedy => {
         let score = 0;
         let keynoteHits = [];
         let matchedTags = [];
         let matchedDim6Or7 = false;
+        const mindSensPool = stripClinicalMarkup(`${remedy.mind || ''} ${remedy.sensitivities || ''}`);
+        const isHitInMindOrSens = (term, isExact = false) => {
+          if (!dim67Text || !term || term.length < 2 || stopSubs67.has(term)) return false;
+          if (!dim67Text.includes(term)) return false;
+          if (modalityGuardKws.some(mk => term.includes(mk))) return false;
+          if (mindSensPool.includes(term)) return true;
+          // 若為完全吻合的藥典心智/敏感關鍵字（例如「喜歡獨處」），亦視為吻合第 6/7 維度
+          return isExact;
+        };
 
         // 1. High-specificity Keynotes (Phatak Bold/CAPITALS & Organon §153)
         const keynotes = REMEDY_KEYNOTES[remedy.en] || [];
@@ -4071,14 +4083,14 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
           if (allText.includes(kn)) {
             score += 32;
             if (!keynoteHits.includes(kn)) keynoteHits.push(kn);
-            if (dim67Text && dim67Text.includes(kn)) matchedDim6Or7 = true;
+            if (isHitInMindOrSens(kn, true)) matchedDim6Or7 = true;
           } else if (kn.length >= 3) {
             for (let i = 0; i < kn.length - 1; i++) {
               const sub = kn.slice(i, i + 2);
               if (allText.includes(sub)) {
                 score += 10;
                 if (!keynoteHits.includes(kn)) keynoteHits.push(kn);
-                if (dim67Text && dim67Text.includes(sub)) matchedDim6Or7 = true;
+                if (isHitInMindOrSens(sub, false)) matchedDim6Or7 = true;
                 break;
               }
             }
@@ -4091,14 +4103,14 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
           if (allText.includes(kw)) {
             score += 12;
             if (!matchedTags.includes(kw)) matchedTags.push(kw);
-            if (dim67Text && dim67Text.includes(kw)) matchedDim6Or7 = true;
+            if (isHitInMindOrSens(kw, true)) matchedDim6Or7 = true;
           } else {
             for (let i = 0; i < kw.length - 1; i++) {
               const sub = kw.slice(i, i + 2);
               if (allText.includes(sub)) {
                 score += 4;
                 if (!matchedTags.includes(kw)) matchedTags.push(kw);
-                if (dim67Text && dim67Text.includes(sub)) matchedDim6Or7 = true;
+                if (isHitInMindOrSens(sub, false)) matchedDim6Or7 = true;
                 break;
               }
             }
@@ -4112,7 +4124,9 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
           if (textPool.includes(token)) {
             score += 8;
             if (!keynoteHits.includes(token) && !matchedTags.includes(token)) matchedTags.push(token);
-            if (dim67Tokens.includes(token)) matchedDim6Or7 = true;
+            if (dim67Tokens.includes(token) && !modalityGuardKws.some(mk => token.includes(mk)) && mindSensPool.includes(token)) {
+              matchedDim6Or7 = true;
+            }
           }
         });
 
