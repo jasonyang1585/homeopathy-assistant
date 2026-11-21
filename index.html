@@ -596,7 +596,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.46</span>
+        <span>Version 1.47</span>
       </div>
     </div>
   </footer>
@@ -4729,7 +4729,59 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
     }
 
     function printReport() {
-      window.print();
+      const container = document.getElementById('results-container');
+      if (!container || container.classList.contains('hidden')) {
+        showToast('目前尚無可列印的報告內容', true);
+        return;
+      }
+
+      const data = window._lastReportData;
+      let reportHtml = '';
+      if (data && data.type === 'symptom') {
+        reportHtml = buildSymptomPdfHtml(data);
+      } else if (data && data.type === 'prihomekg') {
+        reportHtml = buildPrihomeKGPdfHtml(data);
+      } else {
+        const clone = container.cloneNode(true);
+        clone.querySelectorAll('.no-print').forEach(el => el.remove());
+        reportHtml = clone.innerHTML;
+      }
+
+      const existingFrame = document.getElementById('pdf-print-iframe');
+      if (existingFrame) existingFrame.remove();
+
+      const iframe = document.createElement('iframe');
+      iframe.id = 'pdf-print-iframe';
+      iframe.style.cssText = 'position:fixed; right:0; bottom:0; width:0; height:0; border:0; visibility:hidden;';
+      document.body.appendChild(iframe);
+
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(`<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>順勢療方助手｜列印報告</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    @page { size: A4; margin: 10mm 12mm; }
+    * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body { margin: 0; padding: 0; background: #FFFFFF; color: #111111; font-family: "Noto Sans TC", Inter, sans-serif; }
+    .print-wrap { width: 100%; max-width: 718px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div class="print-wrap">${reportHtml}</div>
+</body>
+</html>`);
+      doc.close();
+
+      setTimeout(() => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+      }, 250);
     }
 
     function buildSymptomPdfHtml(data) {
