@@ -641,7 +641,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.52</span>
+        <span>Version 1.53</span>
       </div>
     </div>
   </footer>
@@ -4056,10 +4056,14 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       }
 
       const allText = Object.values(inputs).join(" ");
+      const dim67Text = `${inputs.emotion || ''} ${inputs.sensitive || ''}`.trim();
+      const dim67Tokens = dim67Text.split(/[\s、，,。；;！!？?]+/).filter(t => t.length >= 2);
+
       const scoredRemedies = REMEDY_DB.map(remedy => {
         let score = 0;
         let keynoteHits = [];
         let matchedTags = [];
+        let matchedDim6Or7 = false;
 
         // 1. High-specificity Keynotes (Phatak Bold/CAPITALS & Organon §153)
         const keynotes = REMEDY_KEYNOTES[remedy.en] || [];
@@ -4067,12 +4071,14 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
           if (allText.includes(kn)) {
             score += 32;
             if (!keynoteHits.includes(kn)) keynoteHits.push(kn);
+            if (dim67Text && dim67Text.includes(kn)) matchedDim6Or7 = true;
           } else if (kn.length >= 3) {
             for (let i = 0; i < kn.length - 1; i++) {
               const sub = kn.slice(i, i + 2);
               if (allText.includes(sub)) {
                 score += 10;
                 if (!keynoteHits.includes(kn)) keynoteHits.push(kn);
+                if (dim67Text && dim67Text.includes(sub)) matchedDim6Or7 = true;
                 break;
               }
             }
@@ -4085,12 +4091,14 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
           if (allText.includes(kw)) {
             score += 12;
             if (!matchedTags.includes(kw)) matchedTags.push(kw);
+            if (dim67Text && dim67Text.includes(kw)) matchedDim6Or7 = true;
           } else {
             for (let i = 0; i < kw.length - 1; i++) {
               const sub = kw.slice(i, i + 2);
               if (allText.includes(sub)) {
                 score += 4;
                 if (!matchedTags.includes(kw)) matchedTags.push(kw);
+                if (dim67Text && dim67Text.includes(sub)) matchedDim6Or7 = true;
                 break;
               }
             }
@@ -4104,6 +4112,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
           if (textPool.includes(token)) {
             score += 8;
             if (!keynoteHits.includes(token) && !matchedTags.includes(token)) matchedTags.push(token);
+            if (dim67Tokens.includes(token)) matchedDim6Or7 = true;
           }
         });
 
@@ -4120,6 +4129,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         return {
           ...remedy,
           rawScore: score,
+          matchedDim6Or7,
           matchedTags: combinedTags.slice(0, 6)
         };
       });
@@ -4477,17 +4487,18 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 
       // Potency & Dosage strict rules (依症狀藥/體質藥與匹配程度自動計算)
       const getPotencyRule = (rem, index) => {
+        const pct = Number(rem.matchPercent) || 0;
         let category;
         if (isAI && rem.categoryType) {
           category = rem.categoryType.includes('體質') ? '體質藥' : '症狀藥';
         } else if (diseaseNature === 'acute') {
           category = '症狀藥';
         } else {
-          const isConstitutional = !!(rem.role && rem.role.includes('chronic') && !rem.role.includes('acute'));
+          const isPureChronic = !!(rem.role && rem.role.includes('chronic') && !rem.role.includes('acute'));
+          const isHighMatchMindOrSens = pct > 70 && !!rem.matchedDim6Or7;
+          const isConstitutional = isPureChronic || isHighMatchMindOrSens;
           category = isConstitutional ? '體質藥' : '症狀藥';
         }
-
-        const pct = Number(rem.matchPercent) || 0;
         let potencies;
 
         if (category === '症狀藥') {
