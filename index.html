@@ -486,27 +486,72 @@
 
         </div>
 
-        <!-- Action Buttons Bar -->
-        <div class="bg-linen-100 px-5 py-4 border-t border-linen-300 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <p class="text-xs text-sage-700 flex items-center gap-1.5">
-            <i class="fa-solid fa-circle-check text-sage-600"></i>
-            <span>支援離線經典藥典即時比對，亦可呼叫 AI 進行深度個人化順勢辨證</span>
-          </p>
-          <div class="flex flex-col sm:flex-row gap-2.5">
+        <!-- Action Buttons Bar (Clear Step 2 CTA Cards) -->
+        <div class="bg-gradient-to-b from-linen-100 to-linen-200/70 px-5 sm:px-6 py-5 sm:py-6 border-t-2 border-sage-300 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-sage-800 text-amber-200 text-xs font-bold shadow-xs shrink-0">
+                <i class="fa-solid fa-hand-pointer"></i> 最後一步
+              </span>
+              <h3 class="font-serif text-base sm:text-lg font-bold text-sage-900">
+                請點選下方「任一種」分析方式，立即產生配對報告
+              </h3>
+            </div>
+            <span class="text-xs text-sage-600">
+              填寫完 7 大維度後即可開始（3 種引擎皆可分別點擊交叉對照）
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+            <!-- Option 1: 40 Classic Remedies -->
             <button type="button" onclick="runLocalSymptomMatch()"
-              class="px-5 py-2.5 rounded-xl bg-sage-700 hover:bg-sage-800 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-magnifying-glass"></i>
-              <span>40種經典藥即時配對</span>
+              class="group text-left bg-white hover:bg-sage-50 border-2 border-sage-300 hover:border-sage-600 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between gap-3 active:scale-[0.99]">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-sage-100 text-sage-800">方式 1・離線秒速</span>
+                  <i class="fa-solid fa-magnifying-glass text-sage-600 text-base"></i>
+                </div>
+                <div class="font-bold text-base text-sage-900 group-hover:text-sage-800">40種經典藥即時配對</div>
+                <p class="text-xs text-sage-600 leading-relaxed">精選日常最常用 40 味經典順勢藥，離線即時比對並附巴赫花精建議。</p>
+              </div>
+              <div class="w-full py-2 px-3 rounded-xl bg-sage-700 group-hover:bg-sage-800 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                <span>點此開始 40 種配對</span>
+                <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-0.5 transition"></i>
+              </div>
             </button>
+
+            <!-- Option 2: PrihomeKG 325 Remedies -->
             <button type="button" id="btn-prihomekg" onclick="runPrihomeKGAnalysis()"
-              class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-diagram-project"></i>
-              <span>PrihomeKG分析 (325種)</span>
+              class="group text-left bg-white hover:bg-red-50/70 border-2 border-red-300 hover:border-red-600 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between gap-3 active:scale-[0.99]">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-800">方式 2・知識圖譜</span>
+                  <i class="fa-solid fa-diagram-project text-red-600 text-base"></i>
+                </div>
+                <div class="font-bold text-base text-sage-900 group-hover:text-red-700">PrihomeKG分析 (325種)</div>
+                <p class="text-xs text-sage-600 leading-relaxed">涵蓋 325 味藥典與 8 項概念圖譜，依急／慢性權重與黑體字精準排序。</p>
+              </div>
+              <div class="w-full py-2 px-3 rounded-xl bg-red-600 group-hover:bg-red-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                <span>點此開始 325 種圖譜分析</span>
+                <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-0.5 transition"></i>
+              </div>
             </button>
+
+            <!-- Option 3: AI Deep Analysis -->
             <button type="button" id="btn-ai-symptom" onclick="runAISymptomAnalysis()"
-              class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-sparkles"></i>
-              <span>AI 深度順勢辨證分析</span>
+              class="group text-left bg-white hover:bg-amber-50/80 border-2 border-amber-300 hover:border-amber-600 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between gap-3 active:scale-[0.99]">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">方式 3・推薦深度解析</span>
+                  <i class="fa-solid fa-sparkles text-amber-600 text-base"></i>
+                </div>
+                <div class="font-bold text-base text-sage-900 group-hover:text-amber-800">AI 深度順勢辨證分析</div>
+                <p class="text-xs text-sage-600 leading-relaxed">由 Gemini AI 綜合全部描述與語意脈絡，提供完整辨證、稀釋度與衛教。</p>
+              </div>
+              <div class="w-full py-2 px-3 rounded-xl bg-amber-600 group-hover:bg-amber-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                <span>點此開始 AI 深度辨證</span>
+                <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-0.5 transition"></i>
+              </div>
             </button>
           </div>
         </div>
@@ -596,7 +641,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.47</span>
+        <span>Version 1.48</span>
       </div>
     </div>
   </footer>
