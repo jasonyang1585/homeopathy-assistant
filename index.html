@@ -496,7 +496,7 @@
             <button type="button" onclick="runLocalSymptomMatch()"
               class="px-5 py-2.5 rounded-xl bg-sage-700 hover:bg-sage-800 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
               <i class="fa-solid fa-magnifying-glass"></i>
-              <span>39種經典藥即時配對</span>
+              <span>40種經典藥即時配對</span>
             </button>
             <button type="button" id="btn-prihomekg" onclick="runPrihomeKGAnalysis()"
               class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
@@ -542,7 +542,7 @@
           <button type="button" onclick="searchRemedyByName()"
             class="px-5 py-3 rounded-xl bg-sage-700 hover:bg-sage-800 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
             <i class="fa-solid fa-book-medical"></i>
-            <span>快查39種經典藥方</span>
+            <span>快查40種經典藥方</span>
           </button>
           <button type="button" id="btn-ai-remedy" onclick="runAIRemedyLookup()"
             class="px-5 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
@@ -596,7 +596,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.38</span>
+        <span>Version 1.39</span>
       </div>
     </div>
   </footer>
@@ -1295,6 +1295,20 @@
         mind: "因鼻塞流涕與頭痛而感到煩悶、精神不集中。",
         sensitivities: "對溫暖室內空氣、花香花粉與冷風高度敏感。",
         keywords: ["鼻塞流清涕", "冷敷新鮮空氣好轉", "進溫暖房間就惡化", "傍晚/黃昏惡化", "灼燒熱辣感", "吹冷風受寒", "過敏"]
+      },
+      {
+        en: "Euphrasia officinalis",
+        zh: "小米草",
+        role: ["acute"],
+        origin: "植物界｜列當科（原玄參科）小米草屬一年生草本植物「小米草（Eyebright）」之新鮮開花全株。",
+        affinity: "眼結膜與淚腺、眼瞼邊緣、上呼吸道黏膜（鼻腔、咽喉與氣管）及女性生殖系統。",
+        indications: "急性結膜炎、過敏性鼻炎（花粉症）伴隨劇烈灼熱流淚、受寒初期感冒、眼睛紅腫發炎畏光、麻疹初期眼鼻症狀、白天發作的帶痰咳嗽。",
+        sensation: "眼淚大量湧出且灼熱刺痛具腐蝕性（把眼周與臉頰浸得紅痛）、眼內彷彿有沙粒或毛髮摩擦感、眼睛發癢灼燒；鼻水反而溫和不刺痛（與洋蔥 Allium cepa 正好相反）。",
+        modality: "【惡化】傍晚、待在溫暖室內、強光刺激、吹南風或微風、觸碰。【好轉】戶外涼爽空氣、黑暗環境、喝咖啡、躺下（咳嗽時躺下反而好轉）。",
+        concomitants: "眼睛發紅水腫、頻頻眨眼（感覺眼睛有黏液遮蔽視線）、大量溫和不刺激的清澈鼻涕、白天咳嗽有痰但夜間躺下就不咳。",
+        mind: "沉靜內斂、不愛說話、因眼部劇烈灼痛與畏光而顯得煩悶不耐。",
+        sensitivities: "對強光（畏光）、溫暖室內空氣、風吹與花粉灰塵高度敏感。",
+        keywords: ["結膜炎", "過敏", "花粉症", "流眼淚", "鼻塞流清涕", "灼燒熱辣感", "怕強光", "進溫暖房間就惡化", "傍晚/黃昏惡化", "冷敷新鮮空氣好轉", "咳嗽"]
       }
     ];
 
@@ -1858,6 +1872,22 @@
         "新鮮空氣",
         "傍晚",
         "打噴嚏"
+      ],
+      "Euphrasia officinalis": [
+        "眼淚大量湧出且灼熱刺痛",
+        "灼熱刺痛",
+        "鼻水反而溫和不刺痛",
+        "眼內彷彿有沙粒",
+        "頻頻眨眼",
+        "結膜炎",
+        "畏光",
+        "強光",
+        "白天咳嗽有痰",
+        "躺下反而好轉",
+        "溫暖室內",
+        "傍晚",
+        "花粉症",
+        "流眼淚"
       ]
     };
 
@@ -3598,7 +3628,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
     }
 
     // =========================================================================
-    // 藥名防呆校正：對照內建 39 種經典順勢藥與 38 種巴赫花精標準譯名
+    // 藥名防呆校正：對照內建 40 種經典順勢藥與 38 種巴赫花精標準譯名
     // =========================================================================
     const REMEDY_ALIAS_MAP = {
       'aconitum': 'Aconitum napellus',
@@ -3636,6 +3666,10 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       'hypericum': 'Hypericum perforatum',
       'mercurius': 'Mercurius solubilis',
       'merc sol': 'Mercurius solubilis',
+      'euphrasia': 'Euphrasia officinalis',
+      'euphrasia off': 'Euphrasia officinalis',
+      'euphr': 'Euphrasia officinalis',
+      'eyebright': 'Euphrasia officinalis',
       'pulsatilla nigricans': 'Pulsatilla',
       'pulsatilla pratensis': 'Pulsatilla',
       'gelsemium sempervirens': 'Gelsemium',
