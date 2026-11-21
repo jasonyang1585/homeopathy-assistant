@@ -641,7 +641,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.50</span>
+        <span>Version 1.51</span>
       </div>
     </div>
   </footer>
@@ -4129,7 +4129,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 
       // Normalize percentages nicely for top candidates
       const topScore = Math.max(scoredRemedies[0].rawScore, 20);
-      const ranked = scoredRemedies.slice(0, 4).map((r, idx) => {
+      const ranked = scoredRemedies.slice(0, 5).map((r, idx) => {
         let pct = Math.min(98, Math.max(42, Math.round((r.rawScore / topScore) * 92) - idx * 4));
         if (r.rawScore === 0) pct = 35 - idx * 5;
         return { ...r, matchPercent: pct };
@@ -4302,7 +4302,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       const systemPrompt = `你是一位精通 S.R. Phatak Concise Materia Medica、materiamedica.info 與英國 Bach Centre 38 種巴赫花精的順勢療法專家。
 請根據使用者提供的 7 維度諮詢資訊與病程性質（${diseaseNature === 'acute' ? '急性' : '慢性'}），嚴格遵守以下規則輸出 JSON：
 1. 除了藥物英文名稱外，所有內容一律使用「繁體中文」。
-2. 藥物建議 3 至 4 種最匹配的順勢藥物，依匹配度由高至低排列。
+2. 藥物請固定建議 5 種最匹配的順勢藥物（前 5 名），依匹配度由高至低排列。
 3. Potency 只能從 "5CH", "9CH", "15CH", "30CH", "200CH", "200K" 中選擇。急性建議 "9CH" 或 "200K"；慢性建議 "30CH" 或 "200CH"。用量嚴格規則：凡屬「症狀藥」一律固定填寫「1 天 3 次，餐前使用」；凡屬「體質藥」一律固定填寫「1 天 1 次，或 1 周 1 次」。
 4. 若為慢性體質，請明確標註該藥屬於「症狀藥」或「體質藥」；若為急性症狀，全部標註為「症狀藥」。
 5. 從完整 38 種巴赫花精中選擇最符合情緒的一種（編號 1~38，英文名與繁體中文名）。
@@ -4376,7 +4376,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 
       try {
         const aiData = await fetchGeminiWithBackoff(payload);
-        const normalizedRemedies = Array.isArray(aiData.remedies) ? aiData.remedies.map(normalizeRemedyNames) : [];
+        const normalizedRemedies = Array.isArray(aiData.remedies) ? aiData.remedies.slice(0, 5).map(normalizeRemedyNames) : [];
         const normalizedBach = normalizeBachFlowerName(aiData.bachFlower);
         renderSymptomResults({
           sourceLabel: "Gemini AI 深度順勢辨證解析 (參考 S.R. Phatak 藥典)",
