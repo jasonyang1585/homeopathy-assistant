@@ -641,7 +641,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.53</span>
+        <span>Version 1.54</span>
       </div>
     </div>
   </footer>
@@ -4494,9 +4494,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         } else if (diseaseNature === 'acute') {
           category = '症狀藥';
         } else {
-          const isPureChronic = !!(rem.role && rem.role.includes('chronic') && !rem.role.includes('acute'));
-          const isHighMatchMindOrSens = pct > 70 && !!rem.matchedDim6Or7;
-          const isConstitutional = isPureChronic || isHighMatchMindOrSens;
+          const isConstitutional = pct > 70 && !!rem.matchedDim6Or7;
           category = isConstitutional ? '體質藥' : '症狀藥';
         }
         let potencies;
