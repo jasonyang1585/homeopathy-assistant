@@ -148,7 +148,7 @@
               Materia Medica & Bach System
             </span>
           </div>
-          <p class="text-xs text-sage-200">經典七維度順勢辨證・藥典查詢・巴赫花精情緒平衡</p>
+          <p class="text-xs text-sage-200">經典七面向順勢辨證・藥典查詢・巴赫花精情緒平衡</p>
         </div>
       </div>
 
@@ -234,7 +234,7 @@
           <div>
             <h2 class="font-serif text-lg font-bold flex items-center gap-2">
               <i class="fa-solid fa-clipboard-list text-amber-200"></i>
-              <span>經典順勢療法 7 維度諮詢評估</span>
+              <span>經典順勢療法 7 面向諮詢評估</span>
             </h2>
             <p class="text-xs text-sage-200 mt-0.5">填寫或點選越具體的感受與惡化好轉條件，順勢療方配對精準度越高</p>
           </div>
@@ -498,7 +498,7 @@
               </h3>
             </div>
             <span class="text-xs text-sage-600">
-              填寫完 7 大維度後即可開始（3 種引擎皆可分別點擊交叉對照）
+              填寫完 7 大面向後即可開始（3 種引擎皆可分別點擊交叉對照）
             </span>
           </div>
 
@@ -641,7 +641,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.63</span>
+        <span>Version 1.64</span>
       </div>
     </div>
   </footer>
@@ -656,7 +656,7 @@
         </h3>
         <button type="button" onclick="closeGuidedModal()" class="px-2.5 py-1 rounded-lg bg-sage-700 hover:bg-sage-600 text-linen-50 text-xs font-bold transition flex items-center gap-1.5">
           <i class="fa-solid fa-xmark"></i>
-          <span>返回 7 維度畫面</span>
+          <span>返回 7 面向畫面</span>
         </button>
       </div>
       <iframe id="guided-iframe" class="w-full flex-1 border-0 bg-[#F5F3EE]" title="引導模式問卷"></iframe>
@@ -669,7 +669,7 @@
       <div class="bg-sage-800 px-5 py-4 flex items-center justify-between text-linen-50">
         <h3 class="font-serif font-bold text-base sm:text-lg flex items-center gap-2">
           <i class="fa-solid fa-file-import text-amber-300"></i>
-          <span>整塊貼入外部整理資料（自動分類至 7 大維度）</span>
+          <span>整塊貼入外部整理資料（自動分類至 7 大面向）</span>
         </h3>
         <button type="button" onclick="closeImportModal()" class="text-sage-300 hover:text-white transition">
           <i class="fa-solid fa-xmark text-lg"></i>
@@ -678,7 +678,7 @@
       <div class="p-5 space-y-3 overflow-y-auto">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <p class="text-xs sm:text-sm text-sage-700 leading-relaxed">
-            請將外部整理好的病人資料（如 <strong class="text-sage-900">PrihomeKG 分類輸入 v1</strong> 格式）整塊貼入下方，系統將自動辨識【】內容並分類填入 7 大維度與病程性質。
+            請將外部整理好的病人資料（如 <strong class="text-sage-900">PrihomeKG 分類輸入 v1</strong> 格式）整塊貼入下方，系統將自動辨識【】內容並分類填入 7 大面向與病程性質。
           </p>
           <button type="button" onclick="fillImportSample()"
             class="text-xs px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 font-semibold transition shrink-0">
@@ -706,7 +706,7 @@
           <button type="button" onclick="parseAndFillFromImport()"
             class="px-5 py-2 text-sm font-bold bg-sage-700 hover:bg-sage-800 text-white rounded-xl shadow transition flex items-center gap-2">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
-            <span>解析並填入 7 大維度</span>
+            <span>解析並填入 7 大面向</span>
           </button>
         </div>
       </div>
@@ -3492,7 +3492,7 @@ renderResponsiveStart();
           rawBox.value = event.data.text;
         }
         parseAndFillFromImport();
-        showToast('已將引導模式資料送入「貼入外部整理資料」並完成 7 大維度分類！');
+        showToast('已將引導模式資料送入「貼入外部整理資料」並完成 7 大面向分類！');
       }
     });
 
@@ -3595,7 +3595,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         const rawTokens = sensitiveType.split(/[；;、，,\s]+/).map(s => s.trim()).filter(Boolean);
         const tokens = [];
         rawTokens.forEach(t => {
-          // 遇到轉折詞（如「怕熱但局部喜歡熱敷」）再細切，避免跨維度誤歸類
+          // 遇到轉折詞（如「怕熱但局部喜歡熱敷」）再細切，避免跨面向誤歸類
           const parts = t.split(/(?:但是|但|卻|不過)/).map(p => p.trim()).filter(Boolean);
           tokens.push(...parts);
         });
@@ -3614,7 +3614,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         });
       }
 
-      // 寫入 7 大維度欄位
+      // 寫入 7 大面向欄位
       document.getElementById('dim-cause').value = dim1Parts.join('；');
       document.getElementById('dim-symptom').value = dim2Parts.join('；');
       document.getElementById('dim-sensation').value = dim3Parts.join('、');
@@ -3625,7 +3625,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 
       closeImportModal();
       const filled = countFilledDimensions(getFormInputs());
-      showToast(`已成功解析並分類填入 ${filled} / 7 個維度！`);
+      showToast(`已成功解析並分類填入 ${filled} / 7 個面向！`);
       document.getElementById('dim-cause').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
@@ -4051,7 +4051,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
             }).join(' ');
 
             const crossBadges = item.crossHits.map(t =>
-              `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-linen-100 text-sage-700 border border-linen-300 text-xs">跨維度關聯：${escapeHtml(t.label)} (+${t.pts})</span>`
+              `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-linen-100 text-sage-700 border border-linen-300 text-xs">跨面向關聯：${escapeHtml(t.label)} (+${t.pts})</span>`
             ).join(' ');
 
             const contraBadges = item.contradictions.map(c =>
@@ -4078,7 +4078,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
                 <div class="p-5 space-y-3.5 text-sm">
                   <div>
                     <div class="text-xs font-bold text-sage-700 mb-1.5"><i class="fa-solid fa-share-nodes text-red-600 mr-1"></i>命中的知識圖譜三元組（關係邊 → 概念節點）：</div>
-                    <div class="flex flex-wrap gap-1.5">${exactBadges || '<span class="text-xs text-sage-500">無同維度精準命中</span>'}</div>
+                    <div class="flex flex-wrap gap-1.5">${exactBadges || '<span class="text-xs text-sage-500">無同面向精準命中</span>'}</div>
                   </div>
                   ${crossBadges ? `<div class="flex flex-wrap gap-1.5 pt-1">${crossBadges}</div>` : ''}
                   ${contraBadges ? `<div class="flex flex-wrap gap-1.5 pt-1">${contraBadges}</div>` : ''}
@@ -4101,7 +4101,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
                 <i class="fa-solid fa-diagram-project"></i> PrihomeKG Knowledge Graph 比對引擎
               </span>
               <h2 class="font-serif text-xl sm:text-2xl font-bold text-sage-900">知識圖譜概念關聯比對結果</h2>
-              <p class="text-xs text-sage-600 mt-1">依據 8 項知識圖譜維度「關係邊 × 規範化概念節點 × IDF 稀缺權重 × 模態衝突扣分」計算排序（★ 為藥典黑體字高鑑別節點）</p>
+              <p class="text-xs text-sage-600 mt-1">依據 8 項知識圖譜面向「關係邊 × 規範化概念節點 × IDF 稀缺權重 × 模態衝突扣分」計算排序（★ 為藥典黑體字高鑑別節點）</p>
             </div>
             <div class="flex flex-wrap items-center gap-2 no-print">
               <button type="button" onclick="exportReportToPDF(this, 'PrihomeKG知識圖譜報告')"
@@ -4155,7 +4155,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
           if (!dim67Text.includes(term)) return false;
           if (modalityGuardKws.some(mk => term.includes(mk))) return false;
           if (mindSensPool.includes(term)) return true;
-          // 若為完全吻合的藥典心智/敏感關鍵字（例如「喜歡獨處」），亦視為吻合第 6/7 維度
+          // 若為完全吻合的藥典心智/敏感關鍵字（例如「喜歡獨處」），亦視為吻合第 6/7 面向
           return isExact;
         };
 
@@ -4413,7 +4413,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>AI 辨證分析中...</span>`;
 
       const systemPrompt = `你是一位精通 S.R. Phatak Concise Materia Medica、materiamedica.info 與英國 Bach Centre 38 種巴赫花精的順勢療法專家。
-請根據使用者提供的 7 維度諮詢資訊與病程性質（${diseaseNature === 'acute' ? '急性' : '慢性'}），嚴格遵守以下規則輸出 JSON：
+請根據使用者提供的 7 面向諮詢資訊與病程性質（${diseaseNature === 'acute' ? '急性' : '慢性'}），嚴格遵守以下規則輸出 JSON：
 1. 除了藥物英文名稱外，所有內容一律使用「繁體中文」。
 2. 藥物請固定建議 5 種最匹配的順勢藥物（前 5 名），依匹配度由高至低排列。
 3. Potency 只能從 "5CH", "9CH", "15CH", "30CH", "200CH", "200K" 中選擇。急性建議 "9CH" 或 "200K"；慢性建議 "30CH" 或 "200CH"。用量嚴格規則：凡屬「症狀藥」一律固定填寫「1 天 3 次，餐前使用」；凡屬「體質藥」一律固定填寫「1 天 1 次，或 1 周 1 次」。
@@ -4726,7 +4726,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
             </div>
             <div class="space-y-2 flex-1">
               <h4 class="font-bold text-sage-900 text-sm sm:text-base">
-                智能諮詢引導：補充以下細節可讓順勢配對更精準（目前填寫 ${filledCount} / 7 維度）
+                智能諮詢引導：補充以下細節可讓順勢配對更精準（目前填寫 ${filledCount} / 7 面向）
               </h4>
               <p class="text-xs sm:text-sm text-sage-700">
                 順勢療法講究「個體化辨證」，相同的病名因感受與惡化條件不同，使用的藥物完全不同。您可以點擊下方項目返回補充：
@@ -4769,7 +4769,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-linen-200 pb-2.5">
             <h3 class="font-serif text-base font-bold text-sage-900 flex items-center gap-2">
               <i class="fa-solid fa-clipboard-check text-sage-700"></i>
-              <span>7 大維度評估摘要</span>
+              <span>7 大面向評估摘要</span>
             </h3>
             <span class="text-xs text-sage-600 font-mono">評估時間：${nowStr}｜病程：${diseaseNature === 'acute' ? '急性 (Acute)' : '慢性 (Chronic)'}</span>
           </div>
@@ -5100,7 +5100,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 
           <!-- Section 1: 7 Dimensions -->
           <div style="page-break-inside:avoid; break-inside:avoid; margin-bottom:16px;">
-            <div style="font-size:13px; font-weight:700; color:#000000; border-left:4px solid #111111; padding-left:8px; margin-bottom:7px;">一、7 大維度評估摘要</div>
+            <div style="font-size:13px; font-weight:700; color:#000000; border-left:4px solid #111111; padding-left:8px; margin-bottom:7px;">一、7 大面向評估摘要</div>
             <table style="width:100%; border-collapse:collapse;">
               ${dimRows}
             </table>
@@ -5158,7 +5158,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         }).join('');
 
         const crossPills = item.crossHits.map(t =>
-          `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:#F7F7F7; border:1px dashed #999999; color:#333333; font-size:10px;">跨維度：${escapeHtml(t.label)} (+${t.pts})</span>`
+          `<span style="display:inline-block; padding:2px 7px; margin:2px 4px 2px 0; border-radius:4px; background:#F7F7F7; border:1px dashed #999999; color:#333333; font-size:10px;">跨面向：${escapeHtml(t.label)} (+${t.pts})</span>`
         ).join('');
 
         const contraPills = item.contradictions.map(c =>
@@ -5179,7 +5179,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
             </table>
             <div style="padding:8px 12px; border-bottom:1px solid #E0E0E0;">
               <div style="font-size:11px; font-weight:700; color:#111111; margin-bottom:4px;">命中的知識圖譜三元組（關係邊 → 概念節點）：</div>
-              <div>${exactPills || '<span style="font-size:10.5px; color:#555555;">無同維度精準命中</span>'}</div>
+              <div>${exactPills || '<span style="font-size:10.5px; color:#555555;">無同面向精準命中</span>'}</div>
               ${crossPills ? `<div style="margin-top:4px;">${crossPills}</div>` : ''}
               ${contraPills ? `<div style="margin-top:4px;">${contraPills}</div>` : ''}
             </div>
