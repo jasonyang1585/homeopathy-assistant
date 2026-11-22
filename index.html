@@ -543,7 +543,7 @@
               <div class="space-y-1.5">
                 <div class="flex items-center justify-between gap-2">
                   <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">方式 3・推薦深度解析</span>
-                  <i class="fa-solid fa-sparkles text-amber-600 text-base"></i>
+                  <span class="inline-flex items-center gap-1 text-amber-600 font-bold text-xs shrink-0" title="AI 智慧辨證"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10.5 2a.75.75 0 0 1 .71.51l1.54 4.62 4.62 1.54a.75.75 0 0 1 0 1.42l-4.62 1.54-1.54 4.62a.75.75 0 0 1-1.42 0l-1.54-4.62-4.62-1.54a.75.75 0 0 1 0-1.42l4.62-1.54 1.54-4.62A.75.75 0 0 1 10.5 2Zm7.5 11.25a.6.6 0 0 1 .57.41l.78 2.34 2.34.78a.6.6 0 0 1 0 1.14l-2.34.78-.78 2.34a.6.6 0 0 1-1.14 0l-.78-2.34-2.34-.78a.6.6 0 0 1 0-1.14l2.34-.78.78-2.34a.6.6 0 0 1 .57-.41Z"/></svg><span>AI</span></span>
                 </div>
                 <div class="font-bold text-base text-sage-900 group-hover:text-amber-800">AI 深度順勢辨證分析</div>
                 <p class="text-xs text-sage-600 leading-relaxed">由 Gemini AI 綜合全部描述與語意脈絡，提供完整辨證、稀釋度與衛教。</p>
@@ -591,7 +591,7 @@
           </button>
           <button type="button" id="btn-ai-remedy" onclick="runAIRemedyLookup()"
             class="px-5 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-sparkles"></i>
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10.5 2a.75.75 0 0 1 .71.51l1.54 4.62 4.62 1.54a.75.75 0 0 1 0 1.42l-4.62 1.54-1.54 4.62a.75.75 0 0 1-1.42 0l-1.54-4.62-4.62-1.54a.75.75 0 0 1 0-1.42l4.62-1.54 1.54-4.62A.75.75 0 0 1 10.5 2Zm7.5 11.25a.6.6 0 0 1 .57.41l.78 2.34 2.34.78a.6.6 0 0 1 0 1.14l-2.34.78-.78 2.34a.6.6 0 0 1-1.14 0l-.78-2.34-2.34-.78a.6.6 0 0 1 0-1.14l2.34-.78.78-2.34a.6.6 0 0 1 .57-.41Z"/></svg>
             <span>AI 查詢任意藥方</span>
           </button>
         </div>
@@ -641,7 +641,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.55</span>
+        <span>Version 1.56</span>
       </div>
     </div>
   </footer>
@@ -4712,7 +4712,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         : 'bg-linen-50 border-2 border-sage-300 rounded-2xl p-5 sm:p-6 shadow-sm space-y-5';
       const themeHeaderBorder = isAI ? 'border-b border-amber-200 pb-4' : 'border-b border-sage-200 pb-4';
       const themeBadgeHtml = isAI
-        ? `<span class="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200 mb-1.5"><i class="fa-solid fa-sparkles"></i> ${sourceLabel}</span>`
+        ? `<span class="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200 mb-1.5"><svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10.5 2a.75.75 0 0 1 .71.51l1.54 4.62 4.62 1.54a.75.75 0 0 1 0 1.42l-4.62 1.54-1.54 4.62a.75.75 0 0 1-1.42 0l-1.54-4.62-4.62-1.54a.75.75 0 0 1 0-1.42l4.62-1.54 1.54-4.62A.75.75 0 0 1 10.5 2Zm7.5 11.25a.6.6 0 0 1 .57.41l.78 2.34 2.34.78a.6.6 0 0 1 0 1.14l-2.34.78-.78 2.34a.6.6 0 0 1-1.14 0l-.78-2.34-2.34-.78a.6.6 0 0 1 0-1.14l2.34-.78.78-2.34a.6.6 0 0 1 .57-.41Z"/></svg> ${sourceLabel}</span>`
         : `<span class="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-sage-100 text-sage-800 border border-sage-300 mb-1.5"><i class="fa-solid fa-magnifying-glass"></i> ${sourceLabel}</span>`;
 
       container.innerHTML = `
