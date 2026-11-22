@@ -641,7 +641,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.57</span>
+        <span>Version 1.58</span>
       </div>
     </div>
   </footer>
@@ -5445,49 +5445,90 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       container.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    // Preload speechSynthesis voices when available
+    if ('speechSynthesis' in window && typeof window.speechSynthesis.getVoices === 'function') {
+      window.speechSynthesis.getVoices();
+      if (typeof window.speechSynthesis.addEventListener === 'function') {
+        window.speechSynthesis.addEventListener('voiceschanged', () => {
+          window.speechSynthesis.getVoices();
+        });
+      }
+    }
+
     // Speak remedy name (Latin/English scientific name + Traditional Chinese name)
     function speakRemedyName(enName, zhName) {
-      if (!('speechSynthesis' in window)) {
-        showToast("您的瀏覽器目前不支援語音朗讀功能。", true);
+      const cleanEn = (enName || '').trim();
+      const cleanZh = (zhName || '').trim();
+      const displayLabel = cleanEn && cleanZh ? `${cleanEn}（${cleanZh}）` : (cleanEn || cleanZh);
+
+      if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
+        showToast(`您的瀏覽器不支援語音合成：${displayLabel}`, true);
         return;
       }
+
       try {
-        window.speechSynthesis.cancel();
-        const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
-        const zhVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('zh-tw') || v.lang.toLowerCase().includes('zh')));
+        const synth = window.speechSynthesis;
+        if (synth.paused && typeof synth.resume === 'function') {
+          synth.resume();
+        }
+        if (synth.speaking || synth.pending) {
+          synth.cancel();
+        }
+
+        const voices = typeof synth.getVoices === 'function' ? synth.getVoices() : [];
+        const zhVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('zh-tw') || v.lang.toLowerCase().includes('zh-hk') || v.lang.toLowerCase().includes('zh')));
         const enVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('en-us') || v.lang.toLowerCase().includes('en-gb') || v.lang.toLowerCase().includes('en')));
 
-        const cleanEn = (enName || '').trim();
-        const cleanZh = (zhName || '').trim();
-
-        if (cleanEn && cleanZh) {
-          const utterEn = new SpeechSynthesisUtterance(cleanEn);
-          if (enVoice) utterEn.voice = enVoice;
-          utterEn.lang = (enVoice && enVoice.lang) || 'en-US';
-          utterEn.rate = 0.92;
-
-          const utterZh = new SpeechSynthesisUtterance(cleanZh);
-          if (zhVoice) utterZh.voice = zhVoice;
-          utterZh.lang = (zhVoice && zhVoice.lang) || 'zh-TW';
-          utterZh.rate = 1.0;
-
-          utterEn.onend = () => {
-            window.speechSynthesis.speak(utterZh);
+        const launchUtterances = () => {
+          let zhTriggered = false;
+          const triggerZh = () => {
+            if (!cleanZh || zhTriggered) return;
+            zhTriggered = true;
+            const utterZh = new SpeechSynthesisUtterance(cleanZh);
+            if (zhVoice) utterZh.voice = zhVoice;
+            utterZh.lang = (zhVoice && zhVoice.lang) || 'zh-TW';
+            utterZh.rate = 1.0;
+            utterZh.volume = 1.0;
+            synth.speak(utterZh);
           };
-          utterEn.onerror = () => {
-            window.speechSynthesis.speak(utterZh);
-          };
-          window.speechSynthesis.speak(utterEn);
-          showToast(`正在朗讀：${cleanEn}（${cleanZh}）`);
-        } else {
-          const textToSpeak = cleanEn || cleanZh;
-          const utter = new SpeechSynthesisUtterance(textToSpeak);
-          utter.lang = cleanEn ? 'en-US' : 'zh-TW';
-          window.speechSynthesis.speak(utter);
-          showToast(`正在朗讀：${textToSpeak}`);
-        }
+
+          if (cleanEn) {
+            const utterEn = new SpeechSynthesisUtterance(cleanEn);
+            if (enVoice) utterEn.voice = enVoice;
+            utterEn.lang = (enVoice && enVoice.lang) || 'en-US';
+            utterEn.rate = 0.92;
+            utterEn.volume = 1.0;
+
+            // Fallback timer in case onend is skipped by certain browsers/webviews
+            const fallbackTimer = setTimeout(triggerZh, 1400);
+            utterEn.onend = () => {
+              clearTimeout(fallbackTimer);
+              triggerZh();
+            };
+            utterEn.onerror = () => {
+              clearTimeout(fallbackTimer);
+              triggerZh();
+            };
+            synth.speak(utterEn);
+          } else {
+            triggerZh();
+          }
+
+          showToast(`正在朗讀：${displayLabel}`);
+
+          // Check if browser has zero voices or refused to start speaking
+          setTimeout(() => {
+            const currentVoices = typeof synth.getVoices === 'function' ? synth.getVoices() : [];
+            if (!synth.speaking && !synth.pending && currentVoices.length === 0) {
+              showToast("未偵測到系統語音引擎，請確認裝置音量／靜音開關或系統文字轉語音設定。", true);
+            }
+          }, 500);
+        };
+
+        // Small tick after cancel() prevents Chrome from dropping the queued utterance
+        setTimeout(launchUtterances, 40);
       } catch (err) {
-        showToast("語音朗讀啟動失敗，請再試一次。", true);
+        showToast("語音朗讀啟動失敗，請確認裝置音量或瀏覽器權限。", true);
       }
     }
   </script>
