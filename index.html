@@ -641,7 +641,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.59</span>
+        <span>Version 1.60</span>
       </div>
     </div>
   </footer>
@@ -5455,20 +5455,64 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       }
     }
 
-    // Speak remedy name (Latin/English scientific name + Traditional Chinese name)
-    // Must call synth.speak() synchronously inside click handler for Safari/iOS/mobile compatibility
+    // Speak remedy name with local TTS + online audio fallback
+    let _activeAudio = null;
+    function playOnlineTTS(text, langCode, onDone) {
+      try {
+        if (_activeAudio) {
+          _activeAudio.pause();
+          _activeAudio = null;
+        }
+        const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${encodeURIComponent(langCode)}&q=${encodeURIComponent(text)}`;
+        const audio = new Audio(url);
+        _activeAudio = audio;
+        if (onDone) {
+          audio.onended = onDone;
+          audio.onerror = onDone;
+        }
+        const p = audio.play();
+        if (p && typeof p.catch === 'function') {
+          p.catch(() => {
+            if (onDone) onDone();
+          });
+        }
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
     function speakRemedyName(enName, zhName) {
       const cleanEn = (enName || '').trim();
       const cleanZh = (zhName || '').trim();
       const displayLabel = cleanEn && cleanZh ? `${cleanEn}（${cleanZh}）` : (cleanEn || cleanZh);
 
+      const useFallback = () => {
+        showToast(`正在以線上語音朗讀：${displayLabel}`);
+        if (cleanEn && cleanZh) {
+          playOnlineTTS(cleanEn, 'en', () => playOnlineTTS(cleanZh, 'zh-TW'));
+        } else if (cleanEn) {
+          playOnlineTTS(cleanEn, 'en');
+        } else if (cleanZh) {
+          playOnlineTTS(cleanZh, 'zh-TW');
+        }
+      };
+
       if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
-        showToast(`您的瀏覽器不支援語音合成：${displayLabel}`, true);
+        useFallback();
         return;
       }
 
       try {
         const synth = window.speechSynthesis;
+        const voices = typeof synth.getVoices === 'function' ? synth.getVoices() : [];
+
+        // If browser has 0 local voices, local TTS is silent on many systems -> use online fallback
+        if (voices.length === 0) {
+          useFallback();
+          return;
+        }
+
         if (synth.speaking || synth.pending) {
           synth.cancel();
         }
@@ -5476,31 +5520,39 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
           synth.resume();
         }
 
-        const voices = typeof synth.getVoices === 'function' ? synth.getVoices() : [];
         const zhVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('zh-tw') || v.lang.toLowerCase().includes('zh-hk') || v.lang.toLowerCase().includes('zh')));
         const enVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('en-us') || v.lang.toLowerCase().includes('en-gb') || v.lang.toLowerCase().includes('en')));
 
-        if (cleanEn) {
-          const utterEn = new SpeechSynthesisUtterance(cleanEn);
-          if (enVoice) utterEn.voice = enVoice;
-          utterEn.lang = (enVoice && enVoice.lang) || 'en-US';
-          utterEn.rate = 0.92;
-          utterEn.volume = 1.0;
-          synth.speak(utterEn);
+        // Speak a single combined or primary utterance to avoid Chrome multi-utterance stall
+        const textToSpeak = cleanEn ? `${cleanEn}${cleanZh ? '，' + cleanZh : ''}` : cleanZh;
+        const utter = new SpeechSynthesisUtterance(textToSpeak);
+        if (cleanEn && enVoice) {
+          utter.voice = enVoice;
+          utter.lang = enVoice.lang;
+        } else if (zhVoice) {
+          utter.voice = zhVoice;
+          utter.lang = zhVoice.lang;
+        } else {
+          utter.lang = cleanEn ? 'en-US' : 'zh-TW';
         }
+        utter.rate = 0.92;
+        utter.volume = 1.0;
 
-        if (cleanZh) {
-          const utterZh = new SpeechSynthesisUtterance(cleanZh);
-          if (zhVoice) utterZh.voice = zhVoice;
-          utterZh.lang = (zhVoice && zhVoice.lang) || 'zh-TW';
-          utterZh.rate = 1.0;
-          utterZh.volume = 1.0;
-          synth.speak(utterZh);
-        }
+        let started = false;
+        utter.onstart = () => { started = true; };
+        utter.onerror = () => { useFallback(); };
 
+        synth.speak(utter);
         showToast(`正在朗讀：${displayLabel}`);
+
+        // If Chrome silently drops the utterance without firing onstart, fall back to online audio
+        setTimeout(() => {
+          if (!started && !synth.speaking) {
+            useFallback();
+          }
+        }, 600);
       } catch (err) {
-        showToast("語音朗讀啟動失敗，請確認裝置音量或改用 Chrome / Safari 開啟。", true);
+        useFallback();
       }
     }
   </script>
