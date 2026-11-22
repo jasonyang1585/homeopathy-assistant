@@ -641,7 +641,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.60</span>
+        <span>Version 1.61</span>
       </div>
     </div>
   </footer>
@@ -5345,7 +5345,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
                 <h3 class="text-xl sm:text-2xl">
                   <strong class="font-bold font-mono text-amber-200">${escapeHtml(rem.en)}</strong> <span class="font-semibold text-white">+(${escapeHtml(rem.zh)})</span>
                 </h3>
-                <button type="button" onclick="speakRemedyName(${JSON.stringify(rem.en)}, ${JSON.stringify(rem.zh)})"
+                <button type="button" data-en="${escapeHtml(rem.en)}" data-zh="${escapeHtml(rem.zh)}" onclick="speakRemedyName(this.dataset.en, this.dataset.zh)"
                   class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sage-700 hover:bg-amber-600 text-linen-50 border border-sage-500 hover:border-amber-400 text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer"
                   title="念出藥物名稱（拉丁／英文學名與中文藥名）">
                   <i class="fa-solid fa-volume-high text-amber-200"></i>
@@ -5523,34 +5523,44 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         const zhVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('zh-tw') || v.lang.toLowerCase().includes('zh-hk') || v.lang.toLowerCase().includes('zh')));
         const enVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('en-us') || v.lang.toLowerCase().includes('en-gb') || v.lang.toLowerCase().includes('en')));
 
-        // Speak a single combined or primary utterance to avoid Chrome multi-utterance stall
-        const textToSpeak = cleanEn ? `${cleanEn}${cleanZh ? '，' + cleanZh : ''}` : cleanZh;
-        const utter = new SpeechSynthesisUtterance(textToSpeak);
-        if (cleanEn && enVoice) {
-          utter.voice = enVoice;
-          utter.lang = enVoice.lang;
-        } else if (zhVoice) {
-          utter.voice = zhVoice;
-          utter.lang = zhVoice.lang;
-        } else {
-          utter.lang = cleanEn ? 'en-US' : 'zh-TW';
-        }
-        utter.rate = 0.92;
-        utter.volume = 1.0;
-
         let started = false;
-        utter.onstart = () => { started = true; };
-        utter.onerror = () => { useFallback(); };
+        let fallbackCalled = false;
+        const safeFallback = () => {
+          if (fallbackCalled) return;
+          fallbackCalled = true;
+          useFallback();
+        };
 
-        synth.speak(utter);
+        if (cleanEn) {
+          const utterEn = new SpeechSynthesisUtterance(cleanEn);
+          if (enVoice) utterEn.voice = enVoice;
+          utterEn.lang = (enVoice && enVoice.lang) || 'en-US';
+          utterEn.rate = 0.92;
+          utterEn.volume = 1.0;
+          utterEn.onstart = () => { started = true; };
+          utterEn.onerror = () => { if (!started) safeFallback(); };
+          synth.speak(utterEn);
+        }
+
+        if (cleanZh) {
+          const utterZh = new SpeechSynthesisUtterance(cleanZh);
+          if (zhVoice) utterZh.voice = zhVoice;
+          utterZh.lang = (zhVoice && zhVoice.lang) || 'zh-TW';
+          utterZh.rate = 1.0;
+          utterZh.volume = 1.0;
+          utterZh.onstart = () => { started = true; };
+          utterZh.onerror = () => { if (!started) safeFallback(); };
+          synth.speak(utterZh);
+        }
+
         showToast(`正在朗讀：${displayLabel}`);
 
         // If Chrome silently drops the utterance without firing onstart, fall back to online audio
         setTimeout(() => {
           if (!started && !synth.speaking) {
-            useFallback();
+            safeFallback();
           }
-        }, 600);
+        }, 700);
       } catch (err) {
         useFallback();
       }
