@@ -641,7 +641,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.56</span>
+        <span>Version 1.57</span>
       </div>
     </div>
   </footer>
@@ -5341,9 +5341,17 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
             <div>
               <span class="text-[11px] uppercase tracking-wider text-sage-300 block">Materia Medica 順勢藥典</span>
               <!-- STRICT FORMAT: **Bold English** +(中文藥名) -->
-              <h3 class="text-xl sm:text-2xl mt-0.5">
-                <strong class="font-bold font-mono text-amber-200">${escapeHtml(rem.en)}</strong> <span class="font-semibold text-white">+(${escapeHtml(rem.zh)})</span>
-              </h3>
+              <div class="flex flex-wrap items-center gap-2.5 mt-0.5">
+                <h3 class="text-xl sm:text-2xl">
+                  <strong class="font-bold font-mono text-amber-200">${escapeHtml(rem.en)}</strong> <span class="font-semibold text-white">+(${escapeHtml(rem.zh)})</span>
+                </h3>
+                <button type="button" onclick="speakRemedyName(${JSON.stringify(rem.en)}, ${JSON.stringify(rem.zh)})"
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sage-700 hover:bg-amber-600 text-linen-50 border border-sage-500 hover:border-amber-400 text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer"
+                  title="念出藥物名稱（拉丁／英文學名與中文藥名）">
+                  <i class="fa-solid fa-volume-high text-amber-200"></i>
+                  <span>念出藥名</span>
+                </button>
+              </div>
             </div>
             <div class="flex flex-wrap gap-2 text-xs">
               <span class="px-3 py-1 rounded-lg bg-sage-700 border border-sage-600 text-linen-100">
@@ -5435,6 +5443,52 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       `;
 
       container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Speak remedy name (Latin/English scientific name + Traditional Chinese name)
+    function speakRemedyName(enName, zhName) {
+      if (!('speechSynthesis' in window)) {
+        showToast("您的瀏覽器目前不支援語音朗讀功能。", true);
+        return;
+      }
+      try {
+        window.speechSynthesis.cancel();
+        const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+        const zhVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('zh-tw') || v.lang.toLowerCase().includes('zh')));
+        const enVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('en-us') || v.lang.toLowerCase().includes('en-gb') || v.lang.toLowerCase().includes('en')));
+
+        const cleanEn = (enName || '').trim();
+        const cleanZh = (zhName || '').trim();
+
+        if (cleanEn && cleanZh) {
+          const utterEn = new SpeechSynthesisUtterance(cleanEn);
+          if (enVoice) utterEn.voice = enVoice;
+          utterEn.lang = (enVoice && enVoice.lang) || 'en-US';
+          utterEn.rate = 0.92;
+
+          const utterZh = new SpeechSynthesisUtterance(cleanZh);
+          if (zhVoice) utterZh.voice = zhVoice;
+          utterZh.lang = (zhVoice && zhVoice.lang) || 'zh-TW';
+          utterZh.rate = 1.0;
+
+          utterEn.onend = () => {
+            window.speechSynthesis.speak(utterZh);
+          };
+          utterEn.onerror = () => {
+            window.speechSynthesis.speak(utterZh);
+          };
+          window.speechSynthesis.speak(utterEn);
+          showToast(`正在朗讀：${cleanEn}（${cleanZh}）`);
+        } else {
+          const textToSpeak = cleanEn || cleanZh;
+          const utter = new SpeechSynthesisUtterance(textToSpeak);
+          utter.lang = cleanEn ? 'en-US' : 'zh-TW';
+          window.speechSynthesis.speak(utter);
+          showToast(`正在朗讀：${textToSpeak}`);
+        }
+      } catch (err) {
+        showToast("語音朗讀啟動失敗，請再試一次。", true);
+      }
     }
   </script>
 </body>
