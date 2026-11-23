@@ -641,7 +641,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.64</span>
+        <span>Version 1.65</span>
       </div>
     </div>
   </footer>
@@ -3803,13 +3803,13 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
       },
       chronic: {
         TRIGGERED_BY: 8,
-        HAS_SYMPTOM: 45,
-        HAS_SENSATION: 5,
-        AGGRAVATED_BY: 5,
-        AMELIORATED_BY: 27,
-        HAS_CONCOMITANT: 29,
-        HAS_MIND_EMOTION: 30,
-        HAS_SENSITIVITY: 17
+        HAS_SYMPTOM: 21,
+        HAS_SENSATION: 3,
+        AGGRAVATED_BY: 39,
+        AMELIORATED_BY: 3,
+        HAS_CONCOMITANT: 48,
+        HAS_MIND_EMOTION: 44,
+        HAS_SENSITIVITY: 29
       }
     };
 
@@ -3962,7 +3962,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 
           for (const qn of qNodes) {
             const df = docFreq.get(qn.id) || 1;
-            const idf = 1 + Math.log((totalDocs + 1) / (df + 0.5)) * 0.45;
+            const idf = 1 + Math.log(((diseaseNature === "chronic" ? graph.length : totalDocs) + 1) / (df + 0.5)) * (diseaseNature === "chronic" ? 1.25 : 0.45);
             const isKeynote = entry.keynoteConceptIds.has(qn.id);
 
             if (remedyRelIds.has(qn.id)) {
@@ -3975,7 +3975,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
                 score -= Math.round(relWeight * 0.6);
                 contradictions.push({ rel, oppRel, id: qn.id, label: qn.label });
               } else {
-                const pts = Math.round(relWeight * 0.35 * idf);
+                const pts = Math.round(relWeight * (diseaseNature === "chronic" ? 0.40 : 0.35) * idf);
                 score += pts;
                 crossHits.push({ rel, id: qn.id, label: qn.label, pts });
               }
