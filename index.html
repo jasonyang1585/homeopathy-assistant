@@ -641,7 +641,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.65</span>
+        <span>Version 1.66</span>
       </div>
     </div>
   </footer>
@@ -678,7 +678,7 @@
       <div class="p-5 space-y-3 overflow-y-auto">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <p class="text-xs sm:text-sm text-sage-700 leading-relaxed">
-            請將外部整理好的病人資料（如 <strong class="text-sage-900">PrihomeKG 分類輸入 v1</strong> 格式）整塊貼入下方，系統將自動辨識【】內容並分類填入 7 大面向與病程性質。
+            請將外部整理好的病人資料（如 <strong class="text-sage-900">順勢個案摘要：</strong> 格式）整塊貼入下方，系統將自動辨識【】內容並分類填入 7 大面向與病程性質。
           </p>
           <button type="button" onclick="fillImportSample()"
             class="text-xs px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 font-semibold transition shrink-0">
@@ -686,7 +686,7 @@
           </button>
         </div>
         <textarea id="import-raw-text" rows="11"
-          placeholder="請貼上資料，例如：&#10;PrihomeKG 分類輸入 v1&#10;基本資料：性別【女性】，年齡【50歲】。&#10;比對類型【慢性／反覆】。&#10;Symptoms 症狀【...】&#10;Sensation 主觀感受【...】&#10;Aggravation 惡化因素【...】&#10;Amelioration 改善因素【...】&#10;Concomitants 伴隨症狀【...】&#10;Etiology 病因／誘因【...】&#10;Sensitive Type 長期體質【...】"
+          placeholder="請貼上資料，例如：&#10;順勢個案摘要：&#10;基本資料：性別【女性】，年齡【50歲】。&#10;比對類型【慢性／反覆】。&#10;Symptoms 症狀【...】&#10;Sensation 主觀感受【...】&#10;Aggravation 惡化因素【...】&#10;Amelioration 改善因素【...】&#10;Concomitants 伴隨症狀【...】&#10;Etiology 病因／誘因【...】&#10;Sensitive Type 長期體質【...】"
           class="w-full p-3.5 rounded-xl border border-linen-300 focus:ring-2 focus:ring-sage-500 focus:outline-none text-xs sm:text-sm bg-white leading-relaxed font-sans"></textarea>
         <div class="text-[11px] text-sage-600 bg-sage-50 border border-sage-200 rounded-xl p-3 space-y-1">
           <div class="font-bold text-sage-800"><i class="fa-solid fa-circle-info text-sage-600 mr-1"></i>自動分類對應規則：</div>
@@ -2847,7 +2847,7 @@ const shown = v => v || '未提供';
 
 function renderIntakeText(data) {
   return [
-    'PrihomeKG 分類輸入 v1',
+    '順勢個案摘要：',
     \`基本資料：性別【\${shown(data.metadata.gender)}】，年齡【\${data.metadata.age ? data.metadata.age + '歲' : '未提供'}】。\`,
     \`比對類型【\${data.chronic ? '慢性／反覆' : '急性'}】。\`,
     \`位置在【\${shown(data.metadata.location)}】，從【\${shown(data.metadata.onset)}】開始。\`,
@@ -2887,8 +2887,8 @@ function validateIntakePayload(data) {
 // Copy/pasting the generated text also preserves the same eight categories.
 function parseTypedCase(text) {
   let remainder = String(text || '').replace(/\\r\\n?/g, '\\n').trim();
-  if (!remainder.startsWith('PrihomeKG 分類輸入 v1')) return null;
-  remainder = remainder.slice('PrihomeKG 分類輸入 v1'.length);
+  if (!remainder.startsWith('順勢個案摘要：')) return null;
+  remainder = remainder.slice('順勢個案摘要：'.length);
   const take = (pattern) => { let value = ''; remainder = remainder.replace(pattern, (_, v) => { value = answer(v); return ''; }); return value; };
   const gender = take(/基本資料：性別【([^】]*)】/);
   const age = take(/年齡【([^】]*)】/).replace(/歲$/, '');
@@ -3506,7 +3506,7 @@ renderResponsiveStart();
     }
 
     function fillImportSample() {
-      document.getElementById('import-raw-text').value = `PrihomeKG 分類輸入 v1
+      document.getElementById('import-raw-text').value = `順勢個案摘要：
 基本資料：性別【女性】，年齡【50歲】。
 比對類型【慢性／反覆】。
 位置在【未提供】，從【已經很多年、慢慢出現】開始。
