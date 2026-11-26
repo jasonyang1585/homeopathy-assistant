@@ -486,6 +486,56 @@
 
         </div>
 
+        <!-- Chronic-Only CRM Panel (只有慢性病程顯示，且僅對慢性體質藥加權) -->
+        <div id="crm-panel" class="hidden px-5 sm:px-6 pb-5">
+          <div class="bg-amber-50/70 p-4 rounded-xl border border-amber-300 shadow-sm space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <label for="dim-crm" class="flex items-center gap-2 text-sm font-bold text-sage-900">
+                <span class="inline-flex items-center justify-center px-2 h-5 rounded-full bg-amber-600 text-white text-[11px] font-bold">CRM</span>
+                <span>慢性反應模式 (Chronic Reactive Mode)</span>
+                <span class="text-[11px] font-medium text-amber-800 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded">僅慢性體質藥加權</span>
+              </label>
+              <div id="crm-detected-badge" class="text-xs font-bold text-sage-600">尚未辨識 CRM 類型</div>
+            </div>
+            <input type="text" id="dim-crm" oninput="updateCRMPreview()"
+              placeholder="例如：慢慢越來越嚴重、容易長良性腫瘤／疣增生、每年固定季節反覆、發作週期很短且耳鼻喉反覆發炎..."
+              class="w-full px-3.5 py-2 text-sm rounded-lg border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white" />
+            <div class="space-y-1.5 pt-0.5">
+              <div class="flex flex-wrap gap-1.5 items-center">
+                <span class="text-[11px] font-bold text-amber-900 mr-1">MRS 淋病質：</span>
+                <button type="button" onclick="appendCRMTag('慢性病一直拖著好不了、回不到原本狀態')" class="tag-chip">一直拖著回不到原點</button>
+                <button type="button" onclick="appendCRMTag('緩慢潛伏發展、慢慢越來越嚴重')" class="tag-chip">緩慢潛伏越來越嚴重</button>
+                <button type="button" onclick="appendCRMTag('容易長良性腫瘤或增生（疣、瘜肉、肌瘤）')" class="tag-chip">良性腫瘤／疣增生</button>
+                <button type="button" onclick="appendCRMTag('全身性體液滯留／容易水腫')" class="tag-chip extra-tag hidden">全身體液滯留水腫</button>
+                <button type="button" onclick="appendCRMTag('黏膜慢性黏液分泌（慢性鼻炎等）')" class="tag-chip extra-tag hidden">黏膜慢性黏液分泌</button>
+                <button type="button" onclick="appendCRMTag('普遍的憂鬱傾向')" class="tag-chip extra-tag hidden">普遍憂鬱傾向</button>
+                <button type="button" onclick="appendCRMTag('疫苗／污染／長期用藥化療／重複感染／持續性壓力')" class="tag-chip extra-tag hidden">疫苗／污染／反覆用藥／持續壓力</button>
+                <button type="button" onclick="toggleExtraTags(this)" class="tag-toggle-btn"><i class="fa-solid fa-plus text-[10px]"></i><span>更多</span></button>
+              </div>
+              <div class="flex flex-wrap gap-1.5 items-center">
+                <span class="text-[11px] font-bold text-sage-800 mr-1">MRP 疥癬質：</span>
+                <button type="button" onclick="appendCRMTag('發作具週期性（數月或每年固定季節反覆）')" class="tag-chip">週期性／固定季節反覆</button>
+                <button type="button" onclick="appendCRMTag('不同症狀交替、接續或同時出現')" class="tag-chip">症狀交替或接續出現</button>
+                <button type="button" onclick="appendCRMTag('康復困難／生病後恢復很慢')" class="tag-chip">康復困難恢復慢</button>
+                <button type="button" onclick="appendCRMTag('容易有寄生蟲困擾')" class="tag-chip extra-tag hidden">容易有寄生蟲</button>
+                <button type="button" onclick="appendCRMTag('對調理缺乏良好反應')" class="tag-chip extra-tag hidden">缺乏良好反應</button>
+                <button type="button" onclick="toggleExtraTags(this)" class="tag-toggle-btn"><i class="fa-solid fa-plus text-[10px]"></i><span>更多</span></button>
+              </div>
+              <div class="flex flex-wrap gap-1.5 items-center">
+                <span class="text-[11px] font-bold text-red-800 mr-1">MRP/T 結核質：</span>
+                <button type="button" onclick="appendCRMTag('發作週期很短、頻率高且不規律（每幾週或每月）')" class="tag-chip">短週期高頻不規律</button>
+                <button type="button" onclick="appendCRMTag('反覆發作的耳鼻喉與肺部疾病')" class="tag-chip">反覆耳鼻喉與肺部疾病</button>
+                <button type="button" onclick="appendCRMTag('怕冷、對冷高度敏感')" class="tag-chip">怕冷對冷敏感</button>
+                <button type="button" onclick="appendCRMTag('體型瘦削但食慾正常')" class="tag-chip extra-tag hidden">瘦削但食慾正常</button>
+                <button type="button" onclick="appendCRMTag('常見於兒童或年輕人')" class="tag-chip extra-tag hidden">兒童或年輕人</button>
+                <button type="button" onclick="appendCRMTag('淋巴結腫大')" class="tag-chip extra-tag hidden">淋巴結腫大</button>
+                <button type="button" onclick="appendCRMTag('神經質、易怒、高度敏感')" class="tag-chip extra-tag hidden">神經質易怒敏感</button>
+                <button type="button" onclick="toggleExtraTags(this)" class="tag-toggle-btn"><i class="fa-solid fa-plus text-[10px]"></i><span>更多</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Action Buttons Bar (Clear Step 2 CTA Cards) -->
         <div class="bg-gradient-to-b from-linen-100 to-linen-200/70 px-5 sm:px-6 py-5 sm:py-6 border-t-2 border-sage-300 space-y-4">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -641,7 +691,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.68</span>
+        <span>Version 1.69</span>
       </div>
     </div>
   </footer>
@@ -2576,16 +2626,149 @@
       }
     }
 
+    // =========================================================================
+    // CRM 慢性反應模式（三分類分辨與候選藥物加權 — 僅限慢性體質藥）
+    // 參照《順勢療法－總論》CEDH Chronic Reactive Modes (MRS / MRP / MRP/T)
+    // =========================================================================
+    const CRM_PROFILES = {
+      MRS: {
+        code: 'MRS',
+        name: 'MRS (Sycotic 淋病質)',
+        shortName: 'MRS 淋病質',
+        colorClass: 'bg-amber-100 text-amber-900 border-amber-400',
+        core: ['Thuja occidentalis', 'Medorrhinum', 'Natrum sulfuricum', 'Causticum', 'Nitricum acidum'],
+        shared: ['Calcarea carbonica', 'Sepia', 'Silicea'],
+        keywords: [
+          '淋病質', 'Sycotic', '一直拖著', '好不了', '回不到原本', '回不到前面', '持續都存在', '永遠不會好',
+          '緩慢潛伏', '慢慢越來越嚴重', '高血壓', '良性腫瘤', '增生', '疣', '瘜肉', '肌瘤',
+          '體液滯留', '水腫', '慢性黏液', '慢性鼻炎', '憂鬱傾向',
+          '外來蛋白', '疫苗', '污染', '反覆用藥', '化療', '重複感染', '持續性壓力'
+        ]
+      },
+      MRP: {
+        code: 'MRP',
+        name: 'MRP (Psoric 疥癬質)',
+        shortName: 'MRP 疥癬質',
+        colorClass: 'bg-sage-100 text-sage-900 border-sage-400',
+        core: ['Sulphur', 'Psorinum', 'Arsenicum album', 'Lycopodium clavatum'],
+        shared: ['Calcarea carbonica', 'Sepia'],
+        keywords: [
+          '疥癬質', 'Psoric', '發作具週期性', '固定週期', '每年固定季節', '週期性',
+          '交替', '接續', '輪流出現', '寄生蟲', '康復困難', '恢復很慢', '缺乏良好反應', '好不完全'
+        ]
+      },
+      MRPT: {
+        code: 'MRPT',
+        name: 'MRP/T (Tuberculinic 結核質)',
+        shortName: 'MRP/T 結核質',
+        colorClass: 'bg-red-100 text-red-900 border-red-300',
+        core: ['Natrum muriaticum', 'Tuberculinum', 'Pulsatilla', 'Sulphur iodatum', 'Arsenicum iodatum', 'Calcarea phosphorica', 'Phosphorus', 'Aviaire', 'Silicea'],
+        shared: [],
+        keywords: [
+          '結核質', 'Tuberculinic', '週期很短', '間隔很短', '頻率高', '不規律', '每幾週', '幾乎每月',
+          '兒童', '年輕人', '體型瘦削', '瘦削但食慾正常', '怕冷、對冷', '對冷高度敏感', '對冷敏感',
+          '耳鼻喉與肺部', '耳鼻喉', '反覆肺部', '淋巴結腫大', '神經質', '易怒、高度敏感'
+        ]
+      }
+    };
+
+    function classifyCRM(crmText) {
+      const text = String(crmText || '').trim();
+      if (!text) return { modes: [], scores: { MRS: 0, MRP: 0, MRPT: 0 }, matchedTerms: {} };
+      const scores = { MRS: 0, MRP: 0, MRPT: 0 };
+      const matchedTerms = { MRS: [], MRP: [], MRPT: [] };
+
+      if (/(?:^|[^A-Za-z])MRS(?![A-Za-z])/i.test(text)) { scores.MRS += 3; matchedTerms.MRS.push('MRS'); }
+      if (/MRP\s*\/\s*T|MRPT/i.test(text)) { scores.MRPT += 3; matchedTerms.MRPT.push('MRP/T'); }
+      else if (/(?:^|[^A-Za-z])MRP(?![A-Za-z\/])/i.test(text)) { scores.MRP += 3; matchedTerms.MRP.push('MRP'); }
+
+      Object.values(CRM_PROFILES).forEach(prof => {
+        prof.keywords.forEach(kw => {
+          if (text.includes(kw)) {
+            scores[prof.code] += (kw.length >= 5 ? 2 : 1);
+            if (!matchedTerms[prof.code].includes(kw)) matchedTerms[prof.code].push(kw);
+          }
+        });
+      });
+
+      const maxScore = Math.max(scores.MRS, scores.MRP, scores.MRPT);
+      if (maxScore <= 0) return { modes: [], scores, matchedTerms };
+
+      const modes = Object.keys(scores)
+        .filter(code => scores[code] > 0 && (scores[code] === maxScore || (scores[code] >= 2 && scores[code] >= maxScore * 0.7)))
+        .sort((a, b) => scores[b] - scores[a])
+        .map(code => CRM_PROFILES[code]);
+
+      return { modes, scores, matchedTerms };
+    }
+
+    // 嚴格規則：CRM 慢性反應模式「只有慢性體質藥」才有加權
+    function getCRMWeightBonus(remedy, crmResult, isConstitutional, engineType = 'local') {
+      if (diseaseNature !== 'chronic') return { bonus: 0, labels: [], tier: null };
+      if (!isConstitutional) return { bonus: 0, labels: [], tier: null };
+      if (!remedy || !Array.isArray(remedy.role) || !remedy.role.includes('chronic')) {
+        return { bonus: 0, labels: [], tier: null };
+      }
+      if (!crmResult || !crmResult.modes || crmResult.modes.length === 0) {
+        return { bonus: 0, labels: [], tier: null };
+      }
+
+      const remEn = String(remedy.en || '').trim().toLowerCase();
+      let bestBonus = 0;
+      let bestTier = null;
+      const labels = [];
+
+      const corePts = engineType === 'prihomekg' ? 55 : 35;
+      const sharedPts = engineType === 'prihomekg' ? 35 : 20;
+
+      crmResult.modes.forEach(mode => {
+        const isCore = mode.core.some(n => n.toLowerCase() === remEn);
+        const isShared = !isCore && mode.shared.some(n => n.toLowerCase() === remEn);
+        if (isCore) {
+          if (corePts > bestBonus) { bestBonus = corePts; bestTier = 'core'; }
+          labels.push(`CRM:${mode.shortName}`);
+        } else if (isShared) {
+          if (sharedPts > bestBonus) { bestBonus = sharedPts; bestTier = 'shared'; }
+          labels.push(`CRM:${mode.shortName}共同`);
+        }
+      });
+
+      return { bonus: bestBonus, labels, tier: bestTier };
+    }
+
+    function appendCRMTag(text) {
+      appendTag('dim-crm', text);
+      updateCRMPreview();
+    }
+
+    function updateCRMPreview() {
+      const badge = document.getElementById('crm-detected-badge');
+      const crmEl = document.getElementById('dim-crm');
+      if (!badge || !crmEl) return;
+      const res = classifyCRM(crmEl.value);
+      if (res.modes.length === 0) {
+        badge.innerHTML = '<span class="text-sage-500 font-normal">尚未辨識 CRM 類型（可勾選下方特徵）</span>';
+        return;
+      }
+      badge.innerHTML = res.modes.map(m =>
+        `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[11px] font-bold ${m.colorClass} ml-1"><i class="fa-solid fa-layer-group text-[10px]"></i>判定：${m.name}</span>`
+      ).join('');
+    }
+
     function setDiseaseNature(nature) {
       diseaseNature = nature;
       const btnAcute = document.getElementById('nature-acute');
       const btnChronic = document.getElementById('nature-chronic');
+      const crmPanel = document.getElementById('crm-panel');
       if (nature === 'acute') {
         btnAcute.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-amber-500 text-white shadow";
         btnChronic.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition text-sage-200 hover:text-white";
+        if (crmPanel) crmPanel.classList.add('hidden');
       } else {
         btnChronic.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-amber-500 text-white shadow";
         btnAcute.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition text-sage-200 hover:text-white";
+        if (crmPanel) crmPanel.classList.remove('hidden');
+        updateCRMPreview();
       }
     }
 
@@ -2616,9 +2799,11 @@
     }
 
     function clearSymptomForm() {
-      ['dim-cause', 'dim-symptom', 'dim-sensation', 'dim-modality', 'dim-concomitant', 'dim-emotion', 'dim-sensitive'].forEach(id => {
-        document.getElementById(id).value = '';
+      ['dim-cause', 'dim-symptom', 'dim-sensation', 'dim-modality', 'dim-concomitant', 'dim-emotion', 'dim-sensitive', 'dim-crm'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
       });
+      updateCRMPreview();
       document.getElementById('results-container').classList.add('hidden');
       showToast("已清空所有諮詢欄位");
     }
@@ -2834,10 +3019,14 @@ function canonicalIntakeParts(data, bank, value) {
 const intake = (() => { // A shared transport contract: answers retain their category from form to ranking.
 const INTAKE_SCHEMA = 'prihomekg-intake-v1';
 const INTAKE_FIELDS = [
-  ['symptoms', 'Symptoms 症狀'], ['sensation', 'Sensation 主觀感受'],
-  ['aggravation', 'Aggravation 惡化因素'], ['amelioration', 'Amelioration 改善因素'],
-  ['concomitants', 'Concomitants 伴隨症狀'], ['etiology', 'Etiology 病因／誘因'],
-  ['sensitive_type', 'Sensitive Type 長期體質'], ['crm', 'CRM 慢性反應模式'],
+  ['cause', '1. 病因與誘發因素 (Etiology)'],
+  ['symptom', '2. 主要症狀 (Chief Complaint)'],
+  ['sensation', '3. 自己感覺 (Sensation)'],
+  ['modality', '4. 惡化與好轉因子 (Modality)'],
+  ['concomitant', '5. 伴隨症狀 (Concomitants)'],
+  ['emotion', '6. 情緒與行為 (Mind & Emotion)'],
+  ['sensitive', '7. 對什麼較敏感 (Sensitivities)'],
+  ['crm', 'CRM 慢性反應模式'],
 ];
 const clean = v => String(v || '').replace(/[【】]/g, ' ').replace(/\\s+/g, ' ').trim();
 const missing = /^(?:未填(?:歲)?|未提供|未提供／待補充|不知道(?:／無明顯誘因)?|沒有明顯可觀察特徵|沒有特別固定的疾病傾向|沒有固定(?:位子|位置|側別))$/;
@@ -2846,27 +3035,55 @@ const join = (...values) => [...new Set(values.map(answer).filter(Boolean))].joi
 const shown = v => v || '未提供';
 
 function renderIntakeText(data) {
-  return [
+  const lines = [
     '順勢個案摘要：',
-    \`基本資料：性別【\${shown(data.metadata.gender)}】，年齡【\${data.metadata.age ? data.metadata.age + '歲' : '未提供'}】。\`,
-    \`比對類型【\${data.chronic ? '慢性／反覆' : '急性'}】。\`,
-    \`位置在【\${shown(data.metadata.location)}】，從【\${shown(data.metadata.onset)}】開始。\`,
-    ...INTAKE_FIELDS.map(([key, label]) => \`\${label}【\${shown(data.fields[key])}】\`),
-  ].join('\\n');
+    \`比對類型【\${data.chronic ? '慢性／反覆' : '急性'}】\`,
+  ];
+  for (const [key, label] of INTAKE_FIELDS) {
+    if (key === 'crm' && !data.chronic) continue;
+    lines.push(\`\${label}【\${shown(data.fields[key])}】\`);
+  }
+  return lines.join('\\n');
 }
 
 function createIntakePayload(state, selectionContext) {
   const chronic = state.chronic === 'yes';
+  const gender = ({ male:'男性', female:'女性', other:'其他／不便回答' })[state.sex] || '';
+  const age = /^\\d{1,3}$/.test(String(state.age || '')) ? String(state.age) : '';
+  const loc = answer(state.location);
+  const onset = answer(state.onset);
+  const demo = [gender, age ? age + '歲' : ''].filter(Boolean).join('、');
+
+  const causeText = join(
+    answer(state.etiology),
+    onset ? ('病程起點：' + onset) : '',
+    demo ? ('基本資料：' + demo) : ''
+  );
+  const symptomText = join(
+    answer(state.main),
+    answer(state.observations),
+    chronic ? answer(state.tendency) : '',
+    loc ? ('位置：' + loc) : ''
+  );
+  const agg = answer(state.worse);
+  const amel = answer(state.better);
+  const modalityText = join(
+    agg ? ('惡化：' + agg) : '',
+    amel ? ('改善：' + amel) : ''
+  );
+  const concomitantText = join(answer(state.concomitant), answer(state.thermal));
+
   const data = {
     schema: INTAKE_SCHEMA, chronic,
-    metadata: { gender: ({ male:'男性', female:'女性', other:'其他／不便回答' })[state.sex] || '',
-      age: /^\\d{1,3}$/.test(String(state.age || '')) ? String(state.age) : '',
-      location: answer(state.location), onset: answer(state.onset) },
+    metadata: { gender, age, location: loc, onset },
     fields: {
-      symptoms: join(state.main, state.observations), sensation: answer(state.sensation),
-      aggravation: answer(state.worse), amelioration: answer(state.better),
-      concomitants: answer(state.concomitant), etiology: answer(state.etiology),
-      sensitive_type: chronic ? join(state.tendency, state.thermal, state.behavior) : '',
+      cause: causeText,
+      symptom: symptomText,
+      sensation: answer(state.sensation),
+      modality: modalityText,
+      concomitant: concomitantText,
+      emotion: answer(state.behavior),
+      sensitive: answer(state.sensitive),
       crm: chronic ? answer(state.course) : '',
     },
   };
@@ -2968,6 +3185,48 @@ const wording = {
 };
 window.prihomeIntakeCatalog=catalog;
 window.prihomeOptionBanks=options.optionBanks(catalog);
+// 1-to-1 重整引導模式選項庫：將一般生理特徵併入第 5 面向伴隨症狀，獨立第 7 面向感官/環境敏感，並依 CEDH 總論重構 CRM 三型辨識選項
+(function reorganizeGuidedBanks(banks) {
+  if (Array.isArray(banks.thermal)) {
+    const keepForConcomitant = banks.thermal.filter(([g]) => g !== '冷熱體質');
+    banks.concomitant = [...(banks.concomitant || []), ...keepForConcomitant];
+  }
+  if (Array.isArray(banks.behavior)) {
+    banks.behavior = banks.behavior.map(([g, items]) => [g, items.filter(it => it !== '對噪音敏感')]);
+  }
+  banks.sensitive = [
+    ['冷熱與氣候敏感', ['很怕冷', '怕熱', '怕冷風吹拂', '怕吹冷氣／空調', '對冷與熱皆敏感', '對溫差敏感', '怕悶熱不通風房間', '潮濕／下雨天氣敏感', '打雷閃電／天氣變化敏感', '怕日曬／強陽光']],
+    ['感官與接觸敏感', ['怕強光', '怕聲音吵雜／對噪音敏感', '對氣味敏感', '對菸味／油煙敏感', '拒絕被觸碰', '怕領口／腰部緊繃衣物', '怕震動顛簸']],
+    ['飲食與刺激物敏感', ['對咖啡／茶／酒精敏感', '對牛奶／乳製品敏感', '對藥物／疫苗敏感', '對他人情緒高度敏感']]
+  ];
+  banks.course = [
+    ['MRS 淋病質特徵（持續潛伏／不退／增生滯留）', [
+      '慢性病一直拖著好不了、回不到原本狀態',
+      '緩慢潛伏發展、慢慢越來越嚴重（如高血壓／糖尿病／腫瘤）',
+      '容易長良性腫瘤或增生（疣、瘜肉、肌瘤等）',
+      '全身性體液滯留／容易水腫',
+      '黏膜慢性黏液分泌（如長期慢性鼻炎／分泌物）',
+      '普遍的憂鬱傾向',
+      '誘因：外來蛋白注射（疫苗）／污染／長期反覆用藥或化療／重複感染／持續性壓力'
+    ]],
+    ['MRP 疥癬質特徵（週期反覆／交替／康復困難）', [
+      '發作具週期性（數月或每年固定季節反覆，會慢慢好但不一定回到原點）',
+      '不同症狀交替、接續或同時出現',
+      '容易有寄生蟲困擾',
+      '康復困難／生病後恢復很慢',
+      '對調理缺乏良好反應'
+    ]],
+    ['MRP/T 結核質特徵（短週期高頻／耳鼻喉肺／怕冷瘦削）', [
+      '發作週期很短、頻率高且不規律（每幾週或幾乎每月發作）',
+      '常見於兒童或年輕人',
+      '體型瘦削但食慾正常',
+      '怕冷、對冷高度敏感',
+      '反覆發作的耳鼻喉與肺部疾病',
+      '淋巴結腫大',
+      '神經質、易怒、高度敏感'
+    ]]
+  ];
+})(window.prihomeOptionBanks);
 window.prihomeIntakeParts=options.canonicalIntakeParts;
 window.prihomeWording=value=>String(value||'').split('、').map(part=>wording[part.trim()]||part.trim()).join('、');
 window.prihomeBuildIntake=answers=>intake.createIntakePayload(answers);
@@ -3010,94 +3269,92 @@ const questions = [
   },
   {
     id:'basic', group:'基本資料', title:'請提供年齡與生理性別。',
-    hint:'僅作個案背景；年齡與性別本身不算症狀、感受或體質命中點。',
+    hint:'將一併帶入「1. 病因與誘發因素」背景資訊中供辨證參考。',
     type:'basicFields'
   },
   {
-    id:'main', group:'1 · 症狀', title:'你現在有哪些不舒服？',
-    hint:'點選符合自己的症狀，可以多選；沒有合適的選項，就在答案欄寫下來。',
-    placeholder:'例如：晚上一直咳、右側頭痛、鼻塞、胃痛、皮膚紅腫發癢……',
-    bank:'main'
+    id:'chronic', group:'病程性質分流', title:'這個問題屬於短期急性，還是反覆／慢性體質問題？',
+    hint:'若選「慢性／反覆」，系統會多顯示長期疾病傾向與「CRM 慢性反應模式」題目，並於慢性體質藥分析時套用 CRM 加權。',
+    type:'choice',
+    options:[['no','急性（短期／第一次發作）'],['yes','慢性／反覆（持續一段時間或反覆發作）']]
   },
   {
-    id:'location', group:'背景 · 部位與側別（不獨立計分）', title:'這個主要問題在什麼位置？有左右側或移動方向嗎？',
-    hint:'作為原句的部位限制，避免把腹部的感受對到喉嚨；位置本身不算 Symptoms 符合點。',
-    placeholder:'例如：左側太陽穴；右鼻竇；先左後右；兩側；沒有固定位置……',
-    bank:'location'
-  },
-  {
-    id:'onset', group:'背景 · 起病時間（不獨立計分）', title:'什麼時候開始？是突然還是慢慢出現？',
-    hint:'起病速度不是症狀，也不等於誘因。這裡只記錄時間背景；長期反覆模式後面另問。',
-    placeholder:'例如：昨晚突然開始；三週前慢慢出現；每年秋天都會發作……',
-    bank:'onset'
-  },
-  {
-    id:'observations', group:'症狀補充', title:'還有哪些看得見的變化？',
-    hint:'例如腫脹、出血、鼻水或皮膚變化。可以多選，也可以留白。',
-    placeholder:'例如：牙齦暗紅易出血、有口臭；鼻水清澈量多；皮膚乾裂脫屑……',
-    bank:'observations'
-  },
-  {
-    id:'sensation', group:'2 · Sensation', title:'你的主觀感受像什麼？',
-    hint:'只描述主訴的感覺，例如緊縮、刺痛、麻木。不要在這題填疾病名稱、左右側、什麼讓它變好或變壞。',
-    placeholder:'例如：灼熱、搏動、堵塞；像熱炭在燙、像被帶子綁緊……',
-    bank:'sensation'
-  },
-  {
-    id:'worse', group:'3 · Aggravation 惡化因素', title:'什麼情況或時間確實會讓「這個主訴」變壞？',
-    hint:'寫清楚條件與時間。局部遇熱變痛、悶熱房間變難受、平常怕熱是不同資訊；沒有觀察到就留白。',
-    placeholder:'例如：冷風、悶熱房間、碰觸、躺下、凌晨 2–4 點、睡醒後、精神壓力……',
-    bank:'worse'
-  },
-  {
-    id:'better', group:'4 · Amelioration 改善因素', title:'什麼情況確實會讓「這個主訴」變好？',
-    hint:'填親自觀察到的改善條件。喜歡熱飲不等於喝熱飲會改善疼痛；若只是平常喜好，留到長期體質題。',
-    placeholder:'例如：冷敷、熱飲、坐起來、走動、休息、按壓、新鮮空氣、睡一覺、排氣後……',
-    bank:'better'
-  },
-  {
-    id:'concomitant', group:'5 · Concomitants 伴隨症狀', title:'主症狀發作時，還有什麼會「同時」出現？',
-    hint:'只填與主訴同時出現的另一種表現，例如頭痛同時噁心。不是列出所有病史，也不要重複主訴。長期習慣留到體質題。',
-    placeholder:'例如：頭痛時同時噁心；鼻塞時流眼淚；發燒但不口渴；疼痛時特別焦躁……',
-    bank:'concomitant'
-  },
-  {
-    id:'etiology', group:'6 · Etiology 病因／誘因', title:'開始之前有什麼明確事件或暴露？',
-    hint:'填實際發生的前因，例如受寒後、受傷後、悲傷事件後；「突然」只是速度，不是原因。不確定因果可註明，不自行推測。',
-    placeholder:'例如：受寒、淋雨、流汗後吹冷氣、熬夜、過勞、驚嚇、生氣、悲傷、手術、接觸花粉……',
+    id:'etiology', group:'1 · 病因與誘發因素 (Etiology)', title:'開始之前有什麼明確事件、誘因或暴露？',
+    hint:'對應主畫面第 1 格「病因與誘發因素」。填寫實際發生的前因，例如受寒、外傷、壓力、悲傷或飲食後。',
+    placeholder:'例如：吹冷風受寒、淋雨、熬夜壓力大、驚嚇、悲傷、手術、吃油膩食物……',
     bank:'etiology'
   },
   {
-    id:'chronic', group:'分流 · 急性／慢性', title:'這個問題屬於反覆或慢性嗎？',
-    hint:'若是第一次短期急性問題，可選「否」，後面的 CRM 與 Sensitive Type 會自動略過。',
-    type:'choice',
-    options:[['no','否，這次是短期／第一次急性問題'],['yes','是，會反覆或已持續一段時間']]
+    id:'onset', group:'1b · 起病時間背景（併入第 1 格）', title:'什麼時候開始？是突然還是慢慢出現？',
+    hint:'記錄發作時間與速度，貼入時將自動整合至第 1 格「病因與誘發因素」。',
+    placeholder:'例如：昨晚突然開始；三週前慢慢出現；已經很多年……',
+    bank:'onset'
   },
   {
-    id:'tendency', group:'7 · Sensitive Type', title:'從小到現在，哪些問題最容易反覆出現？',
-    hint:'這是 Sensitive Type 的長期疾病傾向，不是這次發作的伴隨症狀，也不直接推定 CRM。只填實際反覆的問題。',
-    placeholder:'例如：呼吸道、皮膚、消化、泌尿、生殖、頭痛、關節……',
+    id:'main', group:'2 · 主要症狀 (Chief Complaint)', title:'你現在有哪些主要不適症狀？',
+    hint:'對應主畫面第 2 格「主要症狀」。點選符合的症狀，可多選或自行補充。',
+    placeholder:'例如：突然高燒、右側頭痛、乾咳、胃痛脹氣、皮膚紅腫癢疹……',
+    bank:'main'
+  },
+  {
+    id:'observations', group:'2b · 看得見的症狀補充（併入第 2 格）', title:'還有哪些看得見的變化（如腫脹、出血、分泌物或皮膚特徵）？',
+    hint:'貼入時將自動整合至第 2 格「主要症狀」。沒有可留白。',
+    placeholder:'例如：牙齦紅腫出血、黃綠濃稠鼻涕、皮膚乾裂脫屑……',
+    bank:'observations'
+  },
+  {
+    id:'location', group:'2c · 部位與側別（併入第 2 格）', title:'這個主要問題在什麼位置？有左右側或移動方向嗎？',
+    hint:'貼入時將以「位置：…」整合至第 2 格「主要症狀」。',
+    placeholder:'例如：左側太陽穴、右側、先左後右、固定在同一位置……',
+    bank:'location'
+  },
+  {
+    id:'tendency', group:'2d · 長期反覆疾病傾向（慢性・併入第 2 格）', title:'從小到現在，哪些問題最容易反覆出現？',
+    hint:'僅慢性顯示。貼入時將自動整合至第 2 格「主要症狀」。',
+    placeholder:'例如：反覆扁桃腺炎、反覆濕疹、胃脹氣、週期性頭痛……',
     bank:'tendency',
     chronicOnly:true
   },
   {
-    id:'thermal', group:'7 · Sensitive Type', title:'平常整體體質與一般反應有什麼特色？',
-    hint:'只填平常長期穩定的體型、冷熱、飲食、睡眠等一般反應；這次症狀才出現的表現，請回到伴隨症狀題。',
-    placeholder:'例如：怕熱、偏胖、容易出汗、不太口渴、喜歡冷飲、白天嗜睡……',
-    bank:'thermal',
-    chronicOnly:true
+    id:'sensation', group:'3 · 自己感覺 (Sensation)', title:'你的主觀感受或疼痛質地像什麼？',
+    hint:'對應主畫面第 3 格「自己感覺 (Sensation)」。例如搏動痛、灼熱、針刺、緊縮、沉重、麻木等。',
+    placeholder:'例如：血管跳動痛、灼燒熱辣感、針刺尖銳痛、緊縮感、腫脹感……',
+    bank:'sensation'
   },
   {
-    id:'behavior', group:'7 · Sensitive Type', title:'平常的你，長期比較接近什麼樣的反應傾向？',
-    hint:'只寫真正長期穩定的特質，不需要硬選。',
-    placeholder:'例如：急、慢、容易焦慮、煩躁、敏感、喜歡獨處、需要陪伴、容易沒自信……',
-    bank:'behavior',
-    chronicOnly:true
+    id:'worse', group:'4a · 惡化因素 (Aggravation → 第 4 格)', title:'什麼情況、動作或時間會讓症狀變壞？',
+    hint:'對應主畫面第 4 格「惡化與好轉因子」。',
+    placeholder:'例如：稍微移動就惡化、凌晨1-3點惡化、剛睡醒惡化、進溫暖房間惡化……',
+    bank:'worse'
   },
   {
-    id:'course', group:'8 · CRM 慢性反應模式', title:'長期病程如何反覆、交替、進展與恢復？',
-    hint:'描述發作與恢復的模式，不要只列疾病名稱，也不必自己判定哪種 CRM。沒有足夠模式資料時，系統保留未知。',
-    placeholder:'例如：固定週期反覆、每次可完全恢復；或一直拖著並逐漸加重……',
+    id:'better', group:'4b · 好轉因素 (Amelioration → 第 4 格)', title:'什麼情況或方式會讓症狀變好？',
+    hint:'對應主畫面第 4 格「惡化與好轉因子」。',
+    placeholder:'例如：熱敷保暖好轉、冷敷新鮮空氣好轉、用力按壓好轉、持續活動好轉……',
+    bank:'better'
+  },
+  {
+    id:'concomitant', group:'5 · 伴隨症狀 (Concomitants)', title:'發作時有哪些伴隨現象，或口渴、出汗、飲食渴望與睡眠特徵？',
+    hint:'對應主畫面第 5 格「伴隨症狀」。包含口渴、流汗、冷熱、嗜甜／嗜鹹、睡眠與體力狀態。',
+    placeholder:'例如：極度口渴喝冷水、發燒卻不口渴、白天嗜睡、渴望鹹食、夜間盜汗……',
+    bank:'concomitant'
+  },
+  {
+    id:'behavior', group:'6 · 情緒與行為 (Mind & Emotion)', title:'你目前或長期的情緒、心理與行為傾向為何？',
+    hint:'對應主畫面第 6 格「情緒與行為」（同時連動巴赫花精建議）。',
+    placeholder:'例如：焦躁不安、易怒沒耐心、愛哭需要安慰、喜歡獨處、缺乏自信、憂鬱低落……',
+    bank:'behavior'
+  },
+  {
+    id:'sensitive', group:'7 · 對什麼較敏感 (Sensitivities)', title:'你對哪些冷熱、氣候、感官或環境刺激特別敏感？',
+    hint:'對應主畫面第 7 格「對什麼較敏感」。例如怕冷、怕熱、怕強光、怕噪音、氣味敏感、潮濕天氣等。',
+    placeholder:'例如：很怕冷、怕熱、怕強光、怕聲音吵雜、對氣味敏感、潮濕天氣敏感……',
+    bank:'sensitive'
+  },
+  {
+    id:'course', group:'8 · CRM 慢性反應模式（僅慢性體質藥加權）', title:'請勾選最符合你長期病程的「慢性反應模式 (CRM)」特徵：',
+    hint:'依古典順勢療法分 MRS（淋病質）、MRP（疥癬質）、MRP/T（結核質）三類；系統將自動分類並「僅對慢性體質藥」加權。',
+    placeholder:'例如：緩慢潛伏越來越嚴重、良性腫瘤疣增生、每年固定季節反覆、發作週期很短……',
     bank:'course',
     chronicOnly:true
   }
@@ -3507,17 +3764,15 @@ renderResponsiveStart();
 
     function fillImportSample() {
       document.getElementById('import-raw-text').value = `順勢個案摘要：
-基本資料：性別【女性】，年齡【50歲】。
-比對類型【慢性／反覆】。
-位置在【未提供】，從【已經很多年、慢慢出現】開始。
-Symptoms 症狀【黃斑部病變 飛蚊症 是網膜剝離 肝膽都不好 泡泡尿 血液循環不好】
-Sensation 主觀感受【刺麻、像冰塊貼著、脹痛】
-Aggravation 惡化因素【傍晚】
-Amelioration 改善因素【站立】
-Concomitants 伴隨症狀【動作笨拙】
-Etiology 病因／誘因【停經／更年期】
-Sensitive Type 長期體質【每次生病後都很虛弱、經期容易頭痛或不適 長年鼻子悶悶的 嗅覺不靈敏；喜歡溫暖環境、很怕冷；需要陪伴 易怒】
-CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
+比對類型【慢性／反覆】
+1. 病因與誘發因素 (Etiology)【停經／更年期；病程起點：已經很多年、慢慢出現；基本資料：女性、50歲】
+2. 主要症狀 (Chief Complaint)【黃斑部病變、飛蚊症、肝膽不適、泡泡尿、長年鼻子悶塞】
+3. 自己感覺 (Sensation)【刺麻、像冰塊貼著、脹痛】
+4. 惡化與好轉因子 (Modality)【惡化：傍晚；改善：站立、喜歡溫暖環境】
+5. 伴隨症狀 (Concomitants)【動作笨拙、每次生病後都很虛弱】
+6. 情緒與行為 (Mind & Emotion)【需要陪伴、易怒】
+7. 對什麼較敏感 (Sensitivities)【很怕冷】
+CRM 慢性反應模式【緩慢潛伏發展、慢慢越來越嚴重；發作具週期性（每年固定季節反覆）】`;
     }
 
     function parseAndFillFromImport() {
@@ -3533,99 +3788,125 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         return m && m[1] ? m[1].trim() : '';
       };
 
-      // 擷取各欄位【...】
-      const gender = extractBracket(/性別[：:\s]*【([^】]*)】/);
-      const age = extractBracket(/年齡[：:\s]*【([^】]*)】/);
+      // 先檢查是否為新版 1-to-1 格式（1. 病因與誘發因素 ... 7. 對什麼較敏感）
+      const directDim1 = extractBracket(/1\.\s*病因與誘發因素[^【
+]*【([^】]*)】/);
+      const directDim2 = extractBracket(/2\.\s*主要症狀[^【
+]*【([^】]*)】/);
+      const directDim3 = extractBracket(/3\.\s*自己感覺[^【
+]*【([^】]*)】/);
+      const directDim4 = extractBracket(/4\.\s*惡化與好轉因子[^【
+]*【([^】]*)】/);
+      const directDim5 = extractBracket(/5\.\s*伴隨症狀[^【
+]*【([^】]*)】/);
+      const directDim6 = extractBracket(/6\.\s*情緒與行為[^【
+]*【([^】]*)】/);
+      const directDim7 = extractBracket(/7\.\s*對什麼較敏感[^【
+]*【([^】]*)】/);
       const matchType = extractBracket(/比對類型[：:\s]*【([^】]*)】/);
-      const location = extractBracket(/位置在[：:\s]*【([^】]*)】/);
-      const onset = extractBracket(/從[：:\s]*【([^】]*)】開始/);
-      const symptoms = extractBracket(/(?:Symptoms\s*症狀|主要症狀|症狀)[：:\s]*【([^】]*)】/i);
-      const sensation = extractBracket(/(?:Sensation\s*主觀感受|主觀感受|自己感覺)[：:\s]*【([^】]*)】/i);
-      const aggravation = extractBracket(/(?:Aggravation\s*惡化因素|惡化因素|惡化)[：:\s]*【([^】]*)】/i);
-      const amelioration = extractBracket(/(?:Amelioration\s*改善因素|改善因素|好轉因素|好轉)[：:\s]*【([^】]*)】/i);
-      const concomitants = extractBracket(/(?:Concomitants\s*伴隨症狀|伴隨症狀)[：:\s]*【([^】]*)】/i);
-      const etiology = extractBracket(/(?:Etiology\s*病因[／/]誘因|Etiology|病因[／/與]?誘發?因素?)[：:\s]*【([^】]*)】/i);
-      const sensitiveType = extractBracket(/(?:Sensitive\s*Type\s*長期體質|長期體質|敏感特質)[：:\s]*【([^】]*)】/i);
       const crm = extractBracket(/(?:CRM\s*慢性反應模式|慢性反應模式|反應模式)[：:\s]*【([^】]*)】/i);
-      const explicitMind = extractBracket(/(?:Mind|Emotion|情緒與行為|情緒)[：:\s]*【([^】]*)】/i);
 
-      // 判斷急性 / 慢性
-      if (matchType.includes('慢性') || matchType.includes('反覆') || crm) {
+      const isDirectFormat = [directDim1, directDim2, directDim3, directDim4, directDim5, directDim6, directDim7].some(v => v !== '');
+
+      if (matchType.includes('慢性') || matchType.includes('反覆') || isValidVal(crm)) {
         setDiseaseNature('chronic');
       } else if (matchType.includes('急性')) {
         setDiseaseNature('acute');
       }
 
-      // 1. 病因與誘發因素 (Etiology)
-      const dim1Parts = [];
-      if (isValidVal(etiology)) dim1Parts.push(etiology);
-      if (isValidVal(onset)) dim1Parts.push(`病程起點：${onset}`);
-      const demo = [isValidVal(gender) ? gender : '', isValidVal(age) ? age : ''].filter(Boolean).join('、');
-      if (demo) dim1Parts.push(`基本資料：${demo}`);
+      if (isDirectFormat) {
+        document.getElementById('dim-cause').value = isValidVal(directDim1) ? directDim1 : '';
+        document.getElementById('dim-symptom').value = isValidVal(directDim2) ? directDim2 : '';
+        document.getElementById('dim-sensation').value = isValidVal(directDim3) ? directDim3 : '';
+        document.getElementById('dim-modality').value = isValidVal(directDim4) ? directDim4 : '';
+        document.getElementById('dim-concomitant').value = isValidVal(directDim5) ? directDim5 : '';
+        document.getElementById('dim-emotion').value = isValidVal(directDim6) ? directDim6 : '';
+        document.getElementById('dim-sensitive').value = isValidVal(directDim7) ? directDim7 : '';
+        const crmEl = document.getElementById('dim-crm');
+        if (crmEl) crmEl.value = isValidVal(crm) ? crm : '';
+        updateCRMPreview();
+      } else {
+        const gender = extractBracket(/性別[：:\s]*【([^】]*)】/);
+        const age = extractBracket(/年齡[：:\s]*【([^】]*)】/);
+        const location = extractBracket(/位置在[：:\s]*【([^】]*)】/);
+        const onset = extractBracket(/從[：:\s]*【([^】]*)】開始/);
+        const symptoms = extractBracket(/(?:Symptoms\s*症狀|主要症狀|症狀)[：:\s]*【([^】]*)】/i);
+        const sensation = extractBracket(/(?:Sensation\s*主觀感受|主觀感受|自己感覺)[：:\s]*【([^】]*)】/i);
+        const aggravation = extractBracket(/(?:Aggravation\s*惡化因素|惡化因素|惡化)[：:\s]*【([^】]*)】/i);
+        const amelioration = extractBracket(/(?:Amelioration\s*改善因素|改善因素|好轉因素|好轉)[：:\s]*【([^】]*)】/i);
+        const concomitants = extractBracket(/(?:Concomitants\s*伴隨症狀|伴隨症狀)[：:\s]*【([^】]*)】/i);
+        const etiology = extractBracket(/(?:Etiology\s*病因[／/]誘因|Etiology|病因[／/與]?誘發?因素?)[：:\s]*【([^】]*)】/i);
+        const sensitiveType = extractBracket(/(?:Sensitive\s*Type\s*長期體質|長期體質|敏感特質)[：:\s]*【([^】]*)】/i);
+        const explicitMind = extractBracket(/(?:Mind|Emotion|情緒與行為|情緒)[：:\s]*【([^】]*)】/i);
 
-      // 2. 主要症狀 (Chief Complaint)
-      const dim2Parts = [];
-      if (isValidVal(symptoms)) dim2Parts.push(symptoms.replace(/\s+/g, '、'));
-      if (isValidVal(location)) dim2Parts.push(`位置：${location}`);
+        const dim1Parts = [];
+        if (isValidVal(etiology)) dim1Parts.push(etiology);
+        if (isValidVal(onset)) dim1Parts.push(`病程起點：${onset}`);
+        const demo = [isValidVal(gender) ? gender : '', isValidVal(age) ? age : ''].filter(Boolean).join('、');
+        if (demo) dim1Parts.push(`基本資料：${demo}`);
 
-      // 3. 自己感覺 (Sensation)
-      const dim3Parts = [];
-      if (isValidVal(sensation)) dim3Parts.push(sensation);
+        const dim2Parts = [];
+        if (isValidVal(symptoms)) dim2Parts.push(symptoms.replace(/\s+/g, '、'));
+        if (isValidVal(location)) dim2Parts.push(`位置：${location}`);
 
-      // 4. 惡化與好轉因子 (Modality)
-      const dim4Parts = [];
-      if (isValidVal(aggravation)) dim4Parts.push(`惡化：${aggravation}`);
-      if (isValidVal(amelioration)) dim4Parts.push(`改善：${amelioration}`);
-      if (isValidVal(crm)) dim4Parts.push(`反應模式：${crm}`);
+        const dim3Parts = [];
+        if (isValidVal(sensation)) dim3Parts.push(sensation);
 
-      // 5. 伴隨症狀 / 6. 情緒與行為 / 7. 對什麼較敏感
-      const dim5Parts = [];
-      const dim6Parts = [];
-      const dim7Parts = [];
+        const dim4Parts = [];
+        if (isValidVal(aggravation)) dim4Parts.push(`惡化：${aggravation}`);
+        if (isValidVal(amelioration)) dim4Parts.push(`改善：${amelioration}`);
 
-      if (isValidVal(concomitants)) dim5Parts.push(concomitants);
-      if (isValidVal(explicitMind)) dim6Parts.push(explicitMind);
+        const dim5Parts = [];
+        const dim6Parts = [];
+        const dim7Parts = [];
 
-      // 智慧拆分 Sensitive Type 長期體質（逐詞細分並依 Modality / 伴隨 / 情緒 / 敏感精準分流）
-      if (isValidVal(sensitiveType)) {
-        const modalityKws = ['熱敷', '冷敷', '冰敷', '保暖', '按壓', '活動', '休息', '好轉', '惡化', '改善', '洗熱水澡', '冷水澡', '躺下', '坐起', '彎腰', '打嗝', '排氣', '新鮮空氣', '靜止'];
-        const emotionKws = ['陪伴', '易怒', '生氣', '焦慮', '恐懼', '害怕', '愛哭', '哭', '憂鬱', '低落', '沒耐心', '急躁', '暴躁', '獨處', '安靜', '緊張', '悲傷', '委屈', '壓抑', '固執', '自信', '猶豫', '恐慌', '煩躁', '孤單', '敏感多疑', '壓力', '擔心', '情緒'];
-        const sensKws = ['怕冷', '怕熱', '冷風', '吹風', '怕光', '強光', '吵', '聲音', '噪音', '氣味', '菸味', '油煙', '潮濕', '下雨', '季節', '天氣', '冷氣', '悶熱', '觸碰', '緊繃', '環境', '空調', '打雷', '溫暖房間', '密閉', '過敏', '敏感'];
+        if (isValidVal(concomitants)) dim5Parts.push(concomitants);
+        if (isValidVal(explicitMind)) dim6Parts.push(explicitMind);
 
-        const rawTokens = sensitiveType.split(/[；;、，,\s]+/).map(s => s.trim()).filter(Boolean);
-        const tokens = [];
-        rawTokens.forEach(t => {
-          // 遇到轉折詞（如「怕熱但局部喜歡熱敷」）再細切，避免跨面向誤歸類
-          const parts = t.split(/(?:但是|但|卻|不過)/).map(p => p.trim()).filter(Boolean);
-          tokens.push(...parts);
-        });
+        if (isValidVal(sensitiveType)) {
+          const modalityKws = ['熱敷', '冷敷', '冰敷', '保暖', '按壓', '活動', '休息', '好轉', '惡化', '改善', '洗熱水澡', '冷水澡', '躺下', '坐起', '彎腰', '打嗝', '排氣', '新鮮空氣', '靜止'];
+          const emotionKws = ['陪伴', '易怒', '生氣', '焦慮', '恐懼', '害怕', '愛哭', '哭', '憂鬱', '低落', '沒耐心', '急躁', '暴躁', '獨處', '安靜', '緊張', '悲傷', '委屈', '壓抑', '固執', '自信', '猶豫', '恐慌', '煩躁', '孤單', '敏感多疑', '壓力', '擔心', '情緒'];
+          const sensKws = ['怕冷', '怕熱', '冷風', '吹風', '怕光', '強光', '吵', '聲音', '噪音', '氣味', '菸味', '油煙', '潮濕', '下雨', '季節', '天氣', '冷氣', '悶熱', '觸碰', '緊繃', '環境', '空調', '打雷', '溫暖房間', '密閉', '過敏', '敏感'];
 
-        tokens.forEach(tok => {
-          if (modalityKws.some(k => tok.includes(k))) {
-            dim4Parts.push(tok);
-          } else if (emotionKws.some(k => tok.includes(k))) {
-            dim6Parts.push(tok);
-          } else if (sensKws.some(k => tok.includes(k))) {
-            dim7Parts.push(tok);
-          } else {
-            // 飲食渴望、出汗等身體體質特徵歸入伴隨症狀
-            dim5Parts.push(tok);
-          }
-        });
+          const rawTokens = sensitiveType.split(/[；;、，,\s]+/).map(s => s.trim()).filter(Boolean);
+          const tokens = [];
+          rawTokens.forEach(t => {
+            const parts = t.split(/(?:但是|但|卻|不過)/).map(p => p.trim()).filter(Boolean);
+            tokens.push(...parts);
+          });
+
+          tokens.forEach(tok => {
+            if (modalityKws.some(k => tok.includes(k))) {
+              dim4Parts.push(tok);
+            } else if (emotionKws.some(k => tok.includes(k))) {
+              dim6Parts.push(tok);
+            } else if (sensKws.some(k => tok.includes(k))) {
+              dim7Parts.push(tok);
+            } else {
+              dim5Parts.push(tok);
+            }
+          });
+        }
+
+        document.getElementById('dim-cause').value = dim1Parts.join('；');
+        document.getElementById('dim-symptom').value = dim2Parts.join('；');
+        document.getElementById('dim-sensation').value = dim3Parts.join('、');
+        document.getElementById('dim-modality').value = dim4Parts.join('；');
+        document.getElementById('dim-concomitant').value = dim5Parts.join('；');
+        document.getElementById('dim-emotion').value = dim6Parts.join('、');
+        document.getElementById('dim-sensitive').value = dim7Parts.join('、');
+        const crmEl = document.getElementById('dim-crm');
+        if (crmEl) crmEl.value = isValidVal(crm) ? crm : '';
+        updateCRMPreview();
       }
-
-      // 寫入 7 大面向欄位
-      document.getElementById('dim-cause').value = dim1Parts.join('；');
-      document.getElementById('dim-symptom').value = dim2Parts.join('；');
-      document.getElementById('dim-sensation').value = dim3Parts.join('、');
-      document.getElementById('dim-modality').value = dim4Parts.join('；');
-      document.getElementById('dim-concomitant').value = dim5Parts.join('；');
-      document.getElementById('dim-emotion').value = dim6Parts.join('、');
-      document.getElementById('dim-sensitive').value = dim7Parts.join('、');
 
       closeImportModal();
       const filled = countFilledDimensions(getFormInputs());
-      showToast(`已成功解析並分類填入 ${filled} / 7 個面向！`);
+      const crmRes = classifyCRM(document.getElementById('dim-crm')?.value || '');
+      const crmHint = (diseaseNature === 'chronic' && crmRes.modes.length > 0)
+        ? `（CRM 判定：${crmRes.modes.map(m => m.shortName).join(' + ')}）`
+        : '';
+      showToast(`已成功解析並 1:1 填入 ${filled} / 7 個面向${crmHint}！`);
       document.getElementById('dim-cause').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
@@ -3653,10 +3934,14 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         document.getElementById('dim-cause').value = "病程起點：已經很多年、慢慢出現；基本資料：男性、56歲";
         document.getElementById('dim-symptom').value = "高血壓、牙周病、高血脂、疣／增生、牙齦腫脹；位置：眼睛周圍、右側、固定在同一位置";
         document.getElementById('dim-sensation').value = "脹痛、腫脹感";
-        document.getElementById('dim-modality').value = "惡化：剛睡醒惡化；改善：緩慢活動；反應模式：生病後恢復很慢、慢慢越來越嚴重";
+        document.getElementById('dim-modality').value = "惡化：剛睡醒惡化；改善：緩慢活動";
         document.getElementById('dim-concomitant').value = "白天嗜睡、渴望鹹食、腋下冷汗";
         document.getElementById('dim-emotion').value = "容易疲倦／意志低落";
         document.getElementById('dim-sensitive').value = "怕熱";
+        if (document.getElementById('dim-crm')) {
+          document.getElementById('dim-crm').value = "緩慢潛伏發展、慢慢越來越嚴重；容易長良性腫瘤或增生（疣、瘜肉、肌瘤）；康復困難／生病後恢復很慢";
+          updateCRMPreview();
+        }
       }
       showToast("已帶入情境範例，正在為您比對經典藥典...");
       runLocalSymptomMatch();
@@ -3690,12 +3975,14 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         modality: document.getElementById('dim-modality').value.trim(),
         concomitant: document.getElementById('dim-concomitant').value.trim(),
         emotion: document.getElementById('dim-emotion').value.trim(),
-        sensitive: document.getElementById('dim-sensitive').value.trim()
+        sensitive: document.getElementById('dim-sensitive').value.trim(),
+        crm: (document.getElementById('dim-crm')?.value || '').trim()
       };
     }
 
     function countFilledDimensions(inputs) {
-      return Object.values(inputs).filter(v => v.length > 0).length;
+      return ['cause', 'symptom', 'sensation', 'modality', 'concomitant', 'emotion', 'sensitive']
+        .filter(k => (inputs[k] || '').length > 0).length;
     }
 
     function matchBachFlower(emotionText, allText) {
@@ -3997,12 +4284,30 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
           score += 60;
         }
 
+        // CRM 慢性反應模式加權：嚴格限制「只有慢性體質藥」才加權
+        const crmResult = diseaseNature === 'chronic' ? classifyCRM(inputs.crm) : { modes: [] };
+        const userHasMindOrSens = (queryEdges.HAS_MIND_EMOTION.length + queryEdges.HAS_SENSITIVITY.length) > 0;
+        const remedyHitMindOrSens = [...exactTriples, ...crossHits].some(
+          t => t.rel === 'HAS_MIND_EMOTION' || t.rel === 'HAS_SENSITIVITY'
+        );
+        const isChronicConstitutionalKG =
+          diseaseNature === 'chronic' &&
+          score > 0 &&
+          entry.remedy.role && entry.remedy.role.includes('chronic') &&
+          (userHasMindOrSens ? remedyHitMindOrSens : (exactTriples.length > 0 || crossHits.length > 0));
+
+        const crmBonusInfo = getCRMWeightBonus(entry.remedy, crmResult, isChronicConstitutionalKG, 'prihomekg');
+        if (crmBonusInfo.bonus > 0) {
+          score += crmBonusInfo.bonus;
+        }
+
         return {
           remedy: entry.remedy,
           score,
           exactTriples,
           crossHits,
-          contradictions
+          contradictions,
+          crmBonusInfo
         };
       }).filter(r => r.score > 0 && (r.exactTriples.length > 0 || r.crossHits.length > 0))
         .sort((a, b) => b.score - a.score || b.exactTriples.length - a.exactTriples.length);
@@ -4058,6 +4363,10 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
               `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-100 text-red-800 border border-red-300 text-xs font-semibold"><i class="fa-solid fa-triangle-exclamation"></i> 模態反向衝突：${escapeHtml(c.label)}</span>`
             ).join(' ');
 
+            const crmBadges = (item.crmBonusInfo && item.crmBonusInfo.bonus > 0)
+              ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 border border-amber-400 text-xs font-bold"><i class="fa-solid fa-layer-group"></i> 慢性體質藥 ${escapeHtml(item.crmBonusInfo.labels.join(' / '))} (+${item.crmBonusInfo.bonus})</span>`
+              : '';
+
             return `
               <article class="bg-white border border-linen-300 rounded-2xl shadow-sm overflow-hidden">
                 <div class="bg-gradient-to-r from-red-700 to-red-800 text-white px-5 py-3.5 flex flex-wrap items-center justify-between gap-2">
@@ -4078,7 +4387,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
                 <div class="p-5 space-y-3.5 text-sm">
                   <div>
                     <div class="text-xs font-bold text-sage-700 mb-1.5"><i class="fa-solid fa-share-nodes text-red-600 mr-1"></i>命中的知識圖譜三元組（關係邊 → 概念節點）：</div>
-                    <div class="flex flex-wrap gap-1.5">${exactBadges || '<span class="text-xs text-sage-500">無同面向精準命中</span>'}</div>
+                    <div class="flex flex-wrap gap-1.5">${crmBadges} ${exactBadges || (!crmBadges ? '<span class="text-xs text-sage-500">無同面向精準命中</span>' : '')}</div>
                   </div>
                   ${crossBadges ? `<div class="flex flex-wrap gap-1.5 pt-1">${crossBadges}</div>` : ''}
                   ${contraBadges ? `<div class="flex flex-wrap gap-1.5 pt-1">${contraBadges}</div>` : ''}
@@ -4138,7 +4447,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
         return;
       }
 
-      const allText = Object.values(inputs).join(" ");
+      const allText = [inputs.cause, inputs.symptom, inputs.sensation, inputs.modality, inputs.concomitant, inputs.emotion, inputs.sensitive].join(" ");
       const dim67Text = `${inputs.emotion || ''} ${inputs.sensitive || ''}`.trim();
       const dim67Tokens = dim67Text.split(/[\s、，,。；;！!？?]+/).filter(t => t.length >= 2);
       const modalityGuardKws = ['熱敷', '冷敷', '冰敷', '保暖', '按壓', '活動', '休息', '好轉', '惡化', '改善', '洗熱水澡', '冷水澡', '躺下', '坐起', '彎腰', '打嗝', '排氣', '靜止'];
@@ -4217,7 +4526,21 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
           score += 10;
         }
 
+        // 5. CRM 慢性反應模式加權：嚴格限制「只有慢性體質藥」才加權
+        const crmResultLocal = diseaseNature === 'chronic' ? classifyCRM(inputs.crm) : { modes: [] };
+        const isChronicConstitutionalLocal =
+          diseaseNature === 'chronic' &&
+          score > 0 &&
+          remedy.role.includes('chronic') &&
+          matchedDim6Or7;
+
+        const crmBonusLocal = getCRMWeightBonus(remedy, crmResultLocal, isChronicConstitutionalLocal, 'local');
+        if (crmBonusLocal.bonus > 0) {
+          score += crmBonusLocal.bonus;
+        }
+
         const combinedTags = [
+          ...crmBonusLocal.labels.map(t => `★ ${t} (+${crmBonusLocal.bonus})`),
           ...keynoteHits.map(t => `★ ${t}`),
           ...matchedTags
         ];
@@ -4423,6 +4746,11 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 7. 藥物的中文名稱（zh）必須嚴格使用台灣順勢療法標準繁體中文譯名（例如 Pulsatilla 為「白頭翁」、Nux vomica 為「馬錢子」、Aconitum napellus 為「烏頭」），嚴禁自行捏造別名、誤譯或加上多餘的括號備註。
 8. 辨證排序必須嚴格遵循哈尼曼《醫藝論》§153（SRP 原則：奇特、罕見、獨特）與 S.R. Phatak 藥典「黑體字／全大寫（Bold / CAPITALS）」高鑑別力權重：優先以反常或具鑑別力的惡化好轉因子（Modality）、鮮明感官比喻（Sensation）與特殊伴隨症狀（Concomitants）作為核心選藥依據；在 matchedTags 陣列中，請將最具鑑別力的關鍵特徵以「★ 」開頭標示（例如 "★ 凌晨1-3點惡化"、"★ 發燒卻完全不口渴"）。`;
 
+      const aiCrmRes = diseaseNature === 'chronic' ? classifyCRM(inputs.crm) : { modes: [] };
+      const aiCrmBlock = (diseaseNature === 'chronic' && aiCrmRes.modes.length > 0)
+        ? `\nCRM 慢性反應模式：${inputs.crm}\n系統判定 CRM 分類：${aiCrmRes.modes.map(m => `${m.name}（核心候選藥：${m.core.join(', ')}${m.shared.length ? '；共同藥：' + m.shared.join(', ') : ''}）`).join('；')}\n【重要加權規則】上述 CRM 慢性反應模式僅在評估「慢性體質藥（categoryType = 體質藥）」時給予加權優先考量；若屬「症狀藥」則不得套用 CRM 加權。`
+        : '';
+
       const userPrompt = `病程性質：${diseaseNature === 'acute' ? '急性 (Acute)' : '慢性 (Chronic)'}
 1. 病因：${inputs.cause || '未提供'}
 2. 主要症狀：${inputs.symptom || '未提供'}
@@ -4430,7 +4758,7 @@ CRM 慢性反應模式【慢慢越來越嚴重、每年固定季節】`;
 4. 惡化與好轉因子 Modality：${inputs.modality || '未提供'}
 5. 伴隨症狀：${inputs.concomitant || '未提供'}
 6. 情緒與行為：${inputs.emotion || '未提供'}
-7. 對什麼較敏感：${inputs.sensitive || '未提供'}`;
+7. 對什麼較敏感：${inputs.sensitive || '未提供'}${aiCrmBlock}`;
 
       const payload = {
         contents: [{ parts: [{ text: userPrompt }] }],
