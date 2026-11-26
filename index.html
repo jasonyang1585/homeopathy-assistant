@@ -691,7 +691,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.70</span>
+        <span>Version 1.71</span>
       </div>
     </div>
   </footer>
@@ -3034,6 +3034,43 @@ const answer = v => missing.test(clean(v)) ? '' : clean(v);
 const join = (...values) => [...new Set(values.map(answer).filter(Boolean))].join('；');
 const shown = v => v || '未提供';
 
+function classifyGuidedCRM(crmText) {
+  const text = String(crmText || '').trim();
+  if (!text) return [];
+  const defs = [
+    {
+      code: 'MRS',
+      label: 'MRS (Sycotic 淋病質)',
+      kws: ['淋病質', 'Sycotic', '一直拖著', '好不了', '回不到原本', '回不到前面', '持續都存在', '永遠不會好', '緩慢潛伏', '慢慢越來越嚴重', '高血壓', '良性腫瘤', '增生', '疣', '瘜肉', '肌瘤', '體液滯留', '水腫', '慢性黏液', '慢性鼻炎', '憂鬱傾向', '外來蛋白', '疫苗', '污染', '反覆用藥', '化療', '重複感染', '持續性壓力']
+    },
+    {
+      code: 'MRP',
+      label: 'MRP (Psoric 疥癬質)',
+      kws: ['疥癬質', 'Psoric', '發作具週期性', '固定週期', '每年固定季節', '週期性', '交替', '接續', '輪流出現', '寄生蟲', '康復困難', '恢復很慢', '缺乏良好反應', '好不完全']
+    },
+    {
+      code: 'MRPT',
+      label: 'MRP/T (Tuberculinic 結核質)',
+      kws: ['結核質', 'Tuberculinic', '週期很短', '間隔很短', '頻率高', '不規律', '每幾週', '幾乎每月', '兒童', '年輕人', '體型瘦削', '瘦削但食慾正常', '怕冷、對冷', '對冷高度敏感', '對冷敏感', '耳鼻喉與肺部', '耳鼻喉', '反覆肺部', '淋巴結腫大', '神經質', '易怒、高度敏感']
+    }
+  ];
+  const scores = { MRS: 0, MRP: 0, MRPT: 0 };
+  if (/(?:^|[^A-Za-z])MRS(?![A-Za-z])/i.test(text)) scores.MRS += 3;
+  if (/MRP\s*\/\s*T|MRPT/i.test(text)) scores.MRPT += 3;
+  else if (/(?:^|[^A-Za-z])MRP(?![A-Za-z\/])/i.test(text)) scores.MRP += 3;
+  for (const d of defs) {
+    for (const kw of d.kws) {
+      if (text.includes(kw)) scores[d.code] += (kw.length >= 5 ? 2 : 1);
+    }
+  }
+  const maxScore = Math.max(scores.MRS, scores.MRP, scores.MRPT);
+  if (maxScore <= 0) return [];
+  return defs
+    .filter(d => scores[d.code] > 0 && (scores[d.code] === maxScore || (scores[d.code] >= 2 && scores[d.code] >= maxScore * 0.7)))
+    .sort((a, b) => scores[b.code] - scores[a.code])
+    .map(d => d.label);
+}
+
 function renderIntakeText(data) {
   const lines = [
     '順勢個案摘要：',
@@ -3041,7 +3078,14 @@ function renderIntakeText(data) {
   ];
   for (const [key, label] of INTAKE_FIELDS) {
     if (key === 'crm' && !data.chronic) continue;
-    lines.push(\`\${label}【\${shown(data.fields[key])}】\`);
+    let val = shown(data.fields[key]);
+    if (key === 'crm' && data.fields[key]) {
+      const crmTags = classifyGuidedCRM(data.fields[key]);
+      if (crmTags.length > 0 && !crmTags.some(t => val.includes(t))) {
+        val = crmTags.join(' + ') + '｜' + val;
+      }
+    }
+    lines.push(\`\${label}【\${val}】\`);
   }
   return lines.join('\\n');
 }
@@ -3772,7 +3816,7 @@ renderResponsiveStart();
 5. 伴隨症狀 (Concomitants)【動作笨拙、每次生病後都很虛弱】
 6. 情緒與行為 (Mind & Emotion)【需要陪伴、易怒】
 7. 對什麼較敏感 (Sensitivities)【很怕冷】
-CRM 慢性反應模式【緩慢潛伏發展、慢慢越來越嚴重；發作具週期性（每年固定季節反覆）】`;
+CRM 慢性反應模式【MRS (Sycotic 淋病質) + MRP (Psoric 疥癬質)｜緩慢潛伏發展、慢慢越來越嚴重；發作具週期性（每年固定季節反覆）】`;
     }
 
     function parseAndFillFromImport() {
@@ -4420,6 +4464,11 @@ CRM 慢性反應模式【緩慢潛伏發展、慢慢越來越嚴重；發作具�
           <div class="bg-white border border-linen-200 rounded-xl p-4 space-y-2">
             <div class="text-xs font-bold text-sage-900 mb-1"><i class="fa-solid fa-sitemap text-red-600 mr-1"></i>本次個案萃取之 8 項知識圖譜節點：</div>
             ${querySummaryHtml}
+            ${(diseaseNature === 'chronic' && inputs.crm) ? (() => {
+              const kgCrm = classifyCRM(inputs.crm);
+              const badges = kgCrm.modes.map(m => `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-bold ${m.colorClass}">${escapeHtml(m.name)}</span>`).join(' ');
+              return `<div class="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-2 pt-1.5 mt-1 border-t border-linen-200"><span class="text-xs font-bold text-amber-900 sm:w-[210px] shrink-0 sm:pt-1">CRM 慢性反應模式：</span><div class="flex flex-wrap items-center gap-1.5 flex-1 min-w-0">${badges || '<span class="text-xs text-sage-500">未判定分類</span>'}<span class="text-xs text-sage-700">${escapeHtml(inputs.crm)}</span></div></div>`;
+            })() : ''}
           </div>
 
           <div class="space-y-4">
@@ -5084,6 +5133,18 @@ CRM 慢性反應模式【緩慢潛伏發展、慢慢越來越嚴重；發作具�
         { num: 6, label: '情緒與行為 (Mind)', val: document.getElementById('dim-emotion')?.value.trim() || '' },
         { num: 7, label: '對什麼較敏感', val: document.getElementById('dim-sensitive')?.value.trim() || '' }
       ];
+      const crmRawVal = (diseaseNature === 'chronic') ? (document.getElementById('dim-crm')?.value.trim() || '') : '';
+      const crmSummaryRes = (diseaseNature === 'chronic' && crmRawVal) ? classifyCRM(crmRawVal) : { modes: [] };
+      const crmModeBadgesHtml = crmSummaryRes.modes.map(m =>
+        `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[11px] font-bold ${m.colorClass} mr-1">${escapeHtml(m.name)}</span>`
+      ).join('');
+      const crmSummaryCardHtml = (diseaseNature === 'chronic' && crmRawVal) ? `
+              <div class="bg-amber-50/70 px-3.5 py-2.5 rounded-xl border border-amber-300 md:col-span-2">
+                <span class="font-bold text-amber-900">CRM 慢性反應模式：</span>
+                ${crmModeBadgesHtml || '<span class="inline-flex items-center px-2 py-0.5 rounded-full border border-linen-300 bg-white text-[11px] text-sage-600 mr-1">未判定分類</span>'}
+                <span class="text-sage-900">${escapeHtml(crmRawVal)}</span>
+              </div>` : '';
+
       const nowStr = new Date().toLocaleString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false });
       const dimSummaryHtml = `
         <div class="print-block bg-linen-50 border border-linen-300 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3">
@@ -5101,6 +5162,7 @@ CRM 慢性反應模式【緩慢潛伏發展、慢慢越來越嚴重；發作具�
                 <span class="${d.val ? 'text-sage-900' : 'text-sage-400'}">${d.val ? escapeHtml(d.val) : '未填寫'}</span>
               </div>
             `).join('')}
+            ${crmSummaryCardHtml}
           </div>
         </div>
       `;
@@ -5111,6 +5173,8 @@ CRM 慢性反應模式【緩慢潛伏發展、慢慢越來越嚴重；發作具�
         diseaseNature,
         nowStr: _reportTime,
         dimSummaryItems,
+        crmRawVal,
+        crmModes: crmSummaryRes.modes.map(m => m.name),
         ranked: ranked.map((rem, idx) => ({ ...rem, _rule: getPotencyRule(rem, idx) })),
         selectedBach,
         medicalAdvice
@@ -5286,12 +5350,17 @@ CRM 慢性反應模式【緩慢潛伏發展、慢慢越來越嚴重；發作具�
 
     function buildSymptomPdfHtml(data) {
       const natureText = data.diseaseNature === 'acute' ? '急性模式 (Acute)' : '慢性模式 (Chronic)';
+      const crmPdfRow = (data.diseaseNature === 'chronic' && data.crmRawVal) ? `
+        <tr>
+          <td style="width:28%; padding:6px 10px; background:#EAEAEA; border:1px solid #BFBFBF; font-weight:700; color:#111111; font-size:11.5px; vertical-align:top;">CRM 慢性反應模式</td>
+          <td style="width:72%; padding:6px 10px; background:#FFFFFF; border:1px solid #BFBFBF; color:#111111; font-size:11.5px; line-height:1.5;">${(data.crmModes && data.crmModes.length > 0) ? `<strong>[${escapeHtml(data.crmModes.join(' + '))}]</strong> ` : ''}${escapeHtml(data.crmRawVal)}</td>
+        </tr>` : '';
       const dimRows = data.dimSummaryItems.map(d => `
         <tr>
           <td style="width:28%; padding:6px 10px; background:#F3F3F3; border:1px solid #BFBFBF; font-weight:700; color:#111111; font-size:11.5px; vertical-align:top;">${d.num}. ${escapeHtml(d.label)}</td>
           <td style="width:72%; padding:6px 10px; background:#FFFFFF; border:1px solid #BFBFBF; color:${d.val ? '#111111' : '#777777'}; font-size:11.5px; line-height:1.5;">${d.val ? escapeHtml(d.val) : '未填寫'}</td>
         </tr>
-      `).join('');
+      `).join('') + crmPdfRow;
 
       const remedyBlocks = data.ranked.map((rem, idx) => {
         const rule = rem._rule;
@@ -5543,6 +5612,11 @@ CRM 慢性反應模式【緩慢潛伏發展、慢慢越來越嚴重；發作具�
             <div style="font-size:13px; font-weight:700; color:#000000; border-left:4px solid #111111; padding-left:8px; margin-bottom:7px;">一、個案萃取之 8 項知識圖譜概念節點</div>
             <table style="width:100%; border-collapse:collapse;">
               ${nodeRows}
+              ${(data.diseaseNature === 'chronic' && data.inputs && data.inputs.crm) ? (() => {
+                const kgCrm = classifyCRM(data.inputs.crm);
+                const modeLabel = kgCrm.modes.length > 0 ? `<strong>[${escapeHtml(kgCrm.modes.map(m => m.name).join(' + '))}]</strong> ` : '';
+                return `<tr><td style="width:30%; padding:6px 10px; background:#EAEAEA; border:1px solid #BFBFBF; font-weight:700; color:#111111; font-size:11px; vertical-align:top;">CRM 慢性反應模式</td><td style="width:70%; padding:6px 10px; background:#FFFFFF; border:1px solid #BFBFBF; font-size:11px; color:#111111; vertical-align:top;">${modeLabel}${escapeHtml(data.inputs.crm)}</td></tr>`;
+              })() : ''}
             </table>
           </div>
 
