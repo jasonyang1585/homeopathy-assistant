@@ -691,7 +691,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.74</span>
+        <span>Version 1.75</span>
       </div>
     </div>
   </footer>
@@ -3056,8 +3056,8 @@ function classifyGuidedCRM(crmText) {
   ];
   const scores = { MRS: 0, MRP: 0, MRPT: 0 };
   if (/(?:^|[^A-Za-z])MRS(?![A-Za-z])/i.test(text)) scores.MRS += 3;
-  if (/MRP\s*\/\s*T|MRPT/i.test(text)) scores.MRPT += 3;
-  else if (/(?:^|[^A-Za-z])MRP(?![A-Za-z\/])/i.test(text)) scores.MRP += 3;
+  if (/MRP\\s*\\/\\s*T|MRPT/i.test(text)) scores.MRPT += 3;
+  else if (/(?:^|[^A-Za-z])MRP(?![A-Za-z\\/])/i.test(text)) scores.MRP += 3;
   for (const d of defs) {
     for (const kw of d.kws) {
       if (text.includes(kw)) scores[d.code] += (kw.length >= 5 ? 2 : 1);
