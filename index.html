@@ -502,7 +502,7 @@
               class="w-full px-3.5 py-2 text-sm rounded-lg border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white" />
             <div class="space-y-1.5 pt-0.5">
               <div class="flex flex-wrap gap-1.5 items-center">
-                <span class="text-[11px] font-bold text-amber-900 mr-1">MRS 淋病質：</span>
+                <span class="text-[11px] font-bold text-amber-900 mr-1">MRS (Sycotic) 淋病質：</span>
                 <button type="button" onclick="appendCRMTag('慢性病一直拖著好不了、回不到原本狀態')" class="tag-chip">一直拖著回不到原點</button>
                 <button type="button" onclick="appendCRMTag('緩慢潛伏發展、慢慢越來越嚴重')" class="tag-chip">緩慢潛伏越來越嚴重</button>
                 <button type="button" onclick="appendCRMTag('容易長良性腫瘤或增生（疣、瘜肉、肌瘤）')" class="tag-chip">良性腫瘤／疣增生</button>
@@ -513,7 +513,7 @@
                 <button type="button" onclick="toggleExtraTags(this)" class="tag-toggle-btn"><i class="fa-solid fa-plus text-[10px]"></i><span>更多</span></button>
               </div>
               <div class="flex flex-wrap gap-1.5 items-center">
-                <span class="text-[11px] font-bold text-sage-800 mr-1">MRP 疥癬質：</span>
+                <span class="text-[11px] font-bold text-sage-800 mr-1">MRP (Psoric) 疥癬質：</span>
                 <button type="button" onclick="appendCRMTag('發作具週期性（數月或每年固定季節反覆）')" class="tag-chip">週期性／固定季節反覆</button>
                 <button type="button" onclick="appendCRMTag('不同症狀交替、接續或同時出現')" class="tag-chip">症狀交替或接續出現</button>
                 <button type="button" onclick="appendCRMTag('康復困難／生病後恢復很慢')" class="tag-chip">康復困難恢復慢</button>
@@ -522,7 +522,7 @@
                 <button type="button" onclick="toggleExtraTags(this)" class="tag-toggle-btn"><i class="fa-solid fa-plus text-[10px]"></i><span>更多</span></button>
               </div>
               <div class="flex flex-wrap gap-1.5 items-center">
-                <span class="text-[11px] font-bold text-red-800 mr-1">MRP/T 結核質：</span>
+                <span class="text-[11px] font-bold text-red-800 mr-1">MRP/T (Tuberculinic) 結核質：</span>
                 <button type="button" onclick="appendCRMTag('發作週期很短、頻率高且不規律（每幾週或每月）')" class="tag-chip">短週期高頻不規律</button>
                 <button type="button" onclick="appendCRMTag('反覆發作的耳鼻喉與肺部疾病')" class="tag-chip">反覆耳鼻喉與肺部疾病</button>
                 <button type="button" onclick="appendCRMTag('怕冷、對冷高度敏感')" class="tag-chip">怕冷對冷敏感</button>
@@ -691,7 +691,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.73</span>
+        <span>Version 1.74</span>
       </div>
     </div>
   </footer>
@@ -2634,7 +2634,7 @@
       MRS: {
         code: 'MRS',
         name: 'MRS (Sycotic 淋病質)',
-        shortName: 'MRS 淋病質',
+        shortName: 'MRS (Sycotic) 淋病質',
         colorClass: 'bg-amber-100 text-amber-900 border-amber-400',
         core: ['Thuja occidentalis', 'Medorrhinum', 'Natrum sulfuricum', 'Causticum', 'Nitricum acidum'],
         shared: ['Calcarea carbonica', 'Sepia', 'Silicea'],
@@ -2648,7 +2648,7 @@
       MRP: {
         code: 'MRP',
         name: 'MRP (Psoric 疥癬質)',
-        shortName: 'MRP 疥癬質',
+        shortName: 'MRP (Psoric) 疥癬質',
         colorClass: 'bg-sage-100 text-sage-900 border-sage-400',
         core: ['Sulphur', 'Psorinum', 'Arsenicum album', 'Lycopodium clavatum'],
         shared: ['Calcarea carbonica', 'Sepia'],
@@ -2660,7 +2660,7 @@
       MRPT: {
         code: 'MRPT',
         name: 'MRP/T (Tuberculinic 結核質)',
-        shortName: 'MRP/T 結核質',
+        shortName: 'MRP/T (Tuberculinic) 結核質',
         colorClass: 'bg-red-100 text-red-900 border-red-300',
         core: ['Natrum muriaticum', 'Tuberculinum', 'Pulsatilla', 'Sulphur iodatum', 'Arsenicum iodatum', 'Calcarea phosphorica', 'Phosphorus', 'Aviaire', 'Silicea'],
         shared: [],
@@ -3244,7 +3244,7 @@ window.prihomeOptionBanks=options.optionBanks(catalog);
     ['飲食與刺激物敏感', ['對咖啡／茶／酒精敏感', '對牛奶／乳製品敏感', '對藥物／疫苗敏感', '對他人情緒高度敏感']]
   ];
   banks.course = [
-    ['MRS 淋病質特徵（持續潛伏／不退／增生滯留）', [
+    ['MRS (Sycotic) 淋病質特徵（持續潛伏／不退／增生滯留）', [
       '慢性病一直拖著好不了、回不到原本狀態',
       '緩慢潛伏發展、慢慢越來越嚴重（如高血壓／糖尿病／腫瘤）',
       '容易長良性腫瘤或增生（疣、瘜肉、肌瘤等）',
@@ -3253,14 +3253,14 @@ window.prihomeOptionBanks=options.optionBanks(catalog);
       '普遍的憂鬱傾向',
       '誘因：外來蛋白注射（疫苗）／污染／長期反覆用藥或化療／重複感染／持續性壓力'
     ]],
-    ['MRP 疥癬質特徵（週期反覆／交替／康復困難）', [
+    ['MRP (Psoric) 疥癬質特徵（週期反覆／交替／康復困難）', [
       '發作具週期性（數月或每年固定季節反覆，會慢慢好但不一定回到原點）',
       '不同症狀交替、接續或同時出現',
       '容易有寄生蟲困擾',
       '康復困難／生病後恢復很慢',
       '對調理缺乏良好反應'
     ]],
-    ['MRP/T 結核質特徵（短週期高頻／耳鼻喉肺／怕冷瘦削）', [
+    ['MRP/T (Tuberculinic) 結核質特徵（短週期高頻／耳鼻喉肺／怕冷瘦削）', [
       '發作週期很短、頻率高且不規律（每幾週或幾乎每月發作）',
       '常見於兒童或年輕人',
       '體型瘦削但食慾正常',
@@ -3413,7 +3413,7 @@ const questions = [
   },
   {
     id:'course', group:'8 · CRM 慢性反應模式（僅慢性體質藥加權）', title:'請勾選最符合你長期病程的「慢性反應模式 (CRM)」特徵：',
-    hint:'依古典順勢療法分 MRS（淋病質）、MRP（疥癬質）、MRP/T（結核質）三類；系統將自動分類並「僅對慢性體質藥」加權。',
+    hint:'依古典順勢療法分 MRS（Sycotic 淋病質）、MRP（Psoric 疥癬質）、MRP/T（Tuberculinic 結核質）三類；系統將自動分類並「僅對慢性體質藥」加權。',
     placeholder:'例如：緩慢潛伏越來越嚴重、良性腫瘤疣增生、每年固定季節反覆、發作週期很短……',
     bank:'course',
     chronicOnly:true
