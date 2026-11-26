@@ -691,7 +691,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.72</span>
+        <span>Version 1.73</span>
       </div>
     </div>
   </footer>
@@ -3533,7 +3533,7 @@ function render(){
     input=\`<label class="mini" for="answer">你的答案（可自行補充）</label><textarea id="answer" placeholder="\${q.placeholder||''}" oninput="storeAnswer('\${q.id}',this)" onkeydown="handleAnswerKey(event, '\${q.id}')">\${escapeHtml(state[q.id]||'')}</textarea>\${chipButtons(q)}
       <div class="actions">
         <button class="secondary" onclick="back()" \${step===0?'disabled':''}>上一題</button>
-        <button class="primary" onclick="saveText('\${q.id}')">下一題</button>
+        \${step < qs.length - 1 ? \`<button class="primary" onclick="saveText('\${q.id}')">下一題</button>\` : ''}
       </div>\`;
   }
   document.getElementById('screen').innerHTML=\`
