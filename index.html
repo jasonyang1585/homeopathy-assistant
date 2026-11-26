@@ -164,8 +164,8 @@
           <i class="fa-solid fa-book-medical"></i>
           <span>順勢藥名直接查詢</span>
         </button>
-        <div class="w-px h-5 bg-sage-600 mx-1 hidden sm:block"></div>
-        <button onclick="openSettings()" class="px-3 py-2 text-sage-300 hover:text-white transition" title="設定 API Key">
+        <div class="w-px h-5 bg-sage-600 mx-1 hidden"></div>
+        <button onclick="openSettings()" class="hidden px-3 py-2 text-sage-300 hover:text-white transition" title="設定 API Key">
           <i class="fa-solid fa-gear"></i>
         </button>
       </nav>
@@ -691,7 +691,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.69</span>
+        <span>Version 1.70</span>
       </div>
     </div>
   </footer>
@@ -3789,20 +3789,13 @@ CRM 慢性反應模式【緩慢潛伏發展、慢慢越來越嚴重；發作具�
       };
 
       // 先檢查是否為新版 1-to-1 格式（1. 病因與誘發因素 ... 7. 對什麼較敏感）
-      const directDim1 = extractBracket(/1\.\s*病因與誘發因素[^【
-]*【([^】]*)】/);
-      const directDim2 = extractBracket(/2\.\s*主要症狀[^【
-]*【([^】]*)】/);
-      const directDim3 = extractBracket(/3\.\s*自己感覺[^【
-]*【([^】]*)】/);
-      const directDim4 = extractBracket(/4\.\s*惡化與好轉因子[^【
-]*【([^】]*)】/);
-      const directDim5 = extractBracket(/5\.\s*伴隨症狀[^【
-]*【([^】]*)】/);
-      const directDim6 = extractBracket(/6\.\s*情緒與行為[^【
-]*【([^】]*)】/);
-      const directDim7 = extractBracket(/7\.\s*對什麼較敏感[^【
-]*【([^】]*)】/);
+      const directDim1 = extractBracket(/1\.\s*病因與誘發因素[^【\n]*【([^】]*)】/);
+      const directDim2 = extractBracket(/2\.\s*主要症狀[^【\n]*【([^】]*)】/);
+      const directDim3 = extractBracket(/3\.\s*自己感覺[^【\n]*【([^】]*)】/);
+      const directDim4 = extractBracket(/4\.\s*惡化與好轉因子[^【\n]*【([^】]*)】/);
+      const directDim5 = extractBracket(/5\.\s*伴隨症狀[^【\n]*【([^】]*)】/);
+      const directDim6 = extractBracket(/6\.\s*情緒與行為[^【\n]*【([^】]*)】/);
+      const directDim7 = extractBracket(/7\.\s*對什麼較敏感[^【\n]*【([^】]*)】/);
       const matchType = extractBracket(/比對類型[：:\s]*【([^】]*)】/);
       const crm = extractBracket(/(?:CRM\s*慢性反應模式|慢性反應模式|反應模式)[：:\s]*【([^】]*)】/i);
 
