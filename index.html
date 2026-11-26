@@ -691,7 +691,7 @@
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-2">
         <span>© 2026 順勢療方助手 Homeopathic Materia Medica Assistant</span>
-        <span>Version 1.71</span>
+        <span>Version 1.72</span>
       </div>
     </div>
   </footer>
@@ -3270,6 +3270,22 @@ window.prihomeOptionBanks=options.optionBanks(catalog);
       '神經質、易怒、高度敏感'
     ]]
   ];
+  // 全面去重：確保每一題（同一個 bank）內不會出現任何重複選項（保留首次出現位置）
+  Object.keys(banks).forEach(bankKey => {
+    const seen = new Set();
+    banks[bankKey] = (banks[bankKey] || [])
+      .map(([groupTitle, items]) => {
+        const uniqueItems = [];
+        for (const item of items) {
+          const key = String(item || '').trim();
+          if (!key || seen.has(key)) continue;
+          seen.add(key);
+          uniqueItems.push(item);
+        }
+        return [groupTitle, uniqueItems];
+      })
+      .filter(([, items]) => items.length > 0);
+  });
 })(window.prihomeOptionBanks);
 window.prihomeIntakeParts=options.canonicalIntakeParts;
 window.prihomeWording=value=>String(value||'').split('、').map(part=>wording[part.trim()]||part.trim()).join('、');
@@ -3418,18 +3434,26 @@ function save(){
 // before toggling so punctuation inside a label never splits that selection.
 function chipParts(id,value){
   const q=questions.find(q=>q.id===id);
-  if(intakeCatalog && window.prihomeIntakeParts) return window.prihomeIntakeParts(intakeCatalog,q?.bank||id,value);
-  const labels=q?.bank ? (OPTION_BANKS[q.bank]||[]).flatMap(g=>g[1]) : (q?.chips||[]);
-  const options=[...new Set(labels)].map(label=>({label,parts:label.split('、').map(s=>s.trim())}));
-  options.sort((a,b)=>b.parts.length-a.parts.length);
+  const bankName=q?.bank||id;
+  const uiLabels=q?.bank ? (OPTION_BANKS[q.bank]||[]).flatMap(g=>g[1]) : (q?.chips||[]);
+  const uiSet=new Set(uiLabels);
+  const candidates=[
+    ...[...uiSet].map(label=>({label,canonical:label,parts:label.split('、').map(s=>s.trim())})),
+    ...(intakeCatalog?.options||[])
+      .filter(o=>o.bank===bankName)
+      .flatMap(o=>[o.label,...(o.aliases||[])].map(label=>({
+        label,canonical:uiSet.has(label)?label:o.label,parts:label.split('、').map(s=>s.trim())
+      })))
+  ];
+  candidates.sort((a,b)=>b.parts.length-a.parts.length||b.label.length-a.label.length);
   const fragments=String(value||'').split('、').map(s=>s.trim()).filter(Boolean);
   const result=[];
   for(let i=0;i<fragments.length;){
-    const match=options.find(option=>option.parts.every((part,j)=>fragments[i+j]===part));
-    result.push(match ? match.label : fragments[i]);
+    const match=candidates.find(option=>option.parts.every((part,j)=>fragments[i+j]===part));
+    result.push(match ? match.canonical : fragments[i]);
     i+=match ? match.parts.length : 1;
   }
-  return result;
+  return [...new Set(result)];
 }
 function syncChipButtons(id,el){
   if(!el) return;
@@ -3449,7 +3473,11 @@ function storeAnswer(id,el){
   window.refreshSymptomSuggestions?.(id);
 }
 function toggleChipAnswer(id,text,el){
-  if(intakeCatalog && window.prihomeIntakeParts) text=window.prihomeIntakeParts(intakeCatalog,id,text).join('、');
+  const q=questions.find(q=>q.id===id);
+  const uiLabels=new Set(q?.bank ? (OPTION_BANKS[q.bank]||[]).flatMap(g=>g[1]) : (q?.chips||[]));
+  if(!uiLabels.has(text) && intakeCatalog && window.prihomeIntakeParts){
+    text=window.prihomeIntakeParts(intakeCatalog,q?.bank||id,text).join('、');
+  }
   const parts=chipParts(id,el.value);
   // Remove every copy when deselecting, including duplicates saved by older versions.
   const next=(parts.includes(text) ? parts.filter(part=>part!==text) : [...parts,text]).join('、');
